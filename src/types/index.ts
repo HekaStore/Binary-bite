@@ -12,6 +12,7 @@ export interface Product {
   alt: string;
   isPopular?: boolean;
   flavors?: string[];
+  flavorImages?: { [flavor: string]: string };
 }
 
 export interface CartItem {

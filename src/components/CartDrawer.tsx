@@ -94,7 +94,10 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onOpenCheckout }) => {
                 {/* Product thumbnail */}
                 <div className="w-16 h-16 rounded-xl border border-slate-200 bg-sky-50/50 flex items-center justify-center p-1.5 flex-shrink-0 overflow-hidden">
                   <img
-                    src={item.product.image}
+                    src={
+                      (item.selectedFlavor && item.product.flavorImages && item.product.flavorImages[item.selectedFlavor]) ||
+                      item.product.image
+                    }
                     alt={item.product.name}
                     className="w-full h-full object-cover rounded-lg group-hover:scale-[1.025] transition-transform"
                   />

@@ -19,6 +19,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const currentQuantity = getItemQuantity(product.id, selectedFlavor);
   const currentItemId = selectedFlavor ? `${product.id}-${selectedFlavor}` : product.id;
 
+  const displayImage =
+    (selectedFlavor && product.flavorImages && product.flavorImages[selectedFlavor]) ||
+    product.image;
+
   const handleAdd = () => {
     addItem(product, selectedFlavor);
   };
@@ -36,8 +40,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       {/* Product Image Frame */}
       <div className="relative aspect-[4/3] rounded-2xl overflow-hidden mb-3.5 bg-sky-50">
         <img
-          src={product.image}
-          alt={product.alt}
+          src={displayImage}
+          alt={`${product.alt}${selectedFlavor ? ` varian ${selectedFlavor}` : ''}`}
           className="w-full h-full object-cover group-hover:scale-[1.025] transition-transform duration-300"
           loading="lazy"
         />

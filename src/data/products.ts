@@ -45,10 +45,14 @@ export const OFFICIAL_PRODUCTS: Product[] = [
     category: 'Makanan',
     badge: '[04] BEST SELLER ICE',
     description: 'Biskuit gabin renyah dengan isian fla lembut dingin yang tebal, manis, dan menyegarkan.',
-    image: '/images/products/es-gabin.jpg',
+    image: '/images/products/es-gabin-coklat.jpg',
     alt: 'Gabin Ice Cream tebal dingin Binary Bite',
     isPopular: true,
     flavors: ['Coklat', 'Cookies and Cream'],
+    flavorImages: {
+      'Coklat': '/images/products/es-gabin-coklat.jpg',
+      'Cookies and Cream': '/images/products/es-gabin-cookies.jpg',
+    },
   },
   {
     id: 'es-capcin',
