@@ -26,7 +26,7 @@ export const OrderGuide: React.FC = () => {
     {
       num: '4',
       title: 'Ambil & Nikmati!',
-      desc: 'Ambil di stand 12B atau diantar ke kelas.',
+      desc: 'Ambil pesanan di stand Lumajang Kota.',
       icon: CheckCircle2,
     },
   ];

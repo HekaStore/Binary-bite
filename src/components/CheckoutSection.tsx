@@ -14,7 +14,7 @@ export const CheckoutSection: React.FC = () => {
 
   const [customerName, setCustomerName] = useState('');
   const [customerContact, setCustomerContact] = useState('');
-  const [pickupMethod, setPickupMethod] = useState<PickupMethod>('Ambil di Stand 12B');
+  const [pickupMethod, setPickupMethod] = useState<PickupMethod>('Lumajang Kota');
   const [notes, setNotes] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const [createdOrder, setCreatedOrder] = useState<Order | null>(null);
@@ -154,40 +154,23 @@ export const CheckoutSection: React.FC = () => {
                 <MapPin className="w-3.5 h-3.5 text-[#0284C7]" />
                 <span>Metode Pengambilan Pesanan</span>
               </label>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <button
-                  type="button"
-                  onClick={() => setPickupMethod('Ambil di Stand 12B')}
-                  className={`p-3.5 text-left rounded-2xl border transition-all flex flex-col justify-between ${
-                    pickupMethod === 'Ambil di Stand 12B'
-                      ? 'bg-sky-50 border-[#0284C7] shadow-sm'
-                      : 'bg-white border-slate-200 hover:border-sky-300'
-                  }`}
-                >
-                  <span className="font-bold text-xs sm:text-sm text-slate-800">
-                    Ambil di Stand 12B
-                  </span>
-                  <span className="text-[11px] text-slate-500 mt-0.5">
-                    Lapangan Utama Sekolah
-                  </span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setPickupMethod('Antar Area Sekolah')}
-                  className={`p-3.5 text-left rounded-2xl border transition-all flex flex-col justify-between ${
-                    pickupMethod === 'Antar Area Sekolah'
-                      ? 'bg-sky-50 border-[#0284C7] shadow-sm'
-                      : 'bg-white border-slate-200 hover:border-sky-300'
-                  }`}
-                >
-                  <span className="font-bold text-xs sm:text-sm text-slate-800">
-                    Antar Area Sekolah
-                  </span>
-                  <span className="text-[11px] text-slate-500 mt-0.5">
-                    Diantar ke ruang kelasmu
-                  </span>
-                </button>
+              <div className="p-3.5 sm:p-4 rounded-2xl border bg-sky-50/80 border-[#0284C7] shadow-sm flex items-start justify-between gap-3">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="font-extrabold text-xs sm:text-sm text-slate-900">
+                      Lumajang Kota
+                    </span>
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#0284C7] text-white">
+                      Metode Resmi
+                    </span>
+                  </div>
+                  <p className="text-[11px] sm:text-xs text-slate-600 mt-1 font-medium leading-relaxed">
+                    Stand: Jl. AR Hakim No.4, Ditotrunan, Kecamatan Lumajang, Kabupaten Lumajang, Jawa Timur 67316
+                  </p>
+                </div>
+                <div className="w-6 h-6 rounded-full bg-[#0284C7] text-white flex items-center justify-center flex-shrink-0 mt-0.5 shadow-sm">
+                  <CheckCircle2 className="w-4 h-4" />
+                </div>
               </div>
             </div>
 

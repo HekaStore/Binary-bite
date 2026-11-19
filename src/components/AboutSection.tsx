@@ -61,7 +61,7 @@ export const AboutSection: React.FC = () => {
               </div>
               <div className="flex items-center gap-1.5">
                 <Check className="w-4 h-4 text-brand-electric" />
-                <span>Stand Lapangan Utama</span>
+                <span>Jl. AR Hakim No.4, Lumajang</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <Check className="w-4 h-4 text-brand-electric" />

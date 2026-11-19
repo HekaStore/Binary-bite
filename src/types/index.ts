@@ -28,7 +28,7 @@ export type OrderStatus =
   | 'Selesai'
   | 'Dibatalkan';
 
-export type PickupMethod = 'Ambil di Stand 12B' | 'Antar Area Sekolah';
+export type PickupMethod = 'Lumajang Kota';
 
 export interface OrderItem {
   productId: string;

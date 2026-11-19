@@ -140,13 +140,13 @@ export const HeroSection: React.FC = () => {
           {/* Segmented Inputs Bar (2 columns on mobile, 5 on desktop) */}
           <div className="grid grid-cols-2 lg:grid-cols-5 gap-2 sm:gap-3 items-center px-1">
             {/* Box 1: Location */}
-            <div className="p-2.5 sm:p-3 bg-slate-50/90 rounded-xl sm:rounded-2xl border border-slate-100">
+            <div className="p-2.5 sm:p-3 bg-slate-50/90 rounded-xl sm:rounded-2xl border border-slate-100" title="Jl. AR Hakim No.4, Ditotrunan, Lumajang">
               <span className="text-[9px] sm:text-[10px] font-bold text-slate-400 block uppercase tracking-wider">
                 Lokasi Stand
               </span>
               <div className="flex items-center gap-1.5 text-xs sm:text-sm font-extrabold text-slate-800 mt-0.5">
                 <MapPin className="w-3 h-3 text-[#0284C7] flex-shrink-0" />
-                <span className="truncate">Stand 12B</span>
+                <span className="truncate">Jl. AR Hakim No.4</span>
               </div>
             </div>
 
@@ -172,14 +172,14 @@ export const HeroSection: React.FC = () => {
               </div>
             </div>
 
-            {/* Box 4: Layanan Antar */}
-            <div className="p-2.5 sm:p-3 bg-slate-50/90 rounded-xl sm:rounded-2xl border border-slate-100">
+            {/* Box 4: Layanan Pengambilan */}
+            <div className="p-2.5 sm:p-3 bg-slate-50/90 rounded-xl sm:rounded-2xl border border-slate-100" title="Metode: Lumajang Kota">
               <span className="text-[9px] sm:text-[10px] font-bold text-slate-400 block uppercase tracking-wider">
                 Pengambilan
               </span>
               <div className="flex items-center gap-1.5 text-xs sm:text-sm font-extrabold text-slate-800 mt-0.5">
                 <Truck className="w-3 h-3 text-[#0284C7] flex-shrink-0" />
-                <span className="truncate">Stand / Kelas</span>
+                <span className="truncate">Lumajang Kota</span>
               </div>
             </div>
 

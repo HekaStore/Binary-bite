@@ -78,7 +78,7 @@ export const CountdownSection: React.FC = () => {
             </h2>
             <p className="text-sm text-sky-100 font-medium mt-1 leading-relaxed">
               {timeLeft.isOver
-                ? 'Stand 12B sudah siap melayani! Segera kunjungi stand kami di Lapangan Utama.'
+                ? 'Stand 12B sudah siap melayani! Segera kunjungi stand kami di Jl. AR Hakim No.4, Ditotrunan, Lumajang.'
                 : 'Pre-order sekarang untuk menjamin porsi favoritmu sebelum stok habis di hari-H!'}
             </p>
           </div>
