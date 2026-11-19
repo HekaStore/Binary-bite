@@ -133,7 +133,20 @@ export const Footer: React.FC = () => {
         </div>
 
         <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-sky-200">
-          <div>© 2026 BINARY.BITE • Stand Kelas 12B. All rights reserved.</div>
+          <div className="flex flex-col sm:flex-row items-center gap-2 text-center sm:text-left">
+            <span>© 2026 BINARY.BITE • Stand Kelas 12B. All rights reserved.</span>
+            <span className="hidden sm:inline text-sky-300/40">•</span>
+            <a
+              href="https://hekaportfolio.web.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/10 hover:bg-white/20 text-white font-medium transition-all hover:scale-105 border border-white/20 shadow-sm"
+              title="Kunjungi Portfolio HekaLabs Studio"
+            >
+              <span className="text-sky-200">Built by</span>
+              <span className="font-bold text-white underline decoration-sky-300 decoration-1 underline-offset-2">HekaLabs Studio</span>
+            </a>
+          </div>
           <button
             onClick={scrollToTop}
             className="flex items-center gap-1.5 px-3 py-1 bg-white/10 hover:bg-white/20 text-white rounded-full transition-colors"

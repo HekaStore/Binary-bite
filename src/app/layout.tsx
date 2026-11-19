@@ -5,6 +5,7 @@ import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import { ToastNotification } from '@/components/ToastNotification';
 import { FloatingWhatsApp } from '@/components/FloatingWhatsApp';
+import { Watermark } from '@/components/Watermark';
 import { CartDrawer } from '@/components/CartDrawer';
 
 export const metadata: Metadata = {
@@ -61,6 +62,7 @@ export default function RootLayout({
           <CartDrawer />
           <ToastNotification />
           <FloatingWhatsApp />
+          <Watermark />
         </CartProvider>
       </body>
     </html>
