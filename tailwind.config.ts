@@ -9,34 +9,47 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        skybrand: {
+          50: '#F0F9FF',
+          100: '#E0F2FE',
+          200: '#BAE6FD',
+          300: '#7DD3FC',
+          400: '#38BDF8',
+          500: '#0EA5E9',
+          600: '#0284C7',
+          700: '#0369A1',
+          800: '#075985',
+          900: '#0C4A6E',
+          950: '#082F49',
+        },
         brand: {
-          cobalt: "#0A2463",    // Deep Cobalt Blue - Header utama, footer, kontras tinggi
-          royal: "#1E56A0",     // Royal Tech Blue - Kartu sekunder, aksen utama, tombol sekunder
-          sky: "#D6E6F2",       // Crisp Sky Blue - Background section sekunder, highlight halus
-          electric: "#2563EB",  // Electric Blue Accent - Tombol CTA utama, indikator aktif
-          white: "#FFFFFF",     // Pure White - Background utama, permukaan kartu produk
-          slate: "#0F172A",     // Dark Slate - Teks utama agar kontras dan tajam
-          border: "#1E56A0",    // Border tech solid
-          muted: "#64748B",     // Subteks slate muted
-          line: "#E2E8F0",      // Garis pemisah tipis
+          cobalt: "#0A2463",
+          royal: "#0284C7",
+          sky: "#E0F2FE",
+          electric: "#0284C7",
+          white: "#FFFFFF",
+          slate: "#0F172A",
+          muted: "#64748B",
+          line: "#E2E8F0",
         },
       },
       fontFamily: {
         sans: ['"Plus Jakarta Sans"', 'Inter', 'system-ui', 'sans-serif'],
         mono: ['"JetBrains Mono"', 'monospace'],
+        script: ['"Caveat"', 'cursive', 'sans-serif'],
       },
       boxShadow: {
-        'flat-sm': '0 1px 2px 0 rgba(10, 36, 99, 0.05)',
-        'flat-md': '0 4px 6px -1px rgba(10, 36, 99, 0.08), 0 2px 4px -2px rgba(10, 36, 99, 0.04)',
-        'flat-lg': '0 10px 15px -3px rgba(10, 36, 99, 0.1), 0 4px 6px -4px rgba(10, 36, 99, 0.05)',
-        'solid-cobalt': '0 4px 0 0 #0A2463',
-        'solid-royal': '0 4px 0 0 #1E56A0',
-        'solid-electric': '0 4px 0 0 #1D4ED8',
+        'soft-float': '0 20px 40px -15px rgba(2, 132, 199, 0.12), 0 0 15px 0 rgba(0, 0, 0, 0.03)',
+        'card-paper': '0 10px 25px -5px rgba(2, 132, 199, 0.08), 0 8px 10px -6px rgba(2, 132, 199, 0.04)',
+        'btn-sky': '0 4px 14px 0 rgba(2, 132, 199, 0.35)',
       },
+      borderRadius: {
+        '3xl': '1.75rem',
+        '4xl': '2rem',
+      }
     },
   },
   plugins: [],
 };
 
 export default config;
-

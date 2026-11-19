@@ -1,81 +1,82 @@
 'use client';
 
 import React from 'react';
-import { ShoppingBag, FileCheck, Send, CheckCircle2 } from 'lucide-react';
+import { ShoppingBag, FileText, Send, CheckCircle2, ArrowRight } from 'lucide-react';
 
 export const OrderGuide: React.FC = () => {
   const steps = [
     {
-      num: '01',
+      num: '1',
       title: 'Pilih Menu Favorit',
-      desc: 'Pilih dari 5 menu resmi BINARY.BITE (Kue Lipat, Sus Buah, Roll Abon, Es Gabin, atau Es Capcin) dan tambahkan ke keranjang.',
+      desc: 'Pilih dari 5 menu lezat resmi kelas 12B.',
       icon: ShoppingBag,
     },
     {
-      num: '02',
+      num: '2',
       title: 'Isi Data Checkout',
-      desc: 'Masukkan nama, kelas/instansi pemesan, serta pilih metode pengambilan (Ambil di Stand 12B atau Antar Area Sekolah).',
-      icon: FileCheck,
+      desc: 'Masukkan nama, kelas, & metode ambil.',
+      icon: FileText,
     },
     {
-      num: '03',
-      title: 'Kirim via WhatsApp',
-      desc: 'Sistem otomatis merangkai format pemesanan resmi beserta nomor transaksi menuju Admin Nisrina (0858-4378-8915).',
+      num: '3',
+      title: 'Kirim ke WhatsApp',
+      desc: 'Struk otomatis terkirim ke Admin Nisrina.',
       icon: Send,
     },
     {
-      num: '04',
+      num: '4',
       title: 'Ambil & Nikmati!',
-      desc: 'Dapatkan struk digitalmu, simpan buktinya, lalu ambil pesanan lezatmu saat hari acara Jumat, 27 November 2026.',
+      desc: 'Ambil di stand 12B atau diantar ke kelas.',
       icon: CheckCircle2,
     },
   ];
 
   return (
-    <section id="cara-pemesanan" className="py-16 sm:py-24 bg-brand-sky border-b-2 border-brand-cobalt">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-2xl mx-auto mb-12">
-          <div className="inline-block px-3 py-1 bg-brand-white border border-brand-royal rounded-md text-xs font-mono font-bold text-brand-cobalt mb-3">
-            PANDUAN PEMESANAN
-          </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-brand-cobalt tracking-tight">
-            4 Langkah Mudah Memesan
+    <section id="cara-pemesanan" className="py-16 bg-white border-t border-slate-100">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header matching "HOW TO BOOK" in reference image */}
+        <div className="text-center mb-12">
+          <span className="text-xs font-mono font-bold text-[#0284C7] uppercase tracking-wider block mb-1">
+            • ALUR PEMESANAN MUDAH •
+          </span>
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-800 tracking-tight uppercase">
+            HOW TO ORDER
           </h2>
-          <p className="text-sm sm:text-base text-brand-slate font-medium mt-1">
-            Alur pemesanan digital cepat, transparan, dan terintegrasi langsung dengan WhatsApp kasir.
-          </p>
+          <div className="w-12 h-1 bg-[#0284C7] mx-auto mt-2 rounded-full" />
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {steps.map((step) => {
-            const Icon = step.icon;
-            return (
-              <div
-                key={step.num}
-                className="bg-brand-white border-2 border-brand-cobalt rounded-2xl p-6 shadow-flat-md flex flex-col justify-between"
-              >
-                <div>
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="font-mono text-2xl font-black text-brand-royal">
-                      {step.num}
-                    </span>
-                    <div className="w-10 h-10 rounded-xl bg-brand-sky border border-brand-royal flex items-center justify-center text-brand-cobalt">
-                      <Icon className="w-5 h-5" />
-                    </div>
+        {/* 4-Step Horizontal Timeline Connected by Dashed Arrows (Exactly like in reference) */}
+        <div className="bg-slate-50/80 rounded-3xl p-6 sm:p-10 border border-slate-200 shadow-sm">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 relative items-start">
+            {steps.map((step, idx) => {
+              const Icon = step.icon;
+              return (
+                <div key={step.num} className="flex flex-col items-center text-center relative group">
+                  {/* Origami-styled Icon Badge */}
+                  <div className="w-16 h-16 rounded-2xl bg-white border-2 border-sky-100 group-hover:border-[#0284C7] shadow-card-paper flex items-center justify-center text-[#0284C7] mb-4 transition-all duration-300 group-hover:-translate-y-1">
+                    <Icon className="w-8 h-8" />
                   </div>
-                  <h3 className="font-extrabold text-lg text-brand-cobalt mb-2">
-                    {step.title}
+
+                  {/* Step Title & Description */}
+                  <h3 className="font-extrabold text-sm sm:text-base text-slate-800 mb-1">
+                    {step.num}. {step.title}
                   </h3>
-                  <p className="text-xs sm:text-sm text-brand-slate leading-relaxed">
+                  <p className="text-xs text-slate-500 font-medium leading-relaxed max-w-[200px]">
                     {step.desc}
                   </p>
+
+                  {/* Dashed connector arrow between steps (for desktop) */}
+                  {idx < steps.length - 1 && (
+                    <div className="hidden lg:block absolute top-8 -right-4 w-8 text-slate-300 font-bold">
+                      <ArrowRight className="w-5 h-5 text-sky-300" />
+                    </div>
+                  )}
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
       </div>
     </section>
   );
 };
-

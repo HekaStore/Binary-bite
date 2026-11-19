@@ -4,7 +4,7 @@ import React, { useState, useMemo } from 'react';
 import { OFFICIAL_PRODUCTS } from '@/data/products';
 import { ProductCard } from '@/components/ProductCard';
 import { ProductCategory } from '@/types';
-import { Search, Filter, ArrowUpDown, Utensils, Coffee, Sparkles, Image as ImageIcon } from 'lucide-react';
+import { Search, ArrowRight, Utensils, Coffee, Image as ImageIcon } from 'lucide-react';
 
 export const ProductCatalog: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<ProductCategory>('Semua');
@@ -15,12 +15,10 @@ export const ProductCatalog: React.FC = () => {
   const filteredProducts = useMemo(() => {
     let result = [...OFFICIAL_PRODUCTS];
 
-    // Filter by Category
     if (selectedCategory !== 'Semua') {
       result = result.filter((p) => p.category === selectedCategory);
     }
 
-    // Filter by Search Query
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase().trim();
       result = result.filter(
@@ -31,7 +29,6 @@ export const ProductCatalog: React.FC = () => {
       );
     }
 
-    // Sort by price
     if (sortBy === 'asc') {
       result.sort((a, b) => a.price - b.price);
     } else if (sortBy === 'desc') {
@@ -42,130 +39,116 @@ export const ProductCatalog: React.FC = () => {
   }, [selectedCategory, searchQuery, sortBy]);
 
   return (
-    <section id="katalog" className="py-16 sm:py-24 bg-brand-white border-b-2 border-brand-cobalt">
+    <section id="katalog" className="py-20 bg-slate-50 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+        {/* Section Header (Matches "POPULAR PACKAGES" in reference image) */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
           <div>
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-brand-sky border border-brand-royal rounded-md text-xs font-mono font-bold text-brand-cobalt mb-3">
-              <Sparkles className="w-3.5 h-3.5 text-brand-electric" />
-              <span>OFFICIAL MENU KATALOG</span>
-            </div>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-brand-cobalt tracking-tight">
-              PILIHAN MENU SPESIAL BINARY.BITE
+            <span className="text-xs font-mono font-bold text-[#0284C7] uppercase tracking-wider block mb-1">
+              • DAFTAR MENU STAND 12B •
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight uppercase">
+              POPULAR MENU PACKAGES
             </h2>
-            <p className="text-sm sm:text-base text-brand-slate font-medium mt-1">
-              Dibuat dengan bahan pilihan terbaik, higienis, dan terjamin cita rasanya.
-            </p>
           </div>
 
-          {/* Quick Button to View Original Stand Poster */}
-          <button
-            onClick={() => setShowPosterModal(true)}
-            className="inline-flex items-center gap-2 px-4 py-2.5 bg-brand-white border-2 border-brand-cobalt rounded-xl text-xs sm:text-sm font-bold text-brand-cobalt hover:bg-brand-sky transition-colors shadow-sm self-start md:self-auto"
-          >
-            <ImageIcon className="w-4 h-4 text-brand-royal" />
-            <span>Lihat Poster Menu Stand XII B</span>
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setShowPosterModal(true)}
+              className="inline-flex items-center gap-2 text-xs font-extrabold text-[#0284C7] hover:text-[#0369A1] transition-colors py-1.5 px-3 bg-white border border-sky-200 rounded-full shadow-sm hover:shadow"
+            >
+              <ImageIcon className="w-4 h-4 text-[#0284C7]" />
+              <span>Lihat Poster Menu Stand</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
+          </div>
         </div>
 
-        {/* Filter, Search & Sort Bar */}
-        <div className="bg-brand-sky border-2 border-brand-cobalt rounded-2xl p-4 sm:p-6 mb-10 shadow-flat-md">
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
-            {/* Category Tabs */}
-            <div className="md:col-span-5 flex flex-wrap gap-2">
-              <button
-                onClick={() => setSelectedCategory('Semua')}
-                className={`px-4 py-2 text-xs sm:text-sm font-bold rounded-xl border transition-all ${
-                  selectedCategory === 'Semua'
-                    ? 'bg-brand-cobalt text-brand-white border-brand-cobalt shadow-sm'
-                    : 'bg-brand-white text-brand-slate border-brand-royal hover:bg-brand-white/80'
-                }`}
-              >
-                Semua ({OFFICIAL_PRODUCTS.length})
-              </button>
-              <button
-                onClick={() => setSelectedCategory('Makanan')}
-                className={`px-4 py-2 text-xs sm:text-sm font-bold rounded-xl border flex items-center gap-1.5 transition-all ${
-                  selectedCategory === 'Makanan'
-                    ? 'bg-brand-cobalt text-brand-white border-brand-cobalt shadow-sm'
-                    : 'bg-brand-white text-brand-slate border-brand-royal hover:bg-brand-white/80'
-                }`}
-              >
-                <Utensils className="w-3.5 h-3.5" />
-                Makanan (4)
-              </button>
-              <button
-                onClick={() => setSelectedCategory('Minuman')}
-                className={`px-4 py-2 text-xs sm:text-sm font-bold rounded-xl border flex items-center gap-1.5 transition-all ${
-                  selectedCategory === 'Minuman'
-                    ? 'bg-brand-cobalt text-brand-white border-brand-cobalt shadow-sm'
-                    : 'bg-brand-white text-brand-slate border-brand-royal hover:bg-brand-white/80'
-                }`}
-              >
-                <Coffee className="w-3.5 h-3.5" />
-                Minuman (1)
-              </button>
-            </div>
+        {/* Filter Pills & Instant Search */}
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-8">
+          {/* Category Pills */}
+          <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
+            <button
+              onClick={() => setSelectedCategory('Semua')}
+              className={`px-4 py-2 text-xs font-bold rounded-full transition-all ${
+                selectedCategory === 'Semua'
+                  ? 'bg-[#0284C7] text-white shadow-md'
+                  : 'bg-white text-slate-600 hover:bg-sky-50 border border-slate-200'
+              }`}
+            >
+              Semua ({OFFICIAL_PRODUCTS.length})
+            </button>
 
-            {/* Search Input */}
-            <div className="md:col-span-4 relative">
-              <Search className="w-4 h-4 text-brand-muted absolute left-3.5 top-1/2 -translate-y-1/2" />
+            <button
+              onClick={() => setSelectedCategory('Makanan')}
+              className={`px-4 py-2 text-xs font-bold rounded-full transition-all flex items-center gap-1.5 ${
+                selectedCategory === 'Makanan'
+                  ? 'bg-[#0284C7] text-white shadow-md'
+                  : 'bg-white text-slate-600 hover:bg-sky-50 border border-slate-200'
+              }`}
+            >
+              <Utensils className="w-3.5 h-3.5" />
+              <span>Makanan (4)</span>
+            </button>
+
+            <button
+              onClick={() => setSelectedCategory('Minuman')}
+              className={`px-4 py-2 text-xs font-bold rounded-full transition-all flex items-center gap-1.5 ${
+                selectedCategory === 'Minuman'
+                  ? 'bg-[#0284C7] text-white shadow-md'
+                  : 'bg-white text-slate-600 hover:bg-sky-50 border border-slate-200'
+              }`}
+            >
+              <Coffee className="w-3.5 h-3.5" />
+              <span>Minuman (1)</span>
+            </button>
+          </div>
+
+          {/* Search Bar & Price Sort */}
+          <div className="flex items-center gap-2.5 w-full md:w-auto">
+            <div className="relative flex-1 md:w-64">
+              <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Cari menu favoritmu..."
-                className="w-full pl-10 pr-4 py-2.5 bg-brand-white border-2 border-brand-royal rounded-xl text-xs sm:text-sm text-brand-slate placeholder:text-brand-muted font-medium focus:outline-none focus:border-brand-cobalt"
+                className="w-full pl-9 pr-3 py-2 bg-white border border-slate-200 rounded-full text-xs font-medium text-slate-800 focus:outline-none focus:border-[#0284C7] shadow-sm"
               />
-              {searchQuery && (
-                <button
-                  onClick={() => setSearchQuery('')}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-mono text-brand-muted hover:text-brand-slate"
-                >
-                  ✕
-                </button>
-              )}
             </div>
 
-            {/* Sort Dropdown */}
-            <div className="md:col-span-3 flex items-center gap-2">
-              <ArrowUpDown className="w-4 h-4 text-brand-royal flex-shrink-0" />
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as any)}
-                className="w-full px-3 py-2.5 bg-brand-white border-2 border-brand-royal rounded-xl text-xs sm:text-sm font-semibold text-brand-cobalt focus:outline-none focus:border-brand-cobalt"
-              >
-                <option value="default">Urutkan: Rekomendasi</option>
-                <option value="asc">Harga: Termurah (Rp3K)</option>
-                <option value="desc">Harga: Termahal (Rp9K)</option>
-              </select>
-            </div>
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as any)}
+              className="px-3 py-2 bg-white border border-slate-200 rounded-full text-xs font-bold text-slate-700 focus:outline-none focus:border-[#0284C7] shadow-sm"
+            >
+              <option value="default">Urutkan: Rekomendasi</option>
+              <option value="asc">Harga: Termurah</option>
+              <option value="desc">Harga: Termahal</option>
+            </select>
           </div>
         </div>
 
-        {/* Product Grid */}
+        {/* Product Grid (Matches "POPULAR PACKAGES" 4-column / 3-column in reference) */}
         {filteredProducts.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {filteredProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
           </div>
         ) : (
-          <div className="text-center py-16 bg-brand-sky border-2 border-dashed border-brand-royal rounded-2xl p-8">
-            <Utensils className="w-12 h-12 text-brand-royal mx-auto mb-3" />
-            <h3 className="font-extrabold text-lg text-brand-cobalt">Menu Tidak Ditemukan</h3>
-            <p className="text-sm text-brand-slate mt-1 max-w-sm mx-auto">
-              Tidak ada menu yang sesuai dengan pencarian "{searchQuery}". Silakan coba kata kunci lain.
+          <div className="text-center py-16 bg-white rounded-3xl border border-sky-100 p-8 shadow-sm">
+            <p className="text-sm font-bold text-slate-600">
+              Tidak ada menu yang sesuai dengan pencarian "{searchQuery}".
             </p>
             <button
               onClick={() => {
                 setSearchQuery('');
                 setSelectedCategory('Semua');
               }}
-              className="mt-4 px-4 py-2 bg-brand-cobalt text-brand-white text-xs font-bold rounded-lg hover:bg-brand-royal"
+              className="mt-3 px-4 py-2 bg-[#0284C7] text-white text-xs font-bold rounded-full"
             >
-              Reset Filter & Pencarian
+              Reset Filter
             </button>
           </div>
         )}
@@ -173,27 +156,27 @@ export const ProductCatalog: React.FC = () => {
 
       {/* Stand Menu Poster Modal */}
       {showPosterModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-brand-slate/80 animate-in fade-in">
-          <div className="bg-brand-white border-2 border-brand-cobalt rounded-2xl max-w-lg w-full p-5 relative shadow-flat-lg">
-            <div className="flex items-center justify-between pb-3 mb-3 border-b border-brand-line">
-              <h4 className="font-extrabold text-base text-brand-cobalt">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/70 backdrop-blur-sm animate-in fade-in">
+          <div className="bg-white rounded-3xl max-w-lg w-full p-5 relative shadow-2xl">
+            <div className="flex items-center justify-between pb-3 mb-3 border-b border-slate-100">
+              <h4 className="font-extrabold text-sm text-slate-800">
                 Poster Resmi Stand Binary Bite (XII B)
               </h4>
               <button
                 onClick={() => setShowPosterModal(false)}
-                className="w-8 h-8 rounded-lg bg-brand-sky text-brand-cobalt font-bold flex items-center justify-center hover:bg-brand-royal hover:text-brand-white"
+                className="w-7 h-7 rounded-full bg-slate-100 text-slate-700 font-bold flex items-center justify-center hover:bg-slate-200"
               >
                 ✕
               </button>
             </div>
-            <div className="aspect-[1/1] overflow-hidden rounded-xl border border-brand-royal bg-black">
+            <div className="aspect-[1/1] overflow-hidden rounded-2xl border border-slate-200 bg-black">
               <img
                 src="/images/stand-menu.jpg"
                 alt="Stand Binary Bite Poster"
                 className="w-full h-full object-contain"
               />
             </div>
-            <p className="text-xs text-brand-muted font-mono mt-3 text-center">
+            <p className="text-xs text-slate-500 font-mono mt-3 text-center">
               SMA Negeri 1 Lumajang • Stand Kelas XII B • Jumat, 27 November 2026
             </p>
           </div>
@@ -202,4 +185,3 @@ export const ProductCatalog: React.FC = () => {
     </section>
   );
 };
-

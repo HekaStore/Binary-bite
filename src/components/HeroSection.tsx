@@ -1,201 +1,254 @@
 'use client';
 
-import React from 'react';
-import { ArrowDown, Sparkles, ShoppingBag, ShieldCheck, Star, Award } from 'lucide-react';
-import { BRAND_INFO, OFFICIAL_PRODUCTS } from '@/data/products';
-import { formatRupiah } from '@/utils/formatters';
+import React, { useState } from 'react';
+import {
+  Send,
+  Sparkles,
+  MapPin,
+  Calendar,
+  Utensils,
+  Search,
+  CheckCircle2,
+  Clock,
+  ShieldCheck,
+  HeartHandshake,
+  Truck,
+  ArrowRight
+} from 'lucide-react';
+import { BRAND_INFO } from '@/data/products';
 
 export const HeroSection: React.FC = () => {
-  const scrollToKatalog = () => {
+  const [activeTab, setActiveTab] = useState<'Semua' | 'Makanan' | 'Minuman'>('Semua');
+
+  const scrollToCatalog = () => {
     const el = document.getElementById('katalog');
     if (el) el.scrollIntoView({ behavior: 'smooth' });
   };
 
-  const scrollToCara = () => {
-    const el = document.getElementById('cara-pemesanan');
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
-  };
-
   return (
-    <section id="beranda" className="relative overflow-hidden bg-brand-white pt-10 sm:pt-16 pb-12">
-      {/* Subtle Binary Grid Pattern (CSS SVG without gradient) */}
-      <div 
-        className="absolute inset-0 pointer-events-none opacity-[0.035]"
-        style={{
-          backgroundImage: `radial-gradient(#0A2463 1px, transparent 1px)`,
-          backgroundSize: '24px 24px',
-        }}
-      />
+    <section id="beranda" className="relative bg-[#0284C7] overflow-hidden pt-8 pb-20">
+      {/* Background Graphic Elements: Sky, Origami Paper Plane & Polygonal Mountain Silhouettes */}
+      <div className="absolute inset-0 pointer-events-none select-none overflow-hidden">
+        {/* Soft Background Sky Texture & Sun Flare */}
+        <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-sky-400/20 rounded-full blur-3xl" />
 
-      {/* Running Marquee Ticker */}
-      <div className="w-full bg-brand-cobalt text-brand-white py-2.5 overflow-hidden border-y-2 border-brand-royal mb-10">
-        <div className="flex whitespace-nowrap animate-marquee">
-          <span className="font-mono text-xs sm:text-sm font-bold tracking-widest uppercase flex items-center gap-6 px-4">
-            <span>BINARY.BITE</span>
-            <span>•</span>
-            <span className="text-brand-sky">ONE BITE, ENDLESS HAPPINESS!</span>
-            <span>•</span>
-            <span>JUMAT, 27 NOVEMBER 2026</span>
-            <span>•</span>
-            <span className="text-brand-sky">STAND KELAS 12B</span>
-            <span>•</span>
-            <span>PRE-ORDER SEKARANG</span>
-            <span>•</span>
-            <span>DIJAMIN ENAK & SEGAR</span>
-            <span>•</span>
-            <span>BINARY.BITE</span>
-            <span>•</span>
-            <span className="text-brand-sky">ONE BITE, ENDLESS HAPPINESS!</span>
-            <span>•</span>
-            <span>JUMAT, 27 NOVEMBER 2026</span>
-            <span>•</span>
-            <span className="text-brand-sky">STAND KELAS 12B</span>
-          </span>
+        {/* Paper Plane Dashed Flight Loop Path */}
+        <svg
+          className="absolute top-10 right-20 w-[600px] h-[400px] hidden md:block opacity-70"
+          viewBox="0 0 600 400"
+          fill="none"
+        >
+          <path
+            d="M 50 320 C 120 200, 280 120, 360 220 C 420 300, 480 180, 520 80"
+            stroke="white"
+            strokeWidth="2.5"
+            strokeDasharray="8 8"
+            className="animate-flight-path"
+          />
+        </svg>
+
+        {/* Origami 2D Paper Plane Illustration */}
+        <div className="absolute top-12 right-12 lg:right-28 w-44 lg:w-64 animate-pulse">
+          <svg viewBox="0 0 240 180" fill="none" className="w-full drop-shadow-2xl">
+            {/* Origami Paper Plane Facets */}
+            <polygon points="20,130 220,30 140,160" fill="#FFFFFF" />
+            <polygon points="140,160 220,30 110,130" fill="#E0F2FE" />
+            <polygon points="20,130 110,130 220,30" fill="#BAE6FD" />
+            <polygon points="110,130 140,160 125,175" fill="#7DD3FC" />
+          </svg>
+        </div>
+
+        {/* Low-Poly White Mountain / Cloud Shapes at the Bottom */}
+        <div className="absolute bottom-0 left-0 right-0 h-44 opacity-25">
+          <svg viewBox="0 0 1440 240" fill="none" className="w-full h-full preserve-3d">
+            <polygon points="0,240 180,120 360,240" fill="#FFFFFF" />
+            <polygon points="360,240 520,80 720,240" fill="#F0F9FF" />
+            <polygon points="680,240 860,60 1080,240" fill="#FFFFFF" />
+            <polygon points="1020,240 1200,100 1440,240" fill="#BAE6FD" />
+          </svg>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-          {/* Left Column: Headline & Action */}
-          <div className="lg:col-span-7 flex flex-col items-start text-left">
-            {/* Event Badge with Official Logo Avatar */}
-            <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 bg-brand-sky border-2 border-brand-royal rounded-xl text-brand-cobalt text-xs font-mono font-bold mb-6">
-              <div className="w-6 h-6 rounded-full overflow-hidden border border-brand-royal flex-shrink-0 bg-brand-white">
-                <img src="/images/logo.jpg" alt="Binary Bite Mascot" className="w-full h-full object-cover" />
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+        {/* Top Headline Section */}
+        <div className="max-w-3xl mb-12">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-white/20 backdrop-blur-md border border-white/40 rounded-full text-white text-xs font-mono font-bold mb-4 shadow-sm">
+            <Sparkles className="w-3.5 h-3.5 text-sky-200" />
+            <span>SPECIAL EVENT • JUMAT, 27 NOVEMBER 2026</span>
+          </div>
+
+          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-tight uppercase font-mono">
+            BINARY<span className="text-sky-200">.BITE</span>
+          </h1>
+
+          <div className="font-script text-3xl sm:text-5xl text-sky-100 font-bold my-2 tracking-wide transform -rotate-1">
+            One Bite, Endless Happiness.
+          </div>
+
+          <p className="text-sm sm:text-base text-white/90 font-medium max-w-xl leading-relaxed mt-2 mb-6">
+            Festival kuliner modern persembahan dari <strong>Kelas 12B</strong>. Nikmati 5 pilihan camilan renyah, kue lembut lumer, dan minuman kopi cincau segar dengan harga hemat bersahabat!
+          </p>
+
+          <button
+            onClick={scrollToCatalog}
+            className="inline-flex items-center gap-2 px-6 py-3 bg-white text-[#0284C7] font-extrabold text-sm rounded-full shadow-btn-sky hover:bg-sky-50 active:scale-95 transition-all"
+          >
+            <span>Jelajahi Menu Lezat</span>
+            <ArrowRight className="w-4 h-4" />
+          </button>
+        </div>
+
+        {/* Floating Quick Search / Order Bar (Modelled directly on the Flights/Hotels bar in reference) */}
+        <div className="bg-white rounded-3xl sm:rounded-4xl shadow-soft-float p-3 sm:p-5 border border-sky-100 mb-14">
+          {/* Top Category Tabs */}
+          <div className="flex items-center gap-2 border-b border-slate-100 pb-3 mb-4 px-2 overflow-x-auto">
+            <button
+              onClick={() => setActiveTab('Semua')}
+              className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-xs sm:text-sm font-bold transition-all ${
+                activeTab === 'Semua'
+                  ? 'bg-[#0284C7] text-white shadow-md'
+                  : 'text-slate-600 hover:text-[#0284C7] hover:bg-sky-50'
+              }`}
+            >
+              <Utensils className="w-4 h-4" />
+              <span>Semua Menu</span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab('Makanan')}
+              className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-xs sm:text-sm font-bold transition-all ${
+                activeTab === 'Makanan'
+                  ? 'bg-[#0284C7] text-white shadow-md'
+                  : 'text-slate-600 hover:text-[#0284C7] hover:bg-sky-50'
+              }`}
+            >
+              <span>🍩 Makanan (4)</span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab('Minuman')}
+              className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-xs sm:text-sm font-bold transition-all ${
+                activeTab === 'Minuman'
+                  ? 'bg-[#0284C7] text-white shadow-md'
+                  : 'text-slate-600 hover:text-[#0284C7] hover:bg-sky-50'
+              }`}
+            >
+              <span>🥤 Minuman Dingin (1)</span>
+            </button>
+          </div>
+
+          {/* Segmented Inputs Bar */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 items-center px-2">
+            {/* Box 1: Location */}
+            <div className="p-3 bg-slate-50/80 rounded-2xl border border-slate-100">
+              <span className="text-[10px] font-bold text-slate-400 block uppercase tracking-wider">
+                Lokasi Stand
+              </span>
+              <div className="flex items-center gap-2 text-xs sm:text-sm font-extrabold text-slate-800 mt-0.5">
+                <MapPin className="w-3.5 h-3.5 text-[#0284C7]" />
+                <span className="truncate">Stand 12B • Lapangan</span>
               </div>
-              <span className="w-2 h-2 rounded-full bg-brand-electric animate-ping" />
-              <span>SPECIAL EVENT • JUMAT, 27 NOVEMBER 2026</span>
             </div>
 
-            {/* Main Headline */}
-            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-brand-cobalt leading-[1.08] mb-4">
-              BINARY<span className="text-brand-electric">.BITE</span>
-            </h1>
-
-            {/* Tagline */}
-            <div className="inline-block bg-brand-royal text-brand-white px-3 py-1 font-mono font-bold text-sm sm:text-base rounded-md mb-6 tracking-wide">
-              “{BRAND_INFO.tagline}”
+            {/* Box 2: Tanggal */}
+            <div className="p-3 bg-slate-50/80 rounded-2xl border border-slate-100">
+              <span className="text-[10px] font-bold text-slate-400 block uppercase tracking-wider">
+                Tanggal Acara
+              </span>
+              <div className="flex items-center gap-2 text-xs sm:text-sm font-extrabold text-slate-800 mt-0.5">
+                <Calendar className="w-3.5 h-3.5 text-[#0284C7]" />
+                <span className="truncate">Jumat, 27 Nov 2026</span>
+              </div>
             </div>
 
-            {/* Description */}
-            <p className="text-base sm:text-lg text-brand-slate font-medium max-w-2xl leading-relaxed mb-8">
-              Festival kuliner spesial persembahan dari <strong>Kelas 12B</strong>. 
-              Menyajikan perpaduan 5 menu camilan manis, roti abon gurih, es gabin dingin, dan es cappucino cincau segar dengan presisi rasa maksimal dan harga bersahabat!
-            </p>
-
-            {/* CTA Buttons */}
-            <div className="flex flex-wrap items-center gap-4 w-full sm:w-auto">
-              <button
-                onClick={scrollToKatalog}
-                className="w-full sm:w-auto px-7 py-3.5 bg-brand-cobalt text-brand-white text-base font-bold rounded-xl border-2 border-brand-cobalt shadow-solid-electric hover:bg-brand-royal hover:border-brand-royal active:translate-y-1 transition-all flex items-center justify-center gap-2"
-              >
-                <ShoppingBag className="w-5 h-5" />
-                Pesan Sekarang
-              </button>
-              <button
-                onClick={scrollToCara}
-                className="w-full sm:w-auto px-6 py-3.5 bg-brand-white text-brand-cobalt text-base font-bold rounded-xl border-2 border-brand-royal hover:bg-brand-sky active:translate-y-0.5 transition-all flex items-center justify-center gap-2"
-              >
-                <span>Cara Pemesanan</span>
-                <ArrowDown className="w-4 h-4 text-brand-royal" />
-              </button>
+            {/* Box 3: Jam Buka */}
+            <div className="p-3 bg-slate-50/80 rounded-2xl border border-slate-100">
+              <span className="text-[10px] font-bold text-slate-400 block uppercase tracking-wider">
+                Waktu Pelayanan
+              </span>
+              <div className="flex items-center gap-2 text-xs sm:text-sm font-extrabold text-slate-800 mt-0.5">
+                <Clock className="w-3.5 h-3.5 text-[#0284C7]" />
+                <span className="truncate">07:00 - Selesai WIB</span>
+              </div>
             </div>
 
-            {/* Trust Highlights */}
-            <div className="grid grid-cols-3 gap-3 sm:gap-6 mt-10 pt-8 border-t-2 border-brand-line w-full max-w-lg">
-              <div>
-                <div className="font-mono text-xl sm:text-2xl font-extrabold text-brand-cobalt">100%</div>
-                <div className="text-xs font-semibold text-brand-muted">Bahan Segar</div>
+            {/* Box 4: Layanan Antar */}
+            <div className="p-3 bg-slate-50/80 rounded-2xl border border-slate-100">
+              <span className="text-[10px] font-bold text-slate-400 block uppercase tracking-wider">
+                Metode Pengambilan
+              </span>
+              <div className="flex items-center gap-2 text-xs sm:text-sm font-extrabold text-slate-800 mt-0.5">
+                <Truck className="w-3.5 h-3.5 text-[#0284C7]" />
+                <span className="truncate">Stand / Antar Kelas</span>
               </div>
-              <div>
-                <div className="font-mono text-xl sm:text-2xl font-extrabold text-brand-cobalt">Rp3K-9K</div>
-                <div className="text-xs font-semibold text-brand-muted">Harga Pelajar</div>
-              </div>
-              <div>
-                <div className="font-mono text-xl sm:text-2xl font-extrabold text-brand-cobalt">Stand 12B</div>
-                <div className="text-xs font-semibold text-brand-muted">Siap Antar Area</div>
-              </div>
+            </div>
+
+            {/* Box 5: Big Search Button */}
+            <button
+              onClick={scrollToCatalog}
+              className="w-full h-full py-4 bg-[#0284C7] hover:bg-[#0369A1] text-white font-extrabold text-sm rounded-2xl flex items-center justify-center gap-2 shadow-btn-sky transition-all active:scale-95"
+            >
+              <Search className="w-4 h-4" />
+              <span>Cari Menu</span>
+            </button>
+          </div>
+        </div>
+
+        {/* 4 Floating Feature Badges (Directly matching the 4 white cards in the reference) */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="bg-white rounded-2xl p-4 shadow-card-paper border border-sky-100 flex items-center gap-3.5 hover:-translate-y-1 transition-transform">
+            <div className="w-12 h-12 rounded-2xl bg-sky-50 border border-sky-200 flex items-center justify-center text-[#0284C7] flex-shrink-0">
+              <Send className="w-6 h-6 transform -rotate-45" />
+            </div>
+            <div>
+              <h4 className="font-extrabold text-xs sm:text-sm text-slate-800">
+                Harga Pelajar
+              </h4>
+              <p className="text-[11px] text-slate-500 font-medium">
+                Mulai Rp3.000 hingga Rp9.000
+              </p>
             </div>
           </div>
 
-          {/* Right Column: Bento Showcase Cards */}
-          <div className="lg:col-span-5 relative">
-            <div className="bg-brand-sky border-2 border-brand-cobalt rounded-2xl p-5 shadow-solid-cobalt">
-              {/* Stand Banner Card */}
-              <div className="bg-brand-white border-2 border-brand-royal rounded-xl p-4 mb-4">
-                <div className="flex items-center justify-between mb-3 pb-2 border-b border-brand-line">
-                  <div className="flex items-center gap-2">
-                    <img
-                      src="/images/logo.jpg"
-                      alt="Binary Bite Logo"
-                      className="w-5 h-5 rounded-full object-cover border border-brand-royal"
-                    />
-                    <span className="font-mono text-xs font-bold text-brand-cobalt uppercase">
-                      STAND BINARY BITE — XII B
-                    </span>
-                  </div>
-                  <span className="font-mono text-[10px] font-bold px-2 py-0.5 bg-brand-sky text-brand-cobalt rounded border border-brand-royal">
-                    OFFICIAL
-                  </span>
-                </div>
-                
-                {/* Image showcase */}
-                <div className="relative aspect-[4/3] rounded-lg overflow-hidden border border-brand-royal bg-brand-slate">
-                  <img
-                    src="/images/stand-menu.jpg"
-                    alt="Menu Resmi Stand Binary Bite XII B"
-                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                    loading="eager"
-                  />
-                  <div className="absolute bottom-2 left-2 right-2 bg-brand-cobalt text-brand-white p-2 rounded text-[11px] font-mono flex items-center justify-between">
-                    <span>Scan & Order Langsung</span>
-                    <span className="text-brand-sky font-bold">5 Menu Favorit</span>
-                  </div>
-                </div>
-              </div>
+          <div className="bg-white rounded-2xl p-4 shadow-card-paper border border-sky-100 flex items-center gap-3.5 hover:-translate-y-1 transition-transform">
+            <div className="w-12 h-12 rounded-2xl bg-sky-50 border border-sky-200 flex items-center justify-center text-[#0284C7] flex-shrink-0">
+              <ShieldCheck className="w-6 h-6" />
+            </div>
+            <div>
+              <h4 className="font-extrabold text-xs sm:text-sm text-slate-800">
+                100% Higienis
+              </h4>
+              <p className="text-[11px] text-slate-500 font-medium">
+                Bahan segar olahan siswa 12B
+              </p>
+            </div>
+          </div>
 
-              {/* Bento Grid Highlights */}
-              <div className="grid grid-cols-2 gap-3">
-                {/* Card 1: Es Gabin */}
-                <div className="bg-brand-white border-2 border-brand-royal rounded-xl p-3 flex flex-col justify-between">
-                  <div className="flex items-center justify-between">
-                    <span className="font-mono text-[10px] font-bold text-brand-electric">
-                      [04] BEST SELLER
-                    </span>
-                    <Star className="w-3.5 h-3.5 text-brand-royal fill-brand-royal" />
-                  </div>
-                  <div className="my-2 text-center">
-                    <img
-                      src="/images/products/es-gabin.jpg"
-                      alt="Es Gabin"
-                      className="w-20 h-16 mx-auto object-cover rounded-lg border border-brand-line"
-                    />
-                    <div className="font-bold text-sm text-brand-cobalt mt-1">Es Gabin Ice Cream</div>
-                    <div className="font-mono text-xs font-extrabold text-brand-electric">Rp9.000</div>
-                  </div>
-                  <span className="text-[10px] font-mono text-brand-muted text-center">Varian Milo / Cokelat</span>
-                </div>
+          <div className="bg-white rounded-2xl p-4 shadow-card-paper border border-sky-100 flex items-center gap-3.5 hover:-translate-y-1 transition-transform">
+            <div className="w-12 h-12 rounded-2xl bg-sky-50 border border-sky-200 flex items-center justify-center text-[#0284C7] flex-shrink-0">
+              <Clock className="w-6 h-6" />
+            </div>
+            <div>
+              <h4 className="font-extrabold text-xs sm:text-sm text-slate-800">
+                Layanan Cepat
+              </h4>
+              <p className="text-[11px] text-slate-500 font-medium">
+                Admin Nisrina (0858-4378-8915)
+              </p>
+            </div>
+          </div>
 
-                {/* Card 2: Es Capcin */}
-                <div className="bg-brand-white border-2 border-brand-royal rounded-xl p-3 flex flex-col justify-between">
-                  <div className="flex items-center justify-between">
-                    <span className="font-mono text-[10px] font-bold text-brand-electric">
-                      [05] FRESH DRINK
-                    </span>
-                    <Award className="w-3.5 h-3.5 text-brand-royal" />
-                  </div>
-                  <div className="my-2 text-center">
-                    <img
-                      src="/images/products/es-capcin.jpg"
-                      alt="Es Capcin"
-                      className="w-20 h-16 mx-auto object-cover rounded-lg border border-brand-line"
-                    />
-                    <div className="font-bold text-sm text-brand-cobalt mt-1">Es Capcin Creamy</div>
-                    <div className="font-mono text-xs font-extrabold text-brand-electric">Rp6.000</div>
-                  </div>
-                  <span className="text-[10px] font-mono text-brand-muted text-center">Cincau Kenyal Dingin</span>
-                </div>
-              </div>
+          <div className="bg-white rounded-2xl p-4 shadow-card-paper border border-sky-100 flex items-center gap-3.5 hover:-translate-y-1 transition-transform">
+            <div className="w-12 h-12 rounded-2xl bg-sky-50 border border-sky-200 flex items-center justify-center text-[#0284C7] flex-shrink-0">
+              <Truck className="w-6 h-6" />
+            </div>
+            <div>
+              <h4 className="font-extrabold text-xs sm:text-sm text-slate-800">
+                Siap Antar Kelas
+              </h4>
+              <p className="text-[11px] text-slate-500 font-medium">
+                Diantar tepat saat jam istirahat
+              </p>
             </div>
           </div>
         </div>
@@ -203,4 +256,3 @@ export const HeroSection: React.FC = () => {
     </section>
   );
 };
-
