@@ -56,16 +56,8 @@ export const CountdownSection: React.FC = () => {
   ];
 
   return (
-    <section className="bg-[#0284C7] relative overflow-hidden py-14 px-4 sm:px-6">
-      {/* Background Origami Fold & Polygonal Accents (Matching "PRICING DETAILS" in reference) */}
-      <div className="absolute top-0 right-0 w-80 h-full pointer-events-none opacity-20">
-        <svg viewBox="0 0 200 200" fill="none" className="w-full h-full">
-          <polygon points="100,20 180,90 80,180" fill="#FFFFFF" />
-          <polygon points="20,100 100,20 80,180" fill="#BAE6FD" />
-        </svg>
-      </div>
-
-      <div className="max-w-6xl mx-auto relative z-10">
+    <section className="bg-[#0284C7] relative overflow-hidden py-16 sm:py-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
           {/* Left Text */}
           <div className="text-center lg:text-left text-white max-w-lg">

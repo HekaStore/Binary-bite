@@ -48,7 +48,7 @@ export const ProductCatalog: React.FC = () => {
               • DAFTAR MENU STAND 12B •
             </span>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight uppercase">
-              POPULAR MENU PACKAGES
+              Daftar Menu Pilihan Stand 12B
             </h2>
             <p className="text-xs text-slate-500 font-medium mt-1">
               Target kapasitas 25 pesanan per hari. Jika kuota hari ini penuh, selebihnya dialihkan ke hari selanjutnya.

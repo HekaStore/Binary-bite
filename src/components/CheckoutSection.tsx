@@ -182,7 +182,7 @@ export const CheckoutSection: React.FC = () => {
                     </span>
                   </div>
                   <p className="text-[11px] sm:text-xs text-slate-600 mt-1 font-medium leading-relaxed">
-                    Stand: Jl. AR Hakim No.4, Ditotrunan, Kecamatan Lumajang, Kabupaten Lumajang, Jawa Timur 67316
+                    Stand: Jl. AR Hakim, Ditotrunan, Lumajang
                   </p>
                 </div>
                 <div className="w-6 h-6 rounded-full bg-[#0284C7] text-white flex items-center justify-center flex-shrink-0 mt-0.5 shadow-sm">
@@ -288,7 +288,7 @@ export const CheckoutSection: React.FC = () => {
               <button
                 type="submit"
                 disabled={items.length === 0}
-                className="w-full py-4 bg-[#0284C7] hover:bg-[#0369A1] text-white text-sm font-extrabold rounded-full shadow-btn-sky transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 uppercase tracking-wider"
+                className="w-full py-4 bg-[#0284C7] hover:bg-[#0369A1] text-white text-sm font-extrabold rounded-full shadow-btn-sky transition-all hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 uppercase tracking-wider"
               >
                 <Send className="w-4 h-4" />
                 <span>Buat Struk & Kirim via WhatsApp</span>
@@ -318,9 +318,9 @@ export const CheckoutSection: React.FC = () => {
               </p>
               <Link
                 href="/#katalog"
-                className="mt-3 inline-block px-4 py-2 bg-[#0284C7] text-white text-xs font-bold rounded-full"
+                className="mt-3 inline-block px-5 py-2.5 bg-[#0284C7] hover:bg-[#0369A1] text-white text-xs font-bold rounded-full transition-all hover:-translate-y-0.5 active:translate-y-0"
               >
-                Pilih Menu Dulu
+                Pilih Menu Sekarang
               </Link>
             </div>
           ) : (

@@ -32,15 +32,15 @@ export const OrderGuide: React.FC = () => {
   ];
 
   return (
-    <section id="cara-pemesanan" className="py-16 bg-white border-t border-slate-100">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header matching "HOW TO BOOK" in reference image */}
+    <section id="cara-pemesanan" className="py-20 sm:py-28 bg-white border-t border-slate-100">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header */}
         <div className="text-center mb-12">
           <span className="text-xs font-mono font-bold text-[#0284C7] uppercase tracking-wider block mb-1">
             • ALUR PEMESANAN MUDAH •
           </span>
           <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-800 tracking-tight uppercase">
-            HOW TO ORDER
+            Panduan Pemesanan Stand 12B
           </h2>
           <div className="w-12 h-1 bg-[#0284C7] mx-auto mt-2 rounded-full" />
         </div>
