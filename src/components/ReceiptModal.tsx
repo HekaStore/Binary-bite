@@ -62,7 +62,13 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({ order, onClose }) =>
     doc.setFontSize(is58 ? 7 : 8);
     doc.text(`No. Trx : ${order.id}`, leftMargin, y);
     y += 4;
-    doc.text(`Tgl     : ${BRAND_INFO.eventDateText}`, leftMargin, y);
+    doc.text(`Jadwal  : ${order.scheduledDate || BRAND_INFO.eventDateText}`, leftMargin, y);
+    y += 4;
+    doc.text(`Kuota   : Hari ke-${order.scheduledDayIndex || 1} (#${order.dailyOrderNumber || 1}/25 per hari)`, leftMargin, y);
+    if (order.isRollover) {
+      y += 4;
+      doc.text(`*Dialihkan ke hari selanjutnya`, leftMargin, y);
+    }
     y += 4;
     doc.text(`Nama    : ${order.customerName}`, leftMargin, y);
     y += 4;
@@ -194,9 +200,22 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({ order, onClose }) =>
               <span className="font-bold text-brand-cobalt">{order.id}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-brand-muted">Tanggal:</span>
-              <span>{BRAND_INFO.eventDateText}</span>
+              <span className="text-brand-muted">Jadwal:</span>
+              <span className="font-bold text-brand-cobalt">
+                {order.scheduledDate || BRAND_INFO.eventDateText}
+              </span>
             </div>
+            <div className="flex justify-between">
+              <span className="text-brand-muted">Kuota:</span>
+              <span className="font-semibold text-brand-cobalt">
+                Hari ke-{order.scheduledDayIndex || 1} (#{order.dailyOrderNumber || 1}/25 per hari)
+              </span>
+            </div>
+            {order.isRollover && (
+              <div className="text-[10px] text-amber-800 bg-amber-50 p-1 rounded border border-amber-200">
+                *Dialihkan ke hari selanjutnya (kuota harian 25 penuh)
+              </div>
+            )}
             <div className="flex justify-between">
               <span className="text-brand-muted">Pelanggan:</span>
               <span className="font-bold">{order.customerName}</span>

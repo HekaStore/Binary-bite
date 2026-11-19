@@ -33,6 +33,11 @@ export const FaqSection: React.FC = () => {
         'Kami menerima pembayaran tunai (cash) langsung di stand kasir 12B saat pengambilan, serta transfer bank / QRIS digital saat konfirmasi melalui WhatsApp Admin.',
     },
     {
+      question: 'Berapa batas kuota pesanan per hari?',
+      answer:
+        'Kami menetapkan kapasitas target 25 pesanan per hari untuk memastikan setiap olahan makanan dan minuman disajikan dalam kondisi segar berkualitas tinggi. Jika pesanan pada suatu hari telah mencapai kuota 25 pesanan, pesanan berikutnya secara otomatis dialokasikan untuk disiapkan pada hari selanjutnya.',
+    },
+    {
       question: 'Bagaimana cara mendapatkan struk fisik atau digital?',
       answer:
         'Setelah melakukan pemesanan di website ini, struk thermal digital langsung dibuat secara otomatis. Kamu bisa mengunduh file PDF atau mencetaknya langsung sebagai bukti pemesanan.',

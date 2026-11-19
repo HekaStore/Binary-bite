@@ -1,11 +1,12 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useCart } from '@/context/CartContext';
 import { Order, PickupMethod } from '@/types';
 import { generateTransactionId, formatRupiah } from '@/utils/formatters';
+import { calculateNextOrderAllocation, QuotaAllocation } from '@/utils/dailyQuota';
 import { ReceiptModal } from '@/components/ReceiptModal';
-import { ShoppingBag, Send, AlertCircle, User, Phone, MapPin, FileText, ArrowLeft, CheckCircle2 } from 'lucide-react';
+import { ShoppingBag, Send, AlertCircle, User, Phone, MapPin, FileText, ArrowLeft, CheckCircle2, Calendar, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import confetti from 'canvas-confetti';
 
@@ -18,6 +19,18 @@ export const CheckoutSection: React.FC = () => {
   const [notes, setNotes] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const [createdOrder, setCreatedOrder] = useState<Order | null>(null);
+  const [existingOrders, setExistingOrders] = useState<Order[]>([]);
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem('binary_bite_orders');
+      if (raw) {
+        setExistingOrders(JSON.parse(raw));
+      }
+    } catch {}
+  }, []);
+
+  const allocation: QuotaAllocation = calculateNextOrderAllocation(existingOrders);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -57,6 +70,10 @@ export const CheckoutSection: React.FC = () => {
       totalItems,
       status: 'Menunggu konfirmasi',
       createdAt: new Date().toISOString(),
+      scheduledDate: allocation.scheduledDate,
+      scheduledDayIndex: allocation.scheduledDayIndex,
+      dailyOrderNumber: allocation.dailyOrderNumber,
+      isRollover: allocation.isRollover,
     };
 
     try {
@@ -172,6 +189,85 @@ export const CheckoutSection: React.FC = () => {
                   <CheckCircle2 className="w-4 h-4" />
                 </div>
               </div>
+            </div>
+
+            {/* Target 25 Pesanan / Hari & Jadwal Allocation Box */}
+            <div
+              className={`p-4 rounded-2xl border transition-all ${
+                allocation.isRollover
+                  ? 'bg-amber-50/80 border-amber-300 shadow-sm'
+                  : 'bg-sky-50/80 border-sky-200 shadow-sm'
+              }`}
+            >
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex items-center gap-2.5">
+                  <div
+                    className={`w-9 h-9 rounded-xl flex items-center justify-center font-bold text-xs ${
+                      allocation.isRollover
+                        ? 'bg-amber-100 text-amber-900 border border-amber-300'
+                        : 'bg-white text-[#0284C7] border border-sky-300'
+                    }`}
+                  >
+                    <Calendar className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 block">
+                      Jadwal Pengambilan ({allocation.dayLabel})
+                    </span>
+                    <span className="font-extrabold text-xs sm:text-sm text-slate-900 block">
+                      {allocation.scheduledDate}
+                    </span>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <span className="text-[10px] font-bold text-slate-500 block uppercase">
+                    Target Kuota Harian
+                  </span>
+                  <span
+                    className={`text-xs font-mono font-extrabold px-2.5 py-0.5 rounded-full inline-block mt-0.5 ${
+                      allocation.isRollover
+                        ? 'bg-amber-200 text-amber-950 font-bold'
+                        : 'bg-sky-200 text-[#0369A1] font-bold'
+                    }`}
+                  >
+                    Pesanan #{allocation.dailyOrderNumber} / 25
+                  </span>
+                </div>
+              </div>
+
+              {/* Capacity Progress Bar */}
+              <div className="mt-3">
+                <div className="flex justify-between text-[11px] font-medium text-slate-600 mb-1">
+                  <span>Kapasitas {allocation.dayLabel}:</span>
+                  <span className="font-mono font-bold">
+                    {allocation.currentDayOrdersCount} / 25 terisi (
+                    {Math.round((allocation.currentDayOrdersCount / 25) * 100)}%)
+                  </span>
+                </div>
+                <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
+                  <div
+                    className={`h-full rounded-full transition-all duration-500 ${
+                      allocation.isRollover ? 'bg-amber-500' : 'bg-[#0284C7]'
+                    }`}
+                    style={{
+                      width: `${Math.min(100, (allocation.currentDayOrdersCount / 25) * 100)}%`,
+                    }}
+                  />
+                </div>
+              </div>
+
+              {allocation.isRollover ? (
+                <div className="mt-2.5 p-2.5 bg-white rounded-xl border border-amber-200 text-[11px] text-amber-900 leading-relaxed font-medium">
+                  ⚠️ <strong>Ketentuan Kuota:</strong> Kuota Hari ke-
+                  {allocation.scheduledDayIndex - 1} telah mencapai target maksimal 25 pesanan. Sesuai
+                  kebijakan stand kami, pesanan Anda otomatis dialokasikan ke{' '}
+                  <strong>Hari Selanjutnya ({allocation.scheduledDate})</strong>.
+                </div>
+              ) : (
+                <p className="mt-2 text-[11px] text-slate-500 font-medium leading-relaxed">
+                  *Target produksi kami 25 pesanan per hari untuk menjaga kesegaran olahan. Jika kuota hari ini penuh, selebihnya dialihkan ke hari selanjutnya.
+                </p>
+              )}
             </div>
 
             <div>

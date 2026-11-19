@@ -50,5 +50,9 @@ export interface Order {
   totalItems: number;
   status: OrderStatus;
   createdAt: string;
+  scheduledDate?: string;
+  scheduledDayIndex?: number;
+  dailyOrderNumber?: number;
+  isRollover?: boolean;
 }
 

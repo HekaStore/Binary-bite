@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Send,
   Sparkles,
@@ -13,12 +13,34 @@ import {
   ShieldCheck,
   HeartHandshake,
   Truck,
-  ArrowRight
+  ArrowRight,
 } from 'lucide-react';
 import { BRAND_INFO } from '@/data/products';
+import { calculateNextOrderAllocation } from '@/utils/dailyQuota';
 
 export const HeroSection: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'Semua' | 'Makanan' | 'Minuman'>('Semua');
+  const [activeQuota, setActiveQuota] = useState<{
+    count: number;
+    dayIndex: number;
+  }>({
+    count: 0,
+    dayIndex: 1,
+  });
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem('binary_bite_orders');
+      if (raw) {
+        const orders = JSON.parse(raw);
+        const alloc = calculateNextOrderAllocation(orders);
+        setActiveQuota({
+          count: alloc.currentDayOrdersCount,
+          dayIndex: alloc.scheduledDayIndex,
+        });
+      }
+    } catch {}
+  }, []);
 
   const scrollToCatalog = () => {
     const el = document.getElementById('katalog');
@@ -72,9 +94,14 @@ export const HeroSection: React.FC = () => {
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 sm:pt-6">
         {/* Top Headline Section */}
         <div className="max-w-3xl mb-8 sm:mb-12">
-          <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1 sm:py-1.5 bg-white/20 backdrop-blur-md border border-white/40 rounded-full text-white text-[10px] sm:text-xs font-mono font-bold mb-3 sm:mb-4 shadow-sm max-w-full">
-            <Sparkles className="w-3.5 h-3.5 text-sky-200 flex-shrink-0" />
-            <span className="truncate">SPECIAL EVENT • JUMAT, 27 NOVEMBER 2026</span>
+          <div className="flex flex-wrap items-center gap-2 mb-3 sm:mb-4">
+            <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1 sm:py-1.5 bg-white/20 backdrop-blur-md border border-white/40 rounded-full text-white text-[10px] sm:text-xs font-mono font-bold shadow-sm max-w-full">
+              <Sparkles className="w-3.5 h-3.5 text-sky-200 flex-shrink-0" />
+              <span className="truncate">SPECIAL EVENT • JUMAT, 27 NOVEMBER 2026</span>
+            </div>
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-white/20 backdrop-blur-md border border-white/30 rounded-full text-white text-[10px] sm:text-xs font-mono font-bold shadow-sm">
+              <span>🎯 Target: 25 Pesanan/Hari ({activeQuota.count}/25)</span>
+            </div>
           </div>
 
           <h1 className="text-3xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-tight uppercase font-mono">
@@ -240,14 +267,14 @@ export const HeroSection: React.FC = () => {
 
           <div className="bg-white rounded-2xl p-4 shadow-card-paper border border-sky-100 flex items-center gap-3.5 hover:-translate-y-1 transition-transform">
             <div className="w-12 h-12 rounded-2xl bg-sky-50 border border-sky-200 flex items-center justify-center text-[#0284C7] flex-shrink-0">
-              <Truck className="w-6 h-6" />
+              <Calendar className="w-6 h-6" />
             </div>
             <div>
               <h4 className="font-extrabold text-xs sm:text-sm text-slate-800">
-                Siap Antar Kelas
+                Target 25 / Hari
               </h4>
               <p className="text-[11px] text-slate-500 font-medium">
-                Diantar tepat saat jam istirahat
+                Kapasitas fresh, selebihnya ke hari esok
               </p>
             </div>
           </div>

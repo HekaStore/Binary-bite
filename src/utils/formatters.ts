@@ -33,6 +33,14 @@ export function createWhatsAppOrderUrl(order: Order): string {
 
   const notesText = order.notes.trim() ? order.notes.trim() : '-';
 
+  const scheduleLine = order.scheduledDate
+    ? `Jadwal Ambil: ${order.scheduledDate} (Hari ke-${order.scheduledDayIndex || 1})\nUrutan Kuota: Pesanan ke-${order.dailyOrderNumber || 1} dari 25 (Target Harian)${
+        order.isRollover
+          ? '\n*Catatan Kuota: Kuota hari sebelumnya telah penuh (25 pesanan), pesanan ini dialihkan ke hari selanjutnya.*'
+          : ''
+      }`
+    : `Jadwal Ambil: ${BRAND_INFO.eventDateText}`;
+
   const message = `HALO BINARY.BITE!
 
 Saya ingin melakukan pemesanan untuk acara ${BRAND_INFO.eventDateText}.
@@ -42,6 +50,7 @@ No. Transaksi: ${order.id}
 Nama: ${order.customerName}
 Kelas / No. WA: ${order.customerContact}
 Metode Ambil: ${order.pickupMethod}
+${scheduleLine}
 
 DAFTAR PRODUK:
 ${itemsText}

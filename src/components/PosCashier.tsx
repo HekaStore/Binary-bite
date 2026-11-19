@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { Order, OrderStatus, Product } from '@/types';
 import { OFFICIAL_PRODUCTS, BRAND_INFO } from '@/data/products';
 import { formatRupiah, generateTransactionId } from '@/utils/formatters';
+import { calculateNextOrderAllocation, getDayQuotaSummaryList, DAILY_ORDER_LIMIT } from '@/utils/dailyQuota';
 import { ReceiptModal } from '@/components/ReceiptModal';
 import {
   ShieldCheck,
@@ -21,6 +22,7 @@ import {
   XCircle,
   ArrowRight,
   TrendingUp,
+  Calendar,
 } from 'lucide-react';
 
 export const PosCashier: React.FC = () => {
@@ -30,6 +32,7 @@ export const PosCashier: React.FC = () => {
 
   const [orders, setOrders] = useState<Order[]>([]);
   const [statusFilter, setStatusFilter] = useState<string>('Semua');
+  const [dayFilter, setDayFilter] = useState<number | 'Semua'>('Semua');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedReceiptOrder, setSelectedReceiptOrder] = useState<Order | null>(null);
 
@@ -117,14 +120,21 @@ export const PosCashier: React.FC = () => {
     };
   });
 
+  // Day Quota Summaries
+  const daySummaries = getDayQuotaSummaryList(orders);
+
   // Filtered orders
-  const filteredOrders = orders.filter((order) => {
+  const filteredOrders = orders.filter((order, idx) => {
     const matchesStatus = statusFilter === 'Semua' || order.status === statusFilter;
     const matchesSearch =
       order.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       order.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
       order.customerContact.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesStatus && matchesSearch;
+
+    const assignedDay = order.scheduledDayIndex || Math.floor(idx / DAILY_ORDER_LIMIT) + 1;
+    const matchesDay = dayFilter === 'Semua' || assignedDay === dayFilter;
+
+    return matchesStatus && matchesSearch && matchesDay;
   });
 
   // Handle Manual Order Submission
@@ -157,6 +167,8 @@ export const PosCashier: React.FC = () => {
       return;
     }
 
+    const alloc = calculateNextOrderAllocation(orders);
+
     const newOrder: Order = {
       id: generateTransactionId(),
       customerName: manualCustomer.trim() || 'Pembeli Stand Langsung',
@@ -168,6 +180,10 @@ export const PosCashier: React.FC = () => {
       totalItems: calcPortions,
       status: 'Selesai',
       createdAt: new Date().toISOString(),
+      scheduledDate: alloc.scheduledDate,
+      scheduledDayIndex: alloc.scheduledDayIndex,
+      dailyOrderNumber: alloc.dailyOrderNumber,
+      isRollover: alloc.isRollover,
     };
 
     const updated = [newOrder, ...orders];
@@ -356,6 +372,90 @@ export const PosCashier: React.FC = () => {
         </div>
       </div>
 
+      {/* Target & Kuota Harian (Target 25 Pesanan / Hari) */}
+      <div className="bg-brand-white border-2 border-brand-cobalt rounded-2xl p-6 shadow-flat-md space-y-4">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-brand-line pb-3">
+          <div>
+            <h3 className="text-base font-extrabold text-brand-cobalt flex items-center gap-2">
+              <Calendar className="w-4 h-4 text-brand-electric" />
+              <span>Target & Alokasi Kuota Harian (25 Pesanan / Hari)</span>
+            </h3>
+            <p className="text-xs text-brand-muted mt-0.5">
+              Jika pesanan pada suatu hari melebihi target 25, selebihnya otomatis dialihkan ke hari selanjutnya.
+            </p>
+          </div>
+          <div className="flex items-center gap-2">
+            {dayFilter !== 'Semua' && (
+              <button
+                onClick={() => setDayFilter('Semua')}
+                className="text-xs text-[#0284C7] font-bold underline hover:text-[#0369A1]"
+              >
+                Reset Filter Hari
+              </button>
+            )}
+            <div className="font-mono text-xs font-bold px-3 py-1 bg-brand-sky text-brand-cobalt rounded-full border border-brand-royal">
+              Target: 25 Pesanan/Hari
+            </div>
+          </div>
+        </div>
+
+        {/* Day cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          {daySummaries.map((summary) => (
+            <div
+              key={summary.dayIndex}
+              onClick={() => setDayFilter(dayFilter === summary.dayIndex ? 'Semua' : summary.dayIndex)}
+              className={`p-4 rounded-xl border-2 cursor-pointer transition-all ${
+                dayFilter === summary.dayIndex
+                  ? 'border-brand-cobalt bg-sky-50 shadow-sm'
+                  : 'border-brand-line bg-slate-50/50 hover:border-brand-royal'
+              }`}
+            >
+              <div className="flex justify-between items-start mb-2">
+                <div>
+                  <span className="font-mono text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-brand-white border border-brand-royal text-brand-cobalt">
+                    Hari ke-{summary.dayIndex}
+                  </span>
+                  <div className="font-extrabold text-xs text-brand-cobalt mt-1">
+                    {summary.dateStr}
+                  </div>
+                </div>
+                <span
+                  className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                    summary.isFull
+                      ? 'bg-amber-100 text-amber-900 border border-amber-300'
+                      : 'bg-green-100 text-green-800 border border-green-300'
+                  }`}
+                >
+                  {summary.isFull ? 'PENUH (25/25)' : 'TERSEDIA'}
+                </span>
+              </div>
+
+              {/* Progress */}
+              <div className="mt-2">
+                <div className="flex justify-between text-[11px] font-mono text-brand-muted mb-1">
+                  <span>Terisi:</span>
+                  <span className="font-bold text-brand-cobalt">
+                    {summary.count} / {summary.limit} Pesanan
+                  </span>
+                </div>
+                <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
+                  <div
+                    className={`h-full rounded-full transition-all ${
+                      summary.isFull ? 'bg-amber-500' : 'bg-brand-electric'
+                    }`}
+                    style={{ width: `${Math.min(100, (summary.count / summary.limit) * 100)}%` }}
+                  />
+                </div>
+              </div>
+              <div className="text-[10px] text-right text-brand-muted mt-1 font-mono">
+                {dayFilter === summary.dayIndex ? '✓ Memfilter hari ini' : 'Klik untuk memfilter'}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
       {/* Orders Management Table */}
       <div className="bg-brand-white border-2 border-brand-cobalt rounded-2xl p-6 shadow-flat-md space-y-4">
         {/* Filters & Search */}
@@ -419,8 +519,18 @@ export const PosCashier: React.FC = () => {
                     <td className="py-3 px-4">
                       <div className="font-bold text-brand-slate">{order.customerName}</div>
                       <div className="text-[11px] text-brand-muted">{order.customerContact}</div>
-                      <div className="text-[10px] text-brand-royal font-semibold mt-0.5">
-                        {order.pickupMethod}
+                      <div className="mt-1 flex flex-wrap items-center gap-1">
+                        <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-sky-50 text-[#0284C7] border border-sky-200">
+                          Hari ke-{order.scheduledDayIndex || 1} (#{order.dailyOrderNumber || 1}/25)
+                        </span>
+                        {order.isRollover && (
+                          <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-amber-50 text-amber-800 border border-amber-200">
+                            Rollover
+                          </span>
+                        )}
+                      </div>
+                      <div className="text-[10px] text-slate-500 mt-0.5 font-medium">
+                        {order.scheduledDate || BRAND_INFO.eventDateText}
                       </div>
                     </td>
                     <td className="py-3 px-4">
