@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" fill="none">
+  <rect width="400" height="300" rx="16" fill="#F8FAFC"/>
+  <!-- Decorative binary grid lines -->
+  <path d="M40 0V300M80 0V300M120 0V300M160 0V300M200 0V300M240 0V300M280 0V300M320 0V300M360 0V300" stroke="#E2E8F0" stroke-width="1"/>
+  <path d="M0 40H400M0 80H400M0 120H400M0 160H400M0 200H400M0 240H400M0 280H400" stroke="#E2E8F0" stroke-width="1"/>
+  <!-- Coaster / Shadow -->
+  <ellipse cx="200" cy="245" rx="85" ry="25" fill="#D6E6F2"/>
+  <ellipse cx="200" cy="240" rx="75" ry="18" fill="#FFFFFF" stroke="#1E56A0" stroke-width="2"/>
+
+  <!-- Glass Bottle / Mug Container -->
+  <g transform="translate(150, 60)">
+    <!-- Drinking Straw -->
+    <path d="M75 10 L85 0 L105 10 L80 90" stroke="#0A2463" stroke-width="2" fill="none"/>
+    <path d="M78 12 L84 4 L102 12 L82 85" stroke="#2563EB" stroke-width="6" stroke-linecap="round" fill="none"/>
+    <path d="M78 20 L86 16 M80 32 L88 28 M82 44 L90 40" stroke="#FFFFFF" stroke-width="2"/>
+
+    <!-- Bottle neck & cap -->
+    <rect x="35" y="30" width="30" height="15" rx="3" fill="#D6E6F2" stroke="#0A2463" stroke-width="2"/>
+    <rect x="32" y="24" width="36" height="8" rx="2" fill="#1E56A0" stroke="#0A2463" stroke-width="1.5"/>
+
+    <!-- Main Bottle Body -->
+    <rect x="15" y="45" width="70" height="135" rx="14" fill="#FFFFFF" stroke="#0A2463" stroke-width="2.5"/>
+
+    <!-- Creamy Cappuccino Liquid -->
+    <rect x="18" y="70" width="64" height="106" rx="10" fill="#B45309"/>
+    <!-- Milk froth top layer -->
+    <path d="M18 70 C 28 65, 45 75, 55 68 C 65 72, 75 66, 82 70 L82 85 L18 85 Z" fill="#FEF3C7"/>
+
+    <!-- Ice Cubes inside -->
+    <rect x="25" y="80" width="16" height="16" rx="3" fill="#FFFFFF" opacity="0.6" stroke="#92400E" stroke-width="1"/>
+    <rect x="52" y="90" width="18" height="18" rx="3" fill="#FFFFFF" opacity="0.6" stroke="#92400E" stroke-width="1"/>
+    <rect x="30" y="115" width="20" height="18" rx="3" fill="#FFFFFF" opacity="0.6" stroke="#92400E" stroke-width="1"/>
+
+    <!-- Black Grass Jelly (Cincau) Strands & Cubes -->
+    <rect x="22" y="145" width="14" height="12" rx="2" fill="#0F172A"/>
+    <rect x="42" y="152" width="16" height="14" rx="2" fill="#0F172A"/>
+    <rect x="62" y="148" width="15" height="12" rx="2" fill="#0F172A"/>
+    <rect x="32" y="132" width="12" height="14" rx="2" fill="#0F172A"/>
+    <rect x="55" y="125" width="14" height="15" rx="2" fill="#0F172A"/>
+    <rect x="25" y="102" width="12" height="10" rx="2" fill="#0F172A"/>
+    <rect x="58" y="78" width="10" height="12" rx="2" fill="#0F172A"/>
+
+    <!-- Glass reflections -->
+    <path d="M22 55 L22 170" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
+    <path d="M28 55 L28 100" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+  </g>
+
+  <!-- Cold splash droplets -->
+  <circle cx="120" cy="140" r="4" fill="#2563EB"/>
+  <circle cx="280" cy="130" r="3" fill="#2563EB"/>
+  <circle cx="295" cy="170" r="5" fill="#2563EB"/>
+
+  <!-- Badges -->
+  <rect x="24" y="24" width="70" height="24" rx="4" fill="#0A2463"/>
+  <text x="32" y="40" font-family="monospace" font-size="11" font-weight="bold" fill="#D6E6F2">BB-05</text>
+  <rect x="300" y="24" width="76" height="24" rx="4" fill="#2563EB"/>
+  <text x="312" y="40" font-family="monospace" font-size="11" font-weight="bold" fill="#FFFFFF">Rp6.000</text>
+</svg>
+
