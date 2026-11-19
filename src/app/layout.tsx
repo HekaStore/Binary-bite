@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import { Plus_Jakarta_Sans, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 import { CartProvider } from '@/context/CartContext';
 import { Navbar } from '@/components/Navbar';
@@ -7,20 +6,6 @@ import { Footer } from '@/components/Footer';
 import { ToastNotification } from '@/components/ToastNotification';
 import { FloatingWhatsApp } from '@/components/FloatingWhatsApp';
 import { CartDrawer } from '@/components/CartDrawer';
-
-const plusJakartaSans = Plus_Jakarta_Sans({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700', '800'],
-  variable: '--font-plus-jakarta',
-  display: 'swap',
-});
-
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700', '800'],
-  variable: '--font-jetbrains-mono',
-  display: 'swap',
-});
 
 export const metadata: Metadata = {
   title: 'BINARY.BITE — One Bite, Endless Happiness! | Stand Kelas 12B',
@@ -63,7 +48,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="id" className={`${plusJakartaSans.variable} ${jetbrainsMono.variable}`}>
+    <html lang="id">
       <body className="min-h-screen flex flex-col bg-brand-white text-brand-slate font-sans antialiased selection:bg-brand-sky selection:text-brand-cobalt">
         <CartProvider>
           <Navbar />
