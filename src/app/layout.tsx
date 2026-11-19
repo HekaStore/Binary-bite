@@ -22,11 +22,13 @@ const poppins = Poppins({
   variable: '--font-poppins',
 });
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://binarybite.vercel.app';
+
 export const metadata: Metadata = {
-  metadataBase: new URL('https://binary-bite.vercel.app'),
-  title: 'BINARY.BITE: One Bite, Endless Happiness! | Stand Kelas 12B',
+  metadataBase: new URL(siteUrl),
+  title: 'BINARY.BITE: Stand Kuliner Kelas 12B | One Bite, Endless Happiness!',
   description:
-    'Website pemesanan makanan dan minuman resmi BINARY.BITE kelas 12B untuk acara Jumat, 27 November 2026. Kue Lipat, Sus Buah, Roll Abon, Es Gabin, dan Es Capcin segar!',
+    'Website pemesanan resmi BINARY.BITE Kelas 12B (Jumat, 27 November 2026). Sajian aneka kue lezat, kudapan renyah, dan minuman segar mulai Rp3.000 s/d Rp9.000.',
   keywords: [
     'Binary Bite',
     'Stand 12B',
@@ -37,6 +39,7 @@ export const metadata: Metadata = {
     'Es Gabin',
     'Es Capcin',
     'Kuliner Sekolah',
+    'Lumajang',
   ],
   authors: [{ name: 'Kelas 12B, BINARY.BITE' }],
   icons: {
@@ -44,21 +47,34 @@ export const metadata: Metadata = {
     apple: '/images/logo.jpg',
   },
   openGraph: {
-    title: 'BINARY.BITE: One Bite, Endless Happiness!',
+    title: 'BINARY.BITE: Stand Kuliner Kelas 12B | One Bite, Endless Happiness!',
     description:
-      'Pesan camilan manis, gurih, dan minuman segar spesial dari Stand Kelas 12B untuk acara Jumat, 27 November 2026.',
-    url: 'https://binary-bite.vercel.app',
+      'Sajian aneka kue lezat, kudapan renyah, dan minuman segar spesial Stand Kelas 12B (27 Nov 2026). Pesan online sekarang (Rp3.000 s/d Rp9.000)!',
+    url: siteUrl,
     siteName: 'BINARY.BITE',
     images: [
       {
-        url: '/images/logo.jpg',
-        width: 1024,
-        height: 1024,
-        alt: 'Logo Resmi BINARY.BITE Kelas 12B',
+        url: '/images/og-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'BINARY.BITE: Stand Kuliner Kelas 12B - One Bite, Endless Happiness!',
+      },
+      {
+        url: '/og-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'BINARY.BITE: Stand Kuliner Kelas 12B - One Bite, Endless Happiness!',
       },
     ],
     locale: 'id_ID',
     type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'BINARY.BITE: Stand Kuliner Kelas 12B | One Bite, Endless Happiness!',
+    description:
+      'Sajian aneka kue lezat, kudapan renyah, dan minuman segar spesial Stand Kelas 12B (27 Nov 2026). Pesan online sekarang (Rp3.000 s/d Rp9.000)!',
+    images: ['/images/og-image.jpg'],
   },
   other: {
     'page-type': 'place',
