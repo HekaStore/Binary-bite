@@ -2,56 +2,59 @@ import { Order } from '@/types';
 
 export const DAILY_ORDER_LIMIT = 25;
 
-const INDO_DAYS = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
-const INDO_MONTHS = [
-  'Januari',
-  'Februari',
-  'Maret',
-  'April',
-  'Mei',
-  'Juni',
-  'Juli',
-  'Agustus',
-  'September',
-  'Oktober',
-  'November',
-  'Desember',
+export interface EventDay {
+  dayIndex: number;
+  dayLabel: string;
+  dayName: string;
+  dateStr: string;
+  dateShort: string;
+  isoDate: string;
+}
+
+export const OFFICIAL_EVENT_DAYS: EventDay[] = [
+  {
+    dayIndex: 1,
+    dayLabel: 'Hari 1 (Jumat)',
+    dayName: 'Jumat',
+    dateStr: 'Jumat, 27 November 2026',
+    dateShort: '27 Nov',
+    isoDate: '2026-11-27',
+  },
+  {
+    dayIndex: 2,
+    dayLabel: 'Hari 2 (Sabtu)',
+    dayName: 'Sabtu',
+    dateStr: 'Sabtu, 28 November 2026',
+    dateShort: '28 Nov',
+    isoDate: '2026-11-28',
+  },
+  {
+    dayIndex: 3,
+    dayLabel: 'Hari 3 (Minggu)',
+    dayName: 'Minggu',
+    dateStr: 'Minggu, 29 November 2026',
+    dateShort: '29 Nov',
+    isoDate: '2026-11-29',
+  },
 ];
 
-export function formatIndoDate(date: Date): string {
-  const dayName = INDO_DAYS[date.getDay()];
-  const dayNum = date.getDate();
-  const monthName = INDO_MONTHS[date.getMonth()];
-  const year = date.getFullYear();
-  return `${dayName}, ${dayNum} ${monthName} ${year}`;
+/**
+ * Returns the event day object for a given 1-based dayIndex (1..3).
+ * Falls back to Day 1 if out of bounds.
+ */
+export function getEventDay(dayIndex: number): EventDay {
+  const found = OFFICIAL_EVENT_DAYS.find((d) => d.dayIndex === dayIndex);
+  return found || OFFICIAL_EVENT_DAYS[0];
 }
 
 /**
- * Returns the base event date (27 November 2026),
- * or current calendar date if today has passed that date.
+ * Computes the exact calendar date for a given dayIndex.
  */
-export function getBaseEventDate(): Date {
-  const base = new Date('2026-11-27T00:00:00');
-  const now = new Date();
-  if (now.getTime() > base.getTime() + 86400000) {
-    return new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  }
-  return base;
-}
-
-/**
- * Computes the exact calendar date for a given 1-based day index.
- * Day 1 = Jumat, 27 November 2026
- * Day 2 = Sabtu, 28 November 2026
- * Day 3 = Minggu, 29 November 2026, dst.
- */
-export function getDateForDayIndex(dayIndex: number): { date: Date; dateStr: string } {
-  const base = getBaseEventDate();
-  const target = new Date(base);
-  target.setDate(base.getDate() + (dayIndex - 1));
+export function getDateForDayIndex(dayIndex: number): { dateStr: string; dayLabel: string } {
+  const eventDay = getEventDay(dayIndex);
   return {
-    date: target,
-    dateStr: formatIndoDate(target),
+    dateStr: eventDay.dateStr,
+    dayLabel: eventDay.dayLabel,
   };
 }
 
@@ -62,95 +65,102 @@ export interface QuotaAllocation {
   isRollover: boolean;
   currentDayOrdersCount: number;
   dayLabel: string;
+  isFull: boolean;
 }
 
 /**
- * Calculates which day and queue number a NEW order should be allocated to.
- * Target: 25 orders per day.
- * If a day exceeds 25 orders, it automatically rolls over to the next day.
+ * Counts active (non-cancelled) orders for a specific dayIndex.
+ */
+export function getOrdersCountForDay(orders: Order[], dayIndex: number): number {
+  return orders.filter((o) => {
+    if (o.status === 'Dibatalkan') return false;
+    if (o.scheduledDayIndex) {
+      return o.scheduledDayIndex === dayIndex;
+    }
+    // Fallback: match by dateStr
+    const eventDay = getEventDay(dayIndex);
+    return o.scheduledDate?.includes(eventDay.dateShort);
+  }).length;
+}
+
+/**
+ * Calculates allocation for a specific chosen dayIndex,
+ * or recommends the first available day if chosen day is full.
+ */
+export function calculateAllocationForDay(orders: Order[], chosenDayIndex: number = 1): QuotaAllocation {
+  const count = getOrdersCountForDay(orders, chosenDayIndex);
+  const isFull = count >= DAILY_ORDER_LIMIT;
+  const eventDay = getEventDay(chosenDayIndex);
+
+  return {
+    scheduledDate: eventDay.dateStr,
+    scheduledDayIndex: chosenDayIndex,
+    dailyOrderNumber: count + 1,
+    isRollover: isFull,
+    currentDayOrdersCount: count,
+    dayLabel: eventDay.dayLabel,
+    isFull,
+  };
+}
+
+/**
+ * Automatic allocation: returns the first day (Day 1..3) that still has available quota.
  */
 export function calculateNextOrderAllocation(orders: Order[]): QuotaAllocation {
-  const activeOrders = orders.filter((o) => o.status !== 'Dibatalkan');
-
-  let dayIndex = 1;
-  while (true) {
-    const dayStartOrderIndex = (dayIndex - 1) * DAILY_ORDER_LIMIT;
-    const dayEndOrderIndex = dayIndex * DAILY_ORDER_LIMIT;
-
-    // Count orders allocated to this day
-    const countForDay = activeOrders.filter((o, idx) => {
-      if (o.scheduledDayIndex) {
-        return o.scheduledDayIndex === dayIndex;
-      }
-      return idx >= dayStartOrderIndex && idx < dayEndOrderIndex;
-    }).length;
-
-    if (countForDay < DAILY_ORDER_LIMIT) {
-      const { dateStr } = getDateForDayIndex(dayIndex);
-      const isRollover = dayIndex > 1;
-      return {
-        scheduledDate: dateStr,
-        scheduledDayIndex: dayIndex,
-        dailyOrderNumber: countForDay + 1,
-        isRollover,
-        currentDayOrdersCount: countForDay,
-        dayLabel: dayIndex === 1 ? 'Hari ke-1' : `Hari ke-${dayIndex} (Hari Selanjutnya)`,
-      };
+  for (let d = 1; d <= 3; d++) {
+    const alloc = calculateAllocationForDay(orders, d);
+    if (!alloc.isFull) {
+      return alloc;
     }
-
-    dayIndex++;
   }
+
+  // All 3 days are full, return Day 3 as overflow
+  const allocDay3 = calculateAllocationForDay(orders, 3);
+  return {
+    ...allocDay3,
+    isRollover: true,
+  };
 }
 
 export interface DayQuotaSummary {
   dayIndex: number;
+  dayLabel: string;
   dateStr: string;
+  dateShort: string;
   count: number;
   limit: number;
+  remaining: number;
   isFull: boolean;
+  percentage: number;
   orders: Order[];
 }
 
 /**
- * Returns a day-by-day breakdown of orders and capacity for POS Admin & tracking.
+ * Returns a clean 3-day breakdown of orders and capacity for POS Admin & customer selector.
  */
 export function getDayQuotaSummaryList(orders: Order[]): DayQuotaSummary[] {
-  const activeOrders = orders.filter((o) => o.status !== 'Dibatalkan');
-
-  // Determine max day needed (at least 2 days shown)
-  let maxDay = 2;
-  activeOrders.forEach((o, idx) => {
-    const assignedDay = o.scheduledDayIndex || Math.floor(idx / DAILY_ORDER_LIMIT) + 1;
-    if (assignedDay > maxDay) {
-      maxDay = assignedDay;
-    }
-  });
-
-  const summaries: DayQuotaSummary[] = [];
-
-  for (let d = 1; d <= maxDay; d++) {
-    const { dateStr } = getDateForDayIndex(d);
-    const dayStartOrderIndex = (d - 1) * DAILY_ORDER_LIMIT;
-    const dayEndOrderIndex = d * DAILY_ORDER_LIMIT;
-
-    const dayOrders = orders.filter((o, idx) => {
+  return OFFICIAL_EVENT_DAYS.map((day) => {
+    const dayOrders = orders.filter((o) => {
       if (o.scheduledDayIndex) {
-        return o.scheduledDayIndex === d;
+        return o.scheduledDayIndex === day.dayIndex;
       }
-      return idx >= dayStartOrderIndex && idx < dayEndOrderIndex;
+      return o.scheduledDate?.includes(day.dateShort);
     });
 
     const activeCount = dayOrders.filter((o) => o.status !== 'Dibatalkan').length;
+    const percentage = Math.min(100, Math.round((activeCount / DAILY_ORDER_LIMIT) * 100));
 
-    summaries.push({
-      dayIndex: d,
-      dateStr,
+    return {
+      dayIndex: day.dayIndex,
+      dayLabel: day.dayLabel,
+      dateStr: day.dateStr,
+      dateShort: day.dateShort,
       count: activeCount,
       limit: DAILY_ORDER_LIMIT,
+      remaining: Math.max(0, DAILY_ORDER_LIMIT - activeCount),
       isFull: activeCount >= DAILY_ORDER_LIMIT,
+      percentage,
       orders: dayOrders,
-    });
-  }
-
-  return summaries;
+    };
+  });
 }

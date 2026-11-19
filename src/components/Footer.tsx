@@ -50,7 +50,7 @@ export const Footer: React.FC = () => {
                 <span className="text-[11px] font-semibold uppercase tracking-wider">Jam Buka</span>
               </div>
               <div className="text-3xl font-heading font-black text-white">07:00</div>
-              <div className="text-xs text-sky-100 font-medium">Jumat, 27 Nov WIB</div>
+              <div className="text-xs text-sky-100 font-medium">27 s/d 29 Nov 2026</div>
             </div>
           </div>
 

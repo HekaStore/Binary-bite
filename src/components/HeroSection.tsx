@@ -101,7 +101,7 @@ export const HeroSection: React.FC = () => {
             <div className="flex flex-wrap items-center gap-2 mb-4">
               <div className="inline-flex items-center gap-1.5 px-3.5 py-1 bg-white/20 backdrop-blur-md border border-white/30 rounded-full text-white text-[11px] sm:text-xs font-semibold shadow-sm">
                 <Sparkles className="w-3.5 h-3.5 text-amber-300" />
-                <span>STAND KULINER KELAS 12B • 27 NOVEMBER 2026</span>
+                <span>STAND KULINER KELAS 12B • 27 S/D 29 NOVEMBER 2026</span>
               </div>
               <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-white/20 backdrop-blur-md border border-white/25 rounded-full text-white text-[11px] sm:text-xs font-semibold shadow-sm">
                 <Clock className="w-3.5 h-3.5 text-sky-200" />
@@ -151,7 +151,7 @@ export const HeroSection: React.FC = () => {
               </div>
               <div className="p-1.5">
                 <span className="text-[10px] font-bold text-sky-200 block uppercase">Hari & Tanggal</span>
-                <span className="text-xs font-bold text-white block">Jumat, 27 Nov 2026</span>
+                <span className="text-xs font-bold text-white block">27 s/d 29 Nov 2026</span>
               </div>
               <div className="p-1.5">
                 <span className="text-[10px] font-bold text-sky-200 block uppercase">Buka Pukul</span>

@@ -67,8 +67,8 @@ async function createOgImage() {
         <g clip-path="url(#circleClip)">
           <image href="${logoBase64}" x="2" y="2" width="92" height="92" preserveAspectRatio="xMidYMid slice" />
         </g>
-        <rect x="116" y="14" width="310" height="34" rx="17" fill="rgba(255,255,255,0.2)" stroke="rgba(255,255,255,0.35)" stroke-width="1.5" />
-        <text x="132" y="36" font-family="'Inter', -apple-system, sans-serif" font-size="12" font-weight="800" fill="#FFFFFF" letter-spacing="0.08em">STAND KELAS 12B • 27 NOV 2026</text>
+        <rect x="116" y="14" width="330" height="34" rx="17" fill="rgba(255,255,255,0.2)" stroke="rgba(255,255,255,0.35)" stroke-width="1.5" />
+        <text x="132" y="36" font-family="'Inter', -apple-system, sans-serif" font-size="12" font-weight="800" fill="#FFFFFF" letter-spacing="0.08em">STAND KELAS 12B • 27-29 NOV 2026</text>
 
         <rect x="116" y="54" width="220" height="24" rx="12" fill="#FFFFFF" />
         <text x="128" y="70" font-family="'Inter', -apple-system, sans-serif" font-size="11" font-weight="800" fill="#0284C7">📍 Lumajang Kota</text>

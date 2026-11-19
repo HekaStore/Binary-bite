@@ -4,10 +4,28 @@ import React, { useState, useEffect } from 'react';
 import { useCart } from '@/context/CartContext';
 import { Order, PickupMethod } from '@/types';
 import { generateTransactionId, formatRupiah } from '@/utils/formatters';
-import { calculateNextOrderAllocation, QuotaAllocation } from '@/utils/dailyQuota';
+import {
+  calculateAllocationForDay,
+  getDayQuotaSummaryList,
+  OFFICIAL_EVENT_DAYS,
+  QuotaAllocation,
+} from '@/utils/dailyQuota';
 import { orderService } from '@/services/orderService';
 import { ReceiptModal } from '@/components/ReceiptModal';
-import { ShoppingBag, Send, AlertCircle, User, Phone, MapPin, FileText, ArrowLeft, CheckCircle2, Calendar, Sparkles } from 'lucide-react';
+import {
+  ShoppingBag,
+  Send,
+  AlertCircle,
+  User,
+  Phone,
+  MapPin,
+  FileText,
+  ArrowLeft,
+  CheckCircle2,
+  Calendar,
+  Sparkles,
+  Clock,
+} from 'lucide-react';
 import Link from 'next/link';
 import confetti from 'canvas-confetti';
 
@@ -17,6 +35,7 @@ export const CheckoutSection: React.FC = () => {
   const [customerName, setCustomerName] = useState('');
   const [customerContact, setCustomerContact] = useState('');
   const [pickupMethod, setPickupMethod] = useState<PickupMethod>('Lumajang Kota');
+  const [selectedDayIndex, setSelectedDayIndex] = useState<number>(1);
   const [notes, setNotes] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const [createdOrder, setCreatedOrder] = useState<Order | null>(null);
@@ -31,7 +50,8 @@ export const CheckoutSection: React.FC = () => {
     loadCloudOrders();
   }, []);
 
-  const allocation: QuotaAllocation = calculateNextOrderAllocation(existingOrders);
+  const daySummaries = getDayQuotaSummaryList(existingOrders);
+  const allocation: QuotaAllocation = calculateAllocationForDay(existingOrders, selectedDayIndex);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,6 +68,13 @@ export const CheckoutSection: React.FC = () => {
 
     if (!customerContact.trim()) {
       setErrorMsg('Kelas / Instansi / No. WhatsApp pemesan wajib diisi.');
+      return;
+    }
+
+    if (allocation.isFull) {
+      setErrorMsg(
+        `Kuota untuk ${allocation.scheduledDate} sudah mencapai batas 25 pesanan. Silakan pilih tanggal hari lainnya (28 atau 29 Nov).`
+      );
       return;
     }
 
@@ -73,9 +100,9 @@ export const CheckoutSection: React.FC = () => {
       status: 'Menunggu konfirmasi',
       createdAt: new Date().toISOString(),
       scheduledDate: allocation.scheduledDate,
-      scheduledDayIndex: allocation.scheduledDayIndex,
+      scheduledDayIndex: selectedDayIndex,
       dailyOrderNumber: allocation.dailyOrderNumber,
-      isRollover: allocation.isRollover,
+      isRollover: false,
     };
 
     // Save to Cloud & Local Store via orderService
@@ -102,7 +129,7 @@ export const CheckoutSection: React.FC = () => {
       <div className="mb-6">
         <Link
           href="/"
-          className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-[#0284C7] hover:text-[#0369A1] transition-colors"
+          className="inline-flex items-center gap-2 text-xs sm:text-sm font-heading font-bold text-[#0284C7] hover:text-[#0369A1] transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Kembali ke Beranda / Menu</span>
@@ -113,7 +140,7 @@ export const CheckoutSection: React.FC = () => {
         {/* Left: Form */}
         <div className="lg:col-span-7 bg-white rounded-3xl p-6 sm:p-8 shadow-card-paper border border-sky-100">
           <div className="flex items-center gap-3 pb-4 mb-6 border-b border-slate-100">
-            <div className="w-10 h-10 rounded-2xl bg-sky-50 text-[#0284C7] flex items-center justify-center font-mono font-bold border border-sky-200">
+            <div className="w-10 h-10 rounded-2xl bg-sky-50 text-[#0284C7] flex items-center justify-center font-heading font-black border border-sky-200">
               01
             </div>
             <div>
@@ -121,7 +148,7 @@ export const CheckoutSection: React.FC = () => {
                 Formulir Pemesanan
               </h2>
               <p className="text-xs text-slate-500 font-medium">
-                Lengkapi data di bawah ini untuk konfirmasi pesanan ke WhatsApp Admin.
+                Pilih tanggal pengambilan dan lengkapi data pemesan di bawah ini.
               </p>
             </div>
           </div>
@@ -133,7 +160,81 @@ export const CheckoutSection: React.FC = () => {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-5">
+            {/* Pilihan Jadwal Pengambilan 3 Hari */}
+            <div>
+              <label className="block text-xs font-heading font-bold text-slate-700 mb-2 flex items-center justify-between">
+                <span className="flex items-center gap-1.5">
+                  <Calendar className="w-3.5 h-3.5 text-[#0284C7]" />
+                  <span>Pilih Tanggal Pengambilan Stand (27 s/d 29 Nov 2026) *</span>
+                </span>
+                <span className="text-[10px] text-slate-400 font-normal">Kapasitas: 25 Porsi/Hari</span>
+              </label>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                {daySummaries.map((day) => {
+                  const isSelected = selectedDayIndex === day.dayIndex;
+                  return (
+                    <button
+                      key={day.dayIndex}
+                      type="button"
+                      disabled={day.isFull}
+                      onClick={() => setSelectedDayIndex(day.dayIndex)}
+                      className={`p-3.5 rounded-2xl border text-left transition-all relative min-h-[76px] flex flex-col justify-between ${
+                        day.isFull
+                          ? 'bg-slate-50 border-slate-200 opacity-60 cursor-not-allowed'
+                          : isSelected
+                          ? 'bg-sky-50/90 border-[#0284C7] ring-2 ring-[#0284C7] shadow-sm hover:-translate-y-0.5'
+                          : 'bg-white border-slate-200 hover:border-sky-300 hover:bg-slate-50 hover:-translate-y-0.5'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between w-full">
+                        <span className="text-[10px] font-heading font-bold text-[#0284C7] uppercase">
+                          {day.dayLabel}
+                        </span>
+                        {day.isFull ? (
+                          <span className="text-[9px] font-bold text-red-700 bg-red-100 px-1.5 py-0.5 rounded">
+                            Penuh
+                          </span>
+                        ) : (
+                          <span className="text-[10px] font-semibold text-slate-600">
+                            {day.count}/25 porsi
+                          </span>
+                        )}
+                      </div>
+
+                      <div className="font-heading font-black text-xs sm:text-sm text-slate-800 mt-1">
+                        {day.dateShort} 2026
+                      </div>
+
+                      {/* Micro progress bar */}
+                      <div className="w-full bg-slate-200 h-1.5 rounded-full mt-2 overflow-hidden">
+                        <div
+                          className={`h-full rounded-full transition-all duration-300 ${
+                            day.isFull ? 'bg-red-500' : 'bg-[#0284C7]'
+                          }`}
+                          style={{ width: `${day.percentage}%` }}
+                        />
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Status info chosen day */}
+              <div className="mt-2.5 p-3 rounded-2xl bg-sky-50/70 border border-sky-100 flex items-center justify-between text-xs">
+                <div className="flex items-center gap-2">
+                  <Clock className="w-3.5 h-3.5 text-[#0284C7]" />
+                  <span className="text-slate-700 font-medium">
+                    Jadwal Terpilih: <strong>{allocation.scheduledDate}</strong>
+                  </span>
+                </div>
+                <span className="font-heading font-bold text-[#0284C7] text-[11px]">
+                  Antrean #{allocation.dailyOrderNumber} / 25
+                </span>
+              </div>
+            </div>
+
             <div>
               <label className="block text-xs font-bold text-slate-700 mb-1.5 flex items-center gap-1.5">
                 <User className="w-3.5 h-3.5 text-[#0284C7]" />
@@ -172,7 +273,7 @@ export const CheckoutSection: React.FC = () => {
               <div className="p-3.5 sm:p-4 rounded-2xl border bg-sky-50/80 border-[#0284C7] shadow-sm flex items-start justify-between gap-3">
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="font-extrabold text-xs sm:text-sm text-slate-900">
+                    <span className="font-heading font-black text-xs sm:text-sm text-slate-900">
                       Lumajang Kota
                     </span>
                     <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#0284C7] text-white">
@@ -180,92 +281,13 @@ export const CheckoutSection: React.FC = () => {
                     </span>
                   </div>
                   <p className="text-[11px] sm:text-xs text-slate-600 mt-1 font-medium leading-relaxed">
-                    Stand: Jl. AR Hakim, Ditotrunan, Lumajang
+                    Stand Resmi: Jl. AR Hakim, Ditotrunan, Lumajang (07:00 WIB s/d selesai)
                   </p>
                 </div>
                 <div className="w-6 h-6 rounded-full bg-[#0284C7] text-white flex items-center justify-center flex-shrink-0 mt-0.5 shadow-sm">
                   <CheckCircle2 className="w-4 h-4" />
                 </div>
               </div>
-            </div>
-
-            {/* Target 25 Pesanan / Hari & Jadwal Allocation Box */}
-            <div
-              className={`p-4 rounded-2xl border transition-all ${
-                allocation.isRollover
-                  ? 'bg-amber-50/80 border-amber-300 shadow-sm'
-                  : 'bg-sky-50/80 border-sky-200 shadow-sm'
-              }`}
-            >
-              <div className="flex items-start justify-between gap-3">
-                <div className="flex items-center gap-2.5">
-                  <div
-                    className={`w-9 h-9 rounded-xl flex items-center justify-center font-bold text-xs ${
-                      allocation.isRollover
-                        ? 'bg-amber-100 text-amber-900 border border-amber-300'
-                        : 'bg-white text-[#0284C7] border border-sky-300'
-                    }`}
-                  >
-                    <Calendar className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 block">
-                      Jadwal Pengambilan ({allocation.dayLabel})
-                    </span>
-                    <span className="font-extrabold text-xs sm:text-sm text-slate-900 block">
-                      {allocation.scheduledDate}
-                    </span>
-                  </div>
-                </div>
-                <div className="text-right">
-                  <span className="text-[10px] font-bold text-slate-500 block uppercase">
-                    Target Kuota Harian
-                  </span>
-                  <span
-                    className={`text-xs font-mono font-extrabold px-2.5 py-0.5 rounded-full inline-block mt-0.5 ${
-                      allocation.isRollover
-                        ? 'bg-amber-200 text-amber-950 font-bold'
-                        : 'bg-sky-200 text-[#0369A1] font-bold'
-                    }`}
-                  >
-                    Pesanan #{allocation.dailyOrderNumber} / 25
-                  </span>
-                </div>
-              </div>
-
-              {/* Capacity Progress Bar */}
-              <div className="mt-3">
-                <div className="flex justify-between text-[11px] font-medium text-slate-600 mb-1">
-                  <span>Kapasitas {allocation.dayLabel}:</span>
-                  <span className="font-mono font-bold">
-                    {allocation.currentDayOrdersCount} / 25 terisi (
-                    {Math.round((allocation.currentDayOrdersCount / 25) * 100)}%)
-                  </span>
-                </div>
-                <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
-                  <div
-                    className={`h-full rounded-full transition-all duration-500 ${
-                      allocation.isRollover ? 'bg-amber-500' : 'bg-[#0284C7]'
-                    }`}
-                    style={{
-                      width: `${Math.min(100, (allocation.currentDayOrdersCount / 25) * 100)}%`,
-                    }}
-                  />
-                </div>
-              </div>
-
-              {allocation.isRollover ? (
-                <div className="mt-2.5 p-2.5 bg-white rounded-xl border border-amber-200 text-[11px] text-amber-900 leading-relaxed font-medium">
-                  ⚠️ <strong>Ketentuan Kuota:</strong> Kuota Hari ke-
-                  {allocation.scheduledDayIndex - 1} telah mencapai target maksimal 25 pesanan. Sesuai
-                  kebijakan stand kami, pesanan Anda otomatis dialokasikan ke{' '}
-                  <strong>Hari Selanjutnya ({allocation.scheduledDate})</strong>.
-                </div>
-              ) : (
-                <p className="mt-2 text-[11px] text-slate-500 font-medium leading-relaxed">
-                  *Target produksi kami 25 pesanan per hari untuk menjaga kesegaran olahan. Jika kuota hari ini penuh, selebihnya dialihkan ke hari selanjutnya.
-                </p>
-              )}
             </div>
 
             <div>
@@ -285,7 +307,7 @@ export const CheckoutSection: React.FC = () => {
             <div className="pt-3">
               <button
                 type="submit"
-                disabled={items.length === 0 || isSubmitting}
+                disabled={items.length === 0 || isSubmitting || allocation.isFull}
                 className="w-full py-4 bg-[#0284C7] hover:bg-[#0369A1] text-white text-sm font-heading font-black rounded-full shadow-btn-sky transition-all hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 uppercase tracking-wider"
               >
                 <Send className="w-4 h-4" />
@@ -304,7 +326,7 @@ export const CheckoutSection: React.FC = () => {
             <h3 className="font-heading font-black text-base text-slate-800">
               Ringkasan Pesanan
             </h3>
-            <span className="font-mono text-xs font-bold px-2.5 py-0.5 bg-sky-50 text-[#0284C7] rounded-full border border-sky-100">
+            <span className="font-heading font-bold text-xs px-2.5 py-0.5 bg-sky-50 text-[#0284C7] rounded-full border border-sky-100">
               {totalItems} Item
             </span>
           </div>
@@ -316,7 +338,7 @@ export const CheckoutSection: React.FC = () => {
               </p>
               <Link
                 href="/#katalog"
-                className="mt-3 inline-block px-5 py-2.5 bg-[#0284C7] hover:bg-[#0369A1] text-white text-xs font-bold rounded-full transition-all hover:-translate-y-0.5 active:translate-y-0"
+                className="mt-3 inline-block px-5 py-2.5 bg-[#0284C7] hover:bg-[#0369A1] text-white text-xs font-heading font-bold rounded-full transition-all hover:-translate-y-0.5 active:translate-y-0"
               >
                 Pilih Menu Sekarang
               </Link>
@@ -330,15 +352,15 @@ export const CheckoutSection: React.FC = () => {
                     className="p-3 bg-slate-50 rounded-2xl flex items-center justify-between border border-slate-100"
                   >
                     <div>
-                      <h4 className="font-bold text-xs sm:text-sm text-slate-800">
+                      <h4 className="font-heading font-bold text-xs sm:text-sm text-slate-800">
                         {item.product.name}
                         {item.selectedFlavor && ` (${item.selectedFlavor})`}
                       </h4>
-                      <p className="text-[11px] font-mono text-slate-500">
+                      <p className="text-[11px] text-slate-500">
                         {formatRupiah(item.product.price)} x {item.quantity} pcs
                       </p>
                     </div>
-                    <span className="font-mono text-xs sm:text-sm font-extrabold text-[#0284C7]">
+                    <span className="font-heading font-black text-xs sm:text-sm text-[#0284C7]">
                       {formatRupiah(item.product.price * item.quantity)}
                     </span>
                   </div>
@@ -348,15 +370,19 @@ export const CheckoutSection: React.FC = () => {
               <div className="pt-3 border-t border-slate-100 space-y-1.5 text-xs">
                 <div className="flex justify-between text-slate-600 font-medium">
                   <span>Subtotal Produk</span>
-                  <span className="font-mono font-bold">{formatRupiah(totalPrice)}</span>
+                  <span className="font-heading font-bold">{formatRupiah(totalPrice)}</span>
                 </div>
                 <div className="flex justify-between text-slate-600 font-medium">
                   <span>Biaya Pengantaran</span>
-                  <span className="font-mono font-bold text-[#0284C7]">GRATIS</span>
+                  <span className="font-heading font-bold text-[#0284C7]">GRATIS</span>
                 </div>
-                <div className="flex justify-between text-sm sm:text-base font-extrabold text-slate-900 pt-2 border-t border-slate-100">
+                <div className="flex justify-between text-slate-600 font-medium">
+                  <span>Jadwal Pengambilan</span>
+                  <span className="font-heading font-bold text-slate-800">{allocation.scheduledDate}</span>
+                </div>
+                <div className="flex justify-between text-sm sm:text-base font-heading font-black text-slate-900 pt-2 border-t border-slate-100">
                   <span>Total Pembayaran</span>
-                  <span className="font-mono text-lg text-[#0284C7]">
+                  <span className="font-heading font-black text-lg text-[#0284C7]">
                     {formatRupiah(totalPrice)}
                   </span>
                 </div>

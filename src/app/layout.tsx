@@ -28,7 +28,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: 'BINARY.BITE: Stand Kuliner Kelas 12B | One Bite, Endless Happiness!',
   description:
-    'Website pemesanan resmi BINARY.BITE Kelas 12B (Jumat, 27 November 2026). Sajian aneka kue lezat, kudapan renyah, dan minuman segar mulai Rp3.000 s/d Rp9.000.',
+    'Website pemesanan resmi BINARY.BITE Kelas 12B (27 s/d 29 November 2026). Sajian aneka kue lezat, kudapan renyah, dan minuman segar mulai Rp3.000 s/d Rp9.000.',
   keywords: [
     'Binary Bite',
     'Stand 12B',
@@ -49,7 +49,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'BINARY.BITE: Stand Kuliner Kelas 12B | One Bite, Endless Happiness!',
     description:
-      'Sajian aneka kue lezat, kudapan renyah, dan minuman segar spesial Stand Kelas 12B (27 Nov 2026). Pesan online sekarang (Rp3.000 s/d Rp9.000)!',
+      'Sajian aneka kue lezat, kudapan renyah, dan minuman segar spesial Stand Kelas 12B (27 s/d 29 Nov 2026). Pesan online sekarang (Rp3.000 s/d Rp9.000)!',
     url: siteUrl,
     siteName: 'BINARY.BITE',
     images: [
@@ -73,7 +73,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'BINARY.BITE: Stand Kuliner Kelas 12B | One Bite, Endless Happiness!',
     description:
-      'Sajian aneka kue lezat, kudapan renyah, dan minuman segar spesial Stand Kelas 12B (27 Nov 2026). Pesan online sekarang (Rp3.000 s/d Rp9.000)!',
+      'Sajian aneka kue lezat, kudapan renyah, dan minuman segar spesial Stand Kelas 12B (27 s/d 29 Nov 2026). Pesan online sekarang (Rp3.000 s/d Rp9.000)!',
     images: ['/images/og-image.jpg'],
   },
   other: {

@@ -66,7 +66,7 @@ export const AboutSection: React.FC = () => {
               </div>
               <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 border border-slate-200">
                 <Check className="w-4 h-4 text-[#0284C7]" />
-                <span>27 November 2026</span>
+                <span>27 s/d 29 November 2026</span>
               </div>
             </div>
           </div>
