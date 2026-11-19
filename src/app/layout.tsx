@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Inter, Poppins } from 'next/font/google';
 import './globals.css';
 import { CartProvider } from '@/context/CartContext';
 import { Navbar } from '@/components/Navbar';
@@ -7,6 +8,19 @@ import { ToastNotification } from '@/components/ToastNotification';
 import { FloatingWhatsApp } from '@/components/FloatingWhatsApp';
 import { Watermark } from '@/components/Watermark';
 import { CartDrawer } from '@/components/CartDrawer';
+
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-inter',
+});
+
+const poppins = Poppins({
+  weight: ['400', '500', '600', '700', '800', '900'],
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-poppins',
+});
 
 export const metadata: Metadata = {
   title: 'BINARY.BITE: One Bite, Endless Happiness! | Stand Kelas 12B',
@@ -58,7 +72,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="id" data-type="place" data-radius="soft" data-motion="true">
+    <html lang="id" data-type="place" data-radius="soft" data-motion="true" className={`${inter.variable} ${poppins.variable}`}>
       <body className="min-h-screen flex flex-col bg-brand-white text-brand-slate font-sans antialiased selection:bg-brand-sky selection:text-brand-cobalt">
         <CartProvider>
           <Navbar />
@@ -73,4 +87,3 @@ export default function RootLayout({
     </html>
   );
 }
-
