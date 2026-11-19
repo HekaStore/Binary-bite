@@ -30,7 +30,7 @@ export const FaqSection: React.FC = () => {
     {
       question: 'Metode pembayaran apa saja yang didukung?',
       answer:
-        'Kami menerima pembayaran tunai (cash) langsung di stand kasir 12B saat pengambilan, serta transfer bank / QRIS digital saat konfirmasi melalui WhatsApp Admin.',
+        'Kami menerima pembayaran tunai (cash) langsung di stand kasir 12B saat pengambilan, serta transfer bank atau QRIS digital saat konfirmasi melalui WhatsApp Admin.',
     },
     {
       question: 'Berapa batas kuota pesanan per hari?',
@@ -52,11 +52,11 @@ export const FaqSection: React.FC = () => {
     <section id="faq" className="py-20 sm:py-28 bg-slate-50 border-t border-slate-100">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-white border border-sky-200 rounded-full text-xs font-mono font-bold text-[#0284C7] mb-3 shadow-sm">
+          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 bg-white border border-sky-200 rounded-full text-xs font-semibold text-[#0284C7] mb-3 shadow-sm">
             <HelpCircle className="w-3.5 h-3.5 text-[#0284C7]" />
             <span>PUSAT BANTUAN & TANYA JAWAB</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+          <h2 className="font-heading font-black text-2xl sm:text-4xl text-slate-900 tracking-tight uppercase">
             Pertanyaan yang Sering Diajukan
           </h2>
           <p className="text-sm sm:text-base text-slate-500 font-medium mt-1">
@@ -74,11 +74,11 @@ export const FaqSection: React.FC = () => {
               >
                 <button
                   onClick={() => toggleFaq(idx)}
-                  className="w-full p-4 sm:p-5 text-left flex items-center justify-between gap-4 font-bold text-sm sm:text-base text-slate-800 hover:bg-sky-50/40 transition-colors min-h-[52px]"
+                  className="w-full p-4 sm:p-5 text-left flex items-center justify-between gap-4 font-heading font-bold text-sm sm:text-base text-slate-800 hover:bg-sky-50/40 transition-colors min-h-[52px]"
                   aria-expanded={isOpen}
                 >
-                  <span className="flex items-center gap-2.5">
-                    <span className="font-mono text-xs font-black text-[#0284C7]">
+                  <span className="flex items-center gap-3">
+                    <span className="font-heading font-black text-xs text-[#0284C7]">
                       0{idx + 1}
                     </span>
                     <span>{faq.question}</span>

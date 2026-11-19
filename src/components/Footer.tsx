@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { BRAND_INFO } from '@/data/products';
-import { ArrowUp, Instagram, MessageCircle, MapPin, Calendar, Star, Utensils, Award, Users, Clock } from 'lucide-react';
+import { ArrowUp, Instagram, MessageCircle, MapPin, Star, Utensils, Award, Users, Clock } from 'lucide-react';
 
 export const Footer: React.FC = () => {
   const scrollToTop = () => {
@@ -12,7 +12,7 @@ export const Footer: React.FC = () => {
 
   return (
     <footer className="bg-[#0284C7] text-white">
-      {/* Blue Stats & Testimonial Bar (Directly matching the bottom banner in the reference) */}
+      {/* Blue Stats & Testimonial Bar */}
       <div className="border-b border-sky-400/40 py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           {/* Left Stats Grid */}
@@ -20,41 +20,41 @@ export const Footer: React.FC = () => {
             <div>
               <div className="flex items-center justify-center sm:justify-start gap-2 text-sky-200 mb-1">
                 <Utensils className="w-4 h-4" />
-                <span className="text-[11px] font-bold uppercase tracking-wider">Varian Menu</span>
+                <span className="text-[11px] font-semibold uppercase tracking-wider">Varian Menu</span>
               </div>
-              <div className="text-3xl font-black text-white font-mono">5 Pilihan</div>
+              <div className="text-3xl font-heading font-black text-white">5 Pilihan</div>
               <div className="text-xs text-sky-100 font-medium">Makanan & Minuman</div>
             </div>
 
             <div>
               <div className="flex items-center justify-center sm:justify-start gap-2 text-sky-200 mb-1">
                 <Award className="w-4 h-4" />
-                <span className="text-[11px] font-bold uppercase tracking-wider">Kualitas</span>
+                <span className="text-[11px] font-semibold uppercase tracking-wider">Kualitas</span>
               </div>
-              <div className="text-3xl font-black text-white font-mono">100%</div>
+              <div className="text-3xl font-heading font-black text-white">100%</div>
               <div className="text-xs text-sky-100 font-medium">Segar & Higienis</div>
             </div>
 
             <div>
               <div className="flex items-center justify-center sm:justify-start gap-2 text-sky-200 mb-1">
                 <Users className="w-4 h-4" />
-                <span className="text-[11px] font-bold uppercase tracking-wider">Harga</span>
+                <span className="text-[11px] font-semibold uppercase tracking-wider">Harga</span>
               </div>
-              <div className="text-3xl font-black text-white font-mono">3K - 9K</div>
+              <div className="text-3xl font-heading font-black text-white">3K - 9K</div>
               <div className="text-xs text-sky-100 font-medium">Ramah Kantong</div>
             </div>
 
             <div>
               <div className="flex items-center justify-center sm:justify-start gap-2 text-sky-200 mb-1">
                 <Clock className="w-4 h-4" />
-                <span className="text-[11px] font-bold uppercase tracking-wider">Jam Buka</span>
+                <span className="text-[11px] font-semibold uppercase tracking-wider">Jam Buka</span>
               </div>
-              <div className="text-3xl font-black text-white font-mono">07:00</div>
+              <div className="text-3xl font-heading font-black text-white">07:00</div>
               <div className="text-xs text-sky-100 font-medium">Jumat, 27 Nov WIB</div>
             </div>
           </div>
 
-          {/* Right: Folded Origami Testimonial Card (Matches the origami quote card in reference) */}
+          {/* Right: Folded Origami Testimonial Card */}
           <div className="lg:col-span-5 bg-white text-slate-800 rounded-3xl p-5 shadow-card-paper relative overflow-hidden">
             {/* Top folded corner */}
             <div className="absolute top-0 right-0 w-8 h-8 bg-sky-100 rounded-bl-2xl shadow-inner" />
@@ -70,8 +70,8 @@ export const Footer: React.FC = () => {
             </p>
 
             <div className="flex items-center justify-between text-xs font-bold pt-2 border-t border-slate-100">
-              <span className="text-[#0284C7] font-mono">Stand Binary Bite XII B</span>
-              <span className="text-slate-400">SMA Negeri 1 Lumajang</span>
+              <span className="text-[#0284C7] font-heading font-black">Stand Binary Bite XII B</span>
+              <span className="text-slate-400 font-medium">SMA Negeri 1 Lumajang</span>
             </div>
           </div>
         </div>
@@ -85,7 +85,7 @@ export const Footer: React.FC = () => {
               <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-white bg-white flex-shrink-0">
                 <img src="/images/logo.jpg" alt="Logo" className="w-full h-full object-cover" />
               </div>
-              <span className="font-mono text-xl font-black text-white">
+              <span className="font-heading font-black text-xl text-white">
                 BINARY<span className="text-sky-200">.BITE</span>
               </span>
             </div>
@@ -95,10 +95,10 @@ export const Footer: React.FC = () => {
           </div>
 
           <div className="md:col-span-3 space-y-2">
-            <h4 className="text-xs font-bold text-sky-200 uppercase tracking-wider">
+            <h4 className="text-xs font-heading font-bold text-sky-200 uppercase tracking-wider">
               Tautan Halaman
             </h4>
-            <ul className="space-y-1.5 text-xs text-sky-100">
+            <ul className="space-y-1.5 text-xs text-sky-100 font-medium">
               <li><a href="#beranda" className="hover:text-white">Beranda</a></li>
               <li><a href="#katalog" className="hover:text-white">Menu Makanan</a></li>
               <li><a href="#cara-pemesanan" className="hover:text-white">Cara Pemesanan</a></li>
@@ -108,10 +108,10 @@ export const Footer: React.FC = () => {
           </div>
 
           <div className="md:col-span-4 space-y-2">
-            <h4 className="text-xs font-bold text-sky-200 uppercase tracking-wider">
+            <h4 className="text-xs font-heading font-bold text-sky-200 uppercase tracking-wider">
               Kontak & Lokasi Stand
             </h4>
-            <div className="space-y-1.5 text-xs text-sky-100">
+            <div className="space-y-1.5 text-xs text-sky-100 font-medium">
               <p className="flex items-center gap-2">
                 <MapPin className="w-3.5 h-3.5 text-sky-200" />
                 <span>{BRAND_INFO.standLocation}</span>

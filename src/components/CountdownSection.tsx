@@ -56,43 +56,43 @@ export const CountdownSection: React.FC = () => {
   ];
 
   return (
-    <section className="bg-[#0284C7] relative overflow-hidden py-16 sm:py-20">
+    <section className="bg-[#0284C7] relative overflow-hidden py-16 sm:py-20 text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
           {/* Left Text */}
           <div className="text-center lg:text-left text-white max-w-lg">
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-xs font-mono font-bold text-sky-100 mb-3 border border-white/30">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 bg-white/20 backdrop-blur-sm rounded-full text-xs font-semibold text-sky-100 mb-3 border border-white/30">
               <Calendar className="w-3.5 h-3.5 text-sky-200" />
               <span>{BRAND_INFO.eventDateText} • 07:00 WIB</span>
             </div>
-            <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight uppercase">
+            <h2 className="font-heading font-black text-2xl sm:text-4xl tracking-tight uppercase">
               {timeLeft.isOver ? 'EVENT TELAH DIMULAI!' : 'HITUNG MUNDUR BUKA STAND'}
             </h2>
             <p className="text-sm text-sky-100 font-medium mt-1 leading-relaxed">
               {timeLeft.isOver
                 ? 'Stand 12B sudah siap melayani! Segera kunjungi stand kami di Jl. AR Hakim, Ditotrunan, Lumajang.'
-                : 'Pre-order sekarang untuk menjamin porsi favoritmu sebelum stok habis di hari-H!'}
+                : 'Pesan sekarang untuk memastikan porsi menu favoritmu sebelum kehabisan saat acara berlangsung.'}
             </p>
           </div>
 
-          {/* Right: Digital Folded Cards (Styled like the white cards in "PRICING DETAILS" in reference) */}
+          {/* Right: Digital Folded Cards */}
           <div className="flex items-center gap-2.5 sm:gap-4">
             {timeBoxes.map((box, idx) => (
               <div key={box.label} className="flex items-center gap-2 sm:gap-4">
                 <div className="flex flex-col items-center">
                   <div className="w-16 h-20 sm:w-24 sm:h-28 bg-white rounded-2xl flex flex-col items-center justify-center shadow-soft-float border border-sky-100 relative overflow-hidden group hover:-translate-y-0.5 transition-transform">
-                    {/* Top folded colored tab */}
+                    {/* Top colored line */}
                     <div className="absolute top-0 inset-x-0 h-1.5 bg-[#0284C7]" />
-                    <span className="font-mono text-2xl sm:text-4xl font-black text-slate-800 tracking-tight">
+                    <span className="font-heading font-black text-2xl sm:text-4xl text-slate-800 tracking-tight">
                       {box.value}
                     </span>
-                    <span className="font-mono text-[9px] sm:text-[11px] font-bold text-[#0284C7] uppercase mt-1 tracking-wider">
+                    <span className="font-heading font-bold text-[9px] sm:text-[11px] text-[#0284C7] uppercase mt-1 tracking-wider">
                       {box.label}
                     </span>
                   </div>
                 </div>
                 {idx < timeBoxes.length - 1 && (
-                  <span className="font-mono text-xl sm:text-2xl font-black text-white/80 -mt-5">
+                  <span className="font-heading text-xl sm:text-2xl font-black text-white/80 -mt-5">
                     :
                   </span>
                 )}

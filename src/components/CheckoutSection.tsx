@@ -119,7 +119,7 @@ export const CheckoutSection: React.FC = () => {
               01
             </div>
             <div>
-              <h2 className="text-xl sm:text-2xl font-extrabold text-slate-800">
+              <h2 className="font-heading font-black text-xl sm:text-2xl text-slate-800">
                 Formulir Pemesanan
               </h2>
               <p className="text-xs text-slate-500 font-medium">
@@ -288,7 +288,7 @@ export const CheckoutSection: React.FC = () => {
               <button
                 type="submit"
                 disabled={items.length === 0}
-                className="w-full py-4 bg-[#0284C7] hover:bg-[#0369A1] text-white text-sm font-extrabold rounded-full shadow-btn-sky transition-all hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 uppercase tracking-wider"
+                className="w-full py-4 bg-[#0284C7] hover:bg-[#0369A1] text-white text-sm font-heading font-black rounded-full shadow-btn-sky transition-all hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 uppercase tracking-wider"
               >
                 <Send className="w-4 h-4" />
                 <span>Buat Struk & Kirim via WhatsApp</span>
@@ -303,7 +303,7 @@ export const CheckoutSection: React.FC = () => {
         {/* Right: Order Summary */}
         <div className="lg:col-span-5 bg-white rounded-3xl p-6 shadow-card-paper border border-sky-100">
           <div className="flex items-center justify-between pb-3 mb-4 border-b border-slate-100">
-            <h3 className="font-extrabold text-base text-slate-800">
+            <h3 className="font-heading font-black text-base text-slate-800">
               Ringkasan Pesanan
             </h3>
             <span className="font-mono text-xs font-bold px-2.5 py-0.5 bg-sky-50 text-[#0284C7] rounded-full border border-sky-100">

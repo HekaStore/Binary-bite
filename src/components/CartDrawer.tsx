@@ -39,7 +39,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onOpenCheckout }) => {
         className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity"
       />
 
-      {/* Drawer Container (Soft modern aerodynamic origami style) */}
+      {/* Drawer Container */}
       <div className="relative w-full max-w-md bg-white border-l border-sky-100 shadow-2xl flex flex-col h-full z-10 animate-in slide-in-from-right duration-300">
         {/* Header */}
         <div className="p-5 border-b border-sky-100 flex items-center justify-between bg-sky-50/70">
@@ -48,10 +48,10 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onOpenCheckout }) => {
               <ShoppingBag className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="font-extrabold text-base sm:text-lg text-slate-800 leading-tight">
+              <h3 className="font-heading font-black text-base sm:text-lg text-slate-800 leading-tight">
                 Keranjang Pesanan
               </h3>
-              <p className="text-xs font-mono font-bold text-[#0284C7]">
+              <p className="text-xs font-heading font-bold text-[#0284C7]">
                 {totalItems} item dipilih
               </p>
             </div>
@@ -65,14 +65,14 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onOpenCheckout }) => {
           </button>
         </div>
 
-        {/* Item List or Empty State (Rule C-4: Resilience) */}
+        {/* Item List or Empty State */}
         <div className="flex-1 overflow-y-auto p-5 space-y-3.5">
           {items.length === 0 ? (
             <div className="h-full flex flex-col items-center justify-center text-center p-6">
               <div className="w-20 h-20 rounded-3xl bg-sky-50 border border-sky-200 flex items-center justify-center text-[#0284C7] mb-4 shadow-sm">
                 <ShoppingBag className="w-10 h-10" />
               </div>
-              <h4 className="font-extrabold text-lg text-slate-800">
+              <h4 className="font-heading font-black text-lg text-slate-800">
                 Keranjang Masih Kosong
               </h4>
               <p className="text-xs sm:text-sm text-slate-500 font-medium mt-1 max-w-xs leading-relaxed">
@@ -80,7 +80,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onOpenCheckout }) => {
               </p>
               <button
                 onClick={() => setIsCartOpen(false)}
-                className="mt-6 px-6 py-3 bg-[#0284C7] hover:bg-[#0369A1] text-white text-xs sm:text-sm font-extrabold rounded-full shadow-btn-sky transition-all hover:-translate-y-0.5 active:translate-y-0"
+                className="mt-6 px-6 py-3 bg-[#0284C7] hover:bg-[#0369A1] text-white text-xs sm:text-sm font-heading font-black rounded-full shadow-btn-sky transition-all hover:-translate-y-0.5 active:translate-y-0"
               >
                 Pilih Menu Sekarang
               </button>
@@ -103,7 +103,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onOpenCheckout }) => {
                 {/* Details */}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start justify-between gap-1">
-                    <h5 className="font-extrabold text-sm text-slate-800 truncate">
+                    <h5 className="font-heading font-bold text-sm text-slate-800 truncate">
                       {item.product.name}
                     </h5>
                     <button
@@ -117,13 +117,13 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onOpenCheckout }) => {
                   </div>
 
                   {item.selectedFlavor && (
-                    <span className="inline-block px-2 py-0.5 text-[10px] font-mono font-bold bg-sky-50 text-[#0284C7] border border-sky-200 rounded-full mt-1">
+                    <span className="inline-block px-2.5 py-0.5 text-[10px] font-heading font-bold bg-sky-50 text-[#0284C7] border border-sky-200 rounded-full mt-1">
                       Rasa: {item.selectedFlavor}
                     </span>
                   )}
 
                   <div className="flex items-center justify-between mt-2.5 pt-2 border-t border-slate-100">
-                    <span className="font-mono text-sm font-extrabold text-[#0284C7]">
+                    <span className="font-heading font-black text-sm text-[#0284C7]">
                       {formatRupiah(item.product.price * item.quantity)}
                     </span>
 
@@ -136,7 +136,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onOpenCheckout }) => {
                       >
                         <Minus className="w-3.5 h-3.5" />
                       </button>
-                      <span className="w-6 text-center font-mono font-bold text-xs text-[#0284C7]">
+                      <span className="w-6 text-center font-heading font-black text-xs text-[#0284C7]">
                         {item.quantity}
                       </span>
                       <button
@@ -184,11 +184,11 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onOpenCheckout }) => {
             <div className="space-y-1.5 text-xs sm:text-sm">
               <div className="flex justify-between text-slate-500 font-medium">
                 <span>Total Item</span>
-                <span className="font-mono font-bold text-slate-800">{totalItems} pcs</span>
+                <span className="font-heading font-bold text-slate-800">{totalItems} pcs</span>
               </div>
-              <div className="flex justify-between text-base font-extrabold text-slate-900 pt-2 border-t border-slate-100">
+              <div className="flex justify-between text-base font-heading font-black text-slate-900 pt-2 border-t border-slate-100">
                 <span>Total Pembayaran</span>
-                <span className="font-mono text-xl text-[#0284C7]">
+                <span className="font-heading font-black text-xl text-[#0284C7]">
                   {formatRupiah(totalPrice)}
                 </span>
               </div>
@@ -201,7 +201,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onOpenCheckout }) => {
                     setIsCartOpen(false);
                     onOpenCheckout();
                   }}
-                  className="w-full py-4 bg-[#0284C7] hover:bg-[#0369A1] text-white font-black rounded-full shadow-btn-sky flex items-center justify-center gap-2 transition-all hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] text-xs sm:text-sm uppercase tracking-wider"
+                  className="w-full py-4 bg-[#0284C7] hover:bg-[#0369A1] text-white font-heading font-black rounded-full shadow-btn-sky flex items-center justify-center gap-2 transition-all hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] text-xs sm:text-sm uppercase tracking-wider"
                 >
                   <span>Lanjut ke Formulir Checkout</span>
                   <ArrowRight className="w-4 h-4" />
@@ -210,7 +210,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onOpenCheckout }) => {
                 <Link
                   href="/checkout"
                   onClick={() => setIsCartOpen(false)}
-                  className="w-full py-4 bg-[#0284C7] hover:bg-[#0369A1] text-white font-black rounded-full shadow-btn-sky flex items-center justify-center gap-2 transition-all hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] text-xs sm:text-sm uppercase tracking-wider"
+                  className="w-full py-4 bg-[#0284C7] hover:bg-[#0369A1] text-white font-heading font-black rounded-full shadow-btn-sky flex items-center justify-center gap-2 transition-all hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] text-xs sm:text-sm uppercase tracking-wider"
                 >
                   <span>Lanjut ke Formulir Checkout</span>
                   <ArrowRight className="w-4 h-4" />
@@ -218,7 +218,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onOpenCheckout }) => {
               )}
               <button
                 onClick={clearCart}
-                className="w-full py-2 text-xs font-mono font-semibold text-slate-400 hover:text-red-600 transition-colors"
+                className="w-full py-2 text-xs font-medium text-slate-400 hover:text-red-600 transition-colors"
               >
                 Kosongkan Keranjang
               </button>

@@ -34,9 +34,10 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans: ['"Plus Jakarta Sans"', 'Inter', 'system-ui', 'sans-serif'],
+        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        heading: ['Poppins', 'Inter', 'system-ui', 'sans-serif'],
+        display: ['Poppins', 'Inter', 'system-ui', 'sans-serif'],
         mono: ['"JetBrains Mono"', 'monospace'],
-        script: ['"Caveat"', 'cursive', 'sans-serif'],
       },
       boxShadow: {
         'soft-float': '0 20px 40px -15px rgba(2, 132, 199, 0.12), 0 0 15px 0 rgba(0, 0, 0, 0.03)',

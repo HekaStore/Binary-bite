@@ -206,7 +206,7 @@ export const PosCashier: React.FC = () => {
           <div className="w-14 h-14 rounded-2xl bg-brand-sky border-2 border-brand-royal flex items-center justify-center text-brand-cobalt mx-auto mb-4">
             <Lock className="w-7 h-7" />
           </div>
-          <h2 className="text-xl font-extrabold text-brand-cobalt text-center">
+          <h2 className="font-heading font-black text-xl text-brand-cobalt text-center">
             Akses POS Kasir & Admin
           </h2>
           <p className="text-xs text-brand-muted text-center mt-1">
@@ -258,7 +258,7 @@ export const PosCashier: React.FC = () => {
             <ShieldCheck className="w-3.5 h-3.5 text-brand-electric" />
             <span>POS TERMINAL STAND 12B • LIVE</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-brand-cobalt">
+          <h1 className="font-heading font-black text-2xl sm:text-3xl text-brand-cobalt">
             Dashboard Kasir & Manajemen Pesanan
           </h1>
           <p className="text-xs sm:text-sm text-brand-muted">

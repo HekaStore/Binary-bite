@@ -36,6 +36,22 @@ export const Navbar: React.FC = () => {
       >
         Lewati ke Konten Menu Utama
       </a>
+
+      {/* Top Food Store Announcement Bar */}
+      <div className="bg-[#0369A1] text-sky-100 text-[11px] font-medium py-1.5 px-4 text-center border-b border-sky-400/20 hidden sm:block">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span>Stand Kuliner Resmi • Jumat, 27 November 2026 (07:00 WIB)</span>
+          </div>
+          <div className="flex items-center gap-4 text-white/90">
+            <span>📍 Jl. AR Hakim, Ditotrunan, Lumajang</span>
+            <span>•</span>
+            <span>🎯 Kuota Fresh: 25 Porsi/Hari</span>
+          </div>
+        </div>
+      </div>
+
       <div className="w-full bg-[#0284C7] text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 sm:h-20">
@@ -50,15 +66,15 @@ export const Navbar: React.FC = () => {
               </div>
               <div className="min-w-0">
                 <div className="flex items-center gap-1.5 sm:gap-2">
-                  <span className="font-extrabold text-lg sm:text-xl tracking-tight text-white font-mono truncate">
+                  <span className="font-heading font-black text-lg sm:text-2xl tracking-tight text-white uppercase truncate">
                     BINARY<span className="text-sky-200">.BITE</span>
                   </span>
-                  <span className="text-[9px] sm:text-[10px] font-bold px-1.5 sm:px-2 py-0.5 bg-white/20 text-white rounded-full backdrop-blur-sm flex-shrink-0">
-                    XII B
+                  <span className="text-[9px] sm:text-[10px] font-bold px-2 py-0.5 bg-white/20 text-white rounded-full backdrop-blur-sm flex-shrink-0">
+                    STAND 12B
                   </span>
                 </div>
                 <p className="text-[9px] sm:text-[11px] font-medium tracking-wider text-sky-100 uppercase truncate">
-                  Digital Canteen & Food Festival
+                  Artisan Bakery & Cold Treats
                 </p>
               </div>
             </Link>
