@@ -239,15 +239,15 @@ export const PosCashier: React.FC = () => {
 
             <button
               type="submit"
-              className="w-full py-3 bg-brand-cobalt text-brand-white font-bold rounded-xl border border-brand-cobalt shadow-solid-electric hover:bg-brand-royal text-sm"
+              className="w-full py-3 bg-[#0284C7] hover:bg-[#0369A1] text-white font-extrabold rounded-2xl shadow-btn-sky transition-all text-sm active:scale-95"
             >
               Masuk Dashboard Kasir
             </button>
           </form>
 
-          <div className="mt-6 pt-4 border-t border-brand-line text-center">
-            <span className="text-[11px] font-mono text-brand-muted">
-              Petunjuk Akses: PIN Kasir <strong className="text-brand-cobalt">2789</strong>
+          <div className="mt-6 pt-4 border-t border-slate-100 text-center">
+            <span className="text-[11px] text-slate-400 font-medium">
+              Area Khusus: Hanya dapat diakses oleh Admin & Petugas Stand 12B
             </span>
           </div>
         </div>

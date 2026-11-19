@@ -3,10 +3,9 @@
 import React, { useState } from 'react';
 import { useCart } from '@/context/CartContext';
 import { Order, PickupMethod } from '@/types';
-import { generateTransactionId, formatRupiah, createWhatsAppOrderUrl } from '@/utils/formatters';
+import { generateTransactionId, formatRupiah } from '@/utils/formatters';
 import { ReceiptModal } from '@/components/ReceiptModal';
-import { BRAND_INFO } from '@/data/products';
-import { ShoppingBag, Send, AlertCircle, CheckCircle2, User, Phone, MapPin, FileText, ArrowLeft } from 'lucide-react';
+import { ShoppingBag, Send, AlertCircle, User, Phone, MapPin, FileText, ArrowLeft, CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
 import confetti from 'canvas-confetti';
 
@@ -40,7 +39,6 @@ export const CheckoutSection: React.FC = () => {
 
     setErrorMsg('');
 
-    // Create Order Object
     const newOrder: Order = {
       id: generateTransactionId(),
       customerName: customerName.trim(),
@@ -61,7 +59,6 @@ export const CheckoutSection: React.FC = () => {
       createdAt: new Date().toISOString(),
     };
 
-    // Save to localStorage orders list
     try {
       const existing = JSON.parse(localStorage.getItem('binary_bite_orders') || '[]');
       existing.unshift(newOrder);
@@ -70,17 +67,15 @@ export const CheckoutSection: React.FC = () => {
       console.error('Failed to save order to localStorage', err);
     }
 
-    // Trigger celebratory confetti
     try {
       confetti({
         particleCount: 80,
         spread: 60,
         origin: { y: 0.6 },
-        colors: ['#0A2463', '#1E56A0', '#2563EB', '#D6E6F2'],
+        colors: ['#0284C7', '#38BDF8', '#BAE6FD', '#0A2463'],
       });
     } catch {}
 
-    // Show modal & clear cart
     setCreatedOrder(newOrder);
     clearCart();
     addToast('Pesanan berhasil dibuat! Silakan kirim detailnya via WhatsApp.', 'success');
@@ -88,11 +83,11 @@ export const CheckoutSection: React.FC = () => {
 
   return (
     <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
-      {/* Breadcrumb / Back button */}
+      {/* Back button */}
       <div className="mb-6">
         <Link
           href="/"
-          className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-brand-royal hover:text-brand-cobalt transition-colors"
+          className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-[#0284C7] hover:text-[#0369A1] transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Kembali ke Beranda / Menu</span>
@@ -101,33 +96,32 @@ export const CheckoutSection: React.FC = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* Left: Form */}
-        <div className="lg:col-span-7 bg-brand-white border-2 border-brand-cobalt rounded-2xl p-6 sm:p-8 shadow-flat-md">
-          <div className="flex items-center gap-3 pb-4 mb-6 border-b-2 border-brand-line">
-            <div className="w-10 h-10 rounded-xl bg-brand-cobalt text-brand-white flex items-center justify-center font-mono font-bold">
+        <div className="lg:col-span-7 bg-white rounded-3xl p-6 sm:p-8 shadow-card-paper border border-sky-100">
+          <div className="flex items-center gap-3 pb-4 mb-6 border-b border-slate-100">
+            <div className="w-10 h-10 rounded-2xl bg-sky-50 text-[#0284C7] flex items-center justify-center font-mono font-bold border border-sky-200">
               01
             </div>
             <div>
-              <h2 className="text-xl sm:text-2xl font-extrabold text-brand-cobalt">
+              <h2 className="text-xl sm:text-2xl font-extrabold text-slate-800">
                 Formulir Pemesanan
               </h2>
-              <p className="text-xs sm:text-sm text-brand-muted font-medium">
-                Lengkapi data di bawah ini untuk konfirmasi pesanan via WhatsApp.
+              <p className="text-xs text-slate-500 font-medium">
+                Lengkapi data di bawah ini untuk konfirmasi pesanan ke WhatsApp Admin.
               </p>
             </div>
           </div>
 
           {errorMsg && (
-            <div className="mb-6 p-4 bg-red-50 border-2 border-red-500 rounded-xl flex items-center gap-3 text-red-700 text-xs sm:text-sm font-bold">
+            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-2xl flex items-center gap-3 text-red-700 text-xs sm:text-sm font-bold">
               <AlertCircle className="w-5 h-5 flex-shrink-0" />
               <span>{errorMsg}</span>
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-5">
-            {/* Nama Lengkap */}
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-xs sm:text-sm font-bold text-brand-cobalt mb-1.5 flex items-center gap-1.5">
-                <User className="w-4 h-4 text-brand-royal" />
+              <label className="block text-xs font-bold text-slate-700 mb-1.5 flex items-center gap-1.5">
+                <User className="w-3.5 h-3.5 text-[#0284C7]" />
                 <span>Nama Lengkap Pemesan *</span>
               </label>
               <input
@@ -136,14 +130,13 @@ export const CheckoutSection: React.FC = () => {
                 value={customerName}
                 onChange={(e) => setCustomerName(e.target.value)}
                 placeholder="Contoh: Muhammad Rifki / Nisrina"
-                className="w-full px-4 py-3 bg-brand-white border-2 border-brand-royal rounded-xl text-sm font-medium text-brand-slate focus:outline-none focus:border-brand-cobalt"
+                className="w-full px-4 py-3 bg-slate-50/80 border border-slate-200 rounded-2xl text-xs sm:text-sm font-medium text-slate-800 focus:outline-none focus:border-[#0284C7] focus:bg-white transition-all"
               />
             </div>
 
-            {/* Kelas / Instansi / No. WA */}
             <div>
-              <label className="block text-xs sm:text-sm font-bold text-brand-cobalt mb-1.5 flex items-center gap-1.5">
-                <Phone className="w-4 h-4 text-brand-royal" />
+              <label className="block text-xs font-bold text-slate-700 mb-1.5 flex items-center gap-1.5">
+                <Phone className="w-3.5 h-3.5 text-[#0284C7]" />
                 <span>Kelas / Instansi / No. WhatsApp Pemesan *</span>
               </label>
               <input
@@ -152,30 +145,29 @@ export const CheckoutSection: React.FC = () => {
                 value={customerContact}
                 onChange={(e) => setCustomerContact(e.target.value)}
                 placeholder="Contoh: Kelas 12B / 0812-3456-7890"
-                className="w-full px-4 py-3 bg-brand-white border-2 border-brand-royal rounded-xl text-sm font-medium text-brand-slate focus:outline-none focus:border-brand-cobalt"
+                className="w-full px-4 py-3 bg-slate-50/80 border border-slate-200 rounded-2xl text-xs sm:text-sm font-medium text-slate-800 focus:outline-none focus:border-[#0284C7] focus:bg-white transition-all"
               />
             </div>
 
-            {/* Metode Pengambilan */}
             <div>
-              <label className="block text-xs sm:text-sm font-bold text-brand-cobalt mb-1.5 flex items-center gap-1.5">
-                <MapPin className="w-4 h-4 text-brand-royal" />
+              <label className="block text-xs font-bold text-slate-700 mb-1.5 flex items-center gap-1.5">
+                <MapPin className="w-3.5 h-3.5 text-[#0284C7]" />
                 <span>Metode Pengambilan Pesanan</span>
               </label>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <button
                   type="button"
                   onClick={() => setPickupMethod('Ambil di Stand 12B')}
-                  className={`p-3.5 text-left rounded-xl border-2 transition-all flex flex-col justify-between ${
+                  className={`p-3.5 text-left rounded-2xl border transition-all flex flex-col justify-between ${
                     pickupMethod === 'Ambil di Stand 12B'
-                      ? 'bg-brand-sky border-brand-cobalt shadow-sm'
-                      : 'bg-brand-white border-brand-line hover:border-brand-royal'
+                      ? 'bg-sky-50 border-[#0284C7] shadow-sm'
+                      : 'bg-white border-slate-200 hover:border-sky-300'
                   }`}
                 >
-                  <span className="font-bold text-xs sm:text-sm text-brand-cobalt">
+                  <span className="font-bold text-xs sm:text-sm text-slate-800">
                     Ambil di Stand 12B
                   </span>
-                  <span className="text-[11px] text-brand-muted mt-1">
+                  <span className="text-[11px] text-slate-500 mt-0.5">
                     Lapangan Utama Sekolah
                   </span>
                 </button>
@@ -183,26 +175,25 @@ export const CheckoutSection: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setPickupMethod('Antar Area Sekolah')}
-                  className={`p-3.5 text-left rounded-xl border-2 transition-all flex flex-col justify-between ${
+                  className={`p-3.5 text-left rounded-2xl border transition-all flex flex-col justify-between ${
                     pickupMethod === 'Antar Area Sekolah'
-                      ? 'bg-brand-sky border-brand-cobalt shadow-sm'
-                      : 'bg-brand-white border-brand-line hover:border-brand-royal'
+                      ? 'bg-sky-50 border-[#0284C7] shadow-sm'
+                      : 'bg-white border-slate-200 hover:border-sky-300'
                   }`}
                 >
-                  <span className="font-bold text-xs sm:text-sm text-brand-cobalt">
+                  <span className="font-bold text-xs sm:text-sm text-slate-800">
                     Antar Area Sekolah
                   </span>
-                  <span className="text-[11px] text-brand-muted mt-1">
+                  <span className="text-[11px] text-slate-500 mt-0.5">
                     Diantar ke ruang kelasmu
                   </span>
                 </button>
               </div>
             </div>
 
-            {/* Catatan Khusus */}
             <div>
-              <label className="block text-xs sm:text-sm font-bold text-brand-cobalt mb-1.5 flex items-center gap-1.5">
-                <FileText className="w-4 h-4 text-brand-royal" />
+              <label className="block text-xs font-bold text-slate-700 mb-1.5 flex items-center gap-1.5">
+                <FileText className="w-3.5 h-3.5 text-[#0284C7]" />
                 <span>Catatan Tambahan (Opsional)</span>
               </label>
               <textarea
@@ -210,46 +201,45 @@ export const CheckoutSection: React.FC = () => {
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
                 placeholder="Contoh: Es Capcin esnya sedang saja, roll abon jangan pedas."
-                className="w-full px-4 py-2.5 bg-brand-white border-2 border-brand-royal rounded-xl text-sm font-medium text-brand-slate focus:outline-none focus:border-brand-cobalt"
+                className="w-full px-4 py-2.5 bg-slate-50/80 border border-slate-200 rounded-2xl text-xs sm:text-sm font-medium text-slate-800 focus:outline-none focus:border-[#0284C7] focus:bg-white transition-all"
               />
             </div>
 
-            {/* Submit Button */}
-            <div className="pt-4">
+            <div className="pt-3">
               <button
                 type="submit"
                 disabled={items.length === 0}
-                className="w-full py-4 bg-brand-cobalt text-brand-white text-base font-extrabold rounded-xl border border-brand-cobalt shadow-solid-electric hover:bg-brand-royal active:translate-y-1 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                className="w-full py-4 bg-[#0284C7] hover:bg-[#0369A1] text-white text-sm font-extrabold rounded-full shadow-btn-sky transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 uppercase tracking-wider"
               >
-                <Send className="w-5 h-5" />
-                <span>Buat Struk & Kirim Pesanan via WhatsApp</span>
+                <Send className="w-4 h-4" />
+                <span>Buat Struk & Kirim via WhatsApp</span>
               </button>
-              <p className="text-[11px] font-mono text-center text-brand-muted mt-3">
-                *Pesanan akan otomatis diteruskan ke WhatsApp Admin Nisrina (0858-4378-8915)
+              <p className="text-[11px] text-center text-slate-400 mt-2 font-medium">
+                *Pesanan langsung diarahkan ke WhatsApp Admin Nisrina (0858-4378-8915)
               </p>
             </div>
           </form>
         </div>
 
         {/* Right: Order Summary */}
-        <div className="lg:col-span-5 bg-brand-sky border-2 border-brand-cobalt rounded-2xl p-6 shadow-solid-cobalt">
-          <div className="flex items-center justify-between pb-3 mb-4 border-b-2 border-brand-royal">
-            <h3 className="font-extrabold text-lg text-brand-cobalt">
+        <div className="lg:col-span-5 bg-white rounded-3xl p-6 shadow-card-paper border border-sky-100">
+          <div className="flex items-center justify-between pb-3 mb-4 border-b border-slate-100">
+            <h3 className="font-extrabold text-base text-slate-800">
               Ringkasan Pesanan
             </h3>
-            <span className="font-mono text-xs font-bold px-2 py-0.5 bg-brand-white text-brand-cobalt border border-brand-royal rounded">
+            <span className="font-mono text-xs font-bold px-2.5 py-0.5 bg-sky-50 text-[#0284C7] rounded-full border border-sky-100">
               {totalItems} Item
             </span>
           </div>
 
           {items.length === 0 ? (
             <div className="text-center py-8">
-              <p className="text-sm font-bold text-brand-slate">
+              <p className="text-xs sm:text-sm font-bold text-slate-500">
                 Belum ada menu di keranjang.
               </p>
               <Link
                 href="/#katalog"
-                className="mt-3 inline-block px-4 py-2 bg-brand-cobalt text-brand-white text-xs font-bold rounded-lg"
+                className="mt-3 inline-block px-4 py-2 bg-[#0284C7] text-white text-xs font-bold rounded-full"
               >
                 Pilih Menu Dulu
               </Link>
@@ -260,54 +250,45 @@ export const CheckoutSection: React.FC = () => {
                 {items.map((item) => (
                   <div
                     key={item.id}
-                    className="p-3 bg-brand-white border border-brand-royal rounded-xl flex items-center justify-between"
+                    className="p-3 bg-slate-50 rounded-2xl flex items-center justify-between border border-slate-100"
                   >
                     <div>
-                      <h4 className="font-bold text-xs sm:text-sm text-brand-cobalt">
+                      <h4 className="font-bold text-xs sm:text-sm text-slate-800">
                         {item.product.name}
                         {item.selectedFlavor && ` (${item.selectedFlavor})`}
                       </h4>
-                      <p className="text-[11px] font-mono text-brand-muted">
+                      <p className="text-[11px] font-mono text-slate-500">
                         {formatRupiah(item.product.price)} x {item.quantity} pcs
                       </p>
                     </div>
-                    <span className="font-mono text-xs sm:text-sm font-extrabold text-brand-cobalt">
+                    <span className="font-mono text-xs sm:text-sm font-extrabold text-[#0284C7]">
                       {formatRupiah(item.product.price * item.quantity)}
                     </span>
                   </div>
                 ))}
               </div>
 
-              {/* Total Calculation */}
-              <div className="pt-3 border-t-2 border-brand-royal space-y-1.5 text-xs sm:text-sm">
-                <div className="flex justify-between text-brand-slate font-medium">
+              <div className="pt-3 border-t border-slate-100 space-y-1.5 text-xs">
+                <div className="flex justify-between text-slate-600 font-medium">
                   <span>Subtotal Produk</span>
                   <span className="font-mono font-bold">{formatRupiah(totalPrice)}</span>
                 </div>
-                <div className="flex justify-between text-brand-slate font-medium">
-                  <span>Biaya Pengambilan / Antar</span>
-                  <span className="font-mono font-bold text-brand-electric">GRATIS</span>
+                <div className="flex justify-between text-slate-600 font-medium">
+                  <span>Biaya Pengantaran</span>
+                  <span className="font-mono font-bold text-[#0284C7]">GRATIS</span>
                 </div>
-                <div className="flex justify-between text-base font-extrabold text-brand-cobalt pt-2 border-t border-brand-line">
+                <div className="flex justify-between text-sm sm:text-base font-extrabold text-slate-900 pt-2 border-t border-slate-100">
                   <span>Total Pembayaran</span>
-                  <span className="font-mono text-xl text-brand-electric">
+                  <span className="font-mono text-lg text-[#0284C7]">
                     {formatRupiah(totalPrice)}
                   </span>
                 </div>
-              </div>
-
-              <div className="p-3 bg-brand-white border border-brand-royal rounded-xl text-xs text-brand-slate">
-                <span className="font-bold block text-brand-cobalt mb-0.5">
-                  Informasi Penting:
-                </span>
-                Harap segera lakukan konfirmasi via WhatsApp setelah menekan tombol di samping agar kuota pesananmu langsung diproses kelas 12B!
               </div>
             </div>
           )}
         </div>
       </div>
 
-      {/* Success Modal / Thermal Receipt View */}
       {createdOrder && (
         <ReceiptModal
           order={createdOrder}
@@ -317,4 +298,3 @@ export const CheckoutSection: React.FC = () => {
     </div>
   );
 };
-

@@ -98,7 +98,7 @@ export const Navbar: React.FC = () => {
                 className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-sky-900 bg-white/90 hover:bg-white rounded-full transition-all shadow-sm"
               >
                 <ShieldCheck className="w-3.5 h-3.5 text-[#0284C7]" />
-                <span>Kasir (PIN: 2789)</span>
+                <span>Kasir Stand</span>
               </Link>
 
               {/* Cart Button */}
@@ -180,7 +180,7 @@ export const Navbar: React.FC = () => {
                 className="flex items-center justify-center gap-2 py-2.5 bg-white text-[#0284C7] font-bold text-xs rounded-xl"
               >
                 <ShieldCheck className="w-4 h-4" />
-                POS Kasir Stand (PIN: 2789)
+                POS Kasir Stand
               </Link>
               <button
                 onClick={() => scrollToSection('katalog')}

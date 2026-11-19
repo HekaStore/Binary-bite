@@ -103,7 +103,7 @@ export const Footer: React.FC = () => {
               <li><a href="#katalog" className="hover:text-white">Menu Makanan</a></li>
               <li><a href="#cara-pemesanan" className="hover:text-white">Cara Pemesanan</a></li>
               <li><a href="#tentang" className="hover:text-white">Tentang Kami</a></li>
-              <li><Link href="/admin" className="text-white font-bold hover:underline">POS Kasir Stand (PIN: 2789)</Link></li>
+              <li><Link href="/admin" className="text-white font-bold hover:underline">POS Kasir Stand</Link></li>
             </ul>
           </div>
 
