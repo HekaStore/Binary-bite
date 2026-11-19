@@ -38,7 +38,7 @@
 - **Keranjang Belanja**: Global state, stepper kuantitas langsung di kartu, konfirmasi hapus, tersimpan aman di `localStorage`.
 - **Checkout & WhatsApp Otomatis**: Form tervalidasi, pembuatan ID unik `BB-20261127-XXXX`, dan tombol otomatis membuka WhatsApp Admin Nisrina (`6285843788915`).
 - **Generator Struk Digital Thermal**: Pilihan ukuran 58mm & 80mm, unduh PDF (`jsPDF`), cetak thermal langsung (`window.print()`), dan salin pesan.
-- **Dashboard POS Kasir (`/admin`)**: Dilindungi PIN `1212`, rekap omzet & porsi terjual, pembaruan status pesanan, dan input manual pesanan stand langsung (walk-in).
+- **Dashboard POS Kasir (`/admin`)**: Dilindungi PIN `2789`, rekap omzet & porsi terjual, pembaruan status pesanan, dan input manual pesanan stand langsung (walk-in).
 - **Floating WhatsApp**: Akses cepat ke Nisrina dari semua halaman.
 
 ---

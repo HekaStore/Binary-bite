@@ -93,7 +93,7 @@ export const PosCashier: React.FC = () => {
 
   const handlePinSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (pinInput === '1212') {
+    if (pinInput === '2789') {
       setIsAuthenticated(true);
       setPinError(false);
     } else {
@@ -247,7 +247,7 @@ export const PosCashier: React.FC = () => {
 
           <div className="mt-6 pt-4 border-t border-brand-line text-center">
             <span className="text-[11px] font-mono text-brand-muted">
-              Petunjuk Uji Coba: PIN Default <strong className="text-brand-cobalt">1212</strong>
+              Petunjuk Akses: PIN Kasir <strong className="text-brand-cobalt">2789</strong>
             </span>
           </div>
         </div>

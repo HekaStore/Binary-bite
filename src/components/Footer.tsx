@@ -74,7 +74,7 @@ export const Footer: React.FC = () => {
               </li>
               <li>
                 <Link href="/admin" className="text-brand-sky hover:text-brand-white font-mono font-semibold">
-                  Akses POS Kasir Stand (PIN: 1212)
+                  Akses POS Kasir Stand (PIN: 2789)
                 </Link>
               </li>
             </ul>
