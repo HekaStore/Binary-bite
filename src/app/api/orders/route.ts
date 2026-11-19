@@ -17,7 +17,11 @@ const getDbFilePath = () => {
 };
 
 const getFirebaseUrl = () => {
-  return process.env.FIREBASE_DATABASE_URL || process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL;
+  return (
+    process.env.FIREBASE_DATABASE_URL ||
+    process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL ||
+    'https://binary-bite-default-rtdb.asia-southeast1.firebasedatabase.app'
+  );
 };
 
 // Helper to read local orders
