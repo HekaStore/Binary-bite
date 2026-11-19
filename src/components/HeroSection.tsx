@@ -47,8 +47,8 @@ export const HeroSection: React.FC = () => {
           />
         </svg>
 
-        {/* Origami 2D Paper Plane Illustration */}
-        <div className="absolute top-12 right-12 lg:right-28 w-44 lg:w-64 animate-pulse">
+        {/* Origami 2D Paper Plane Illustration (Optimized to never overlap text on mobile) */}
+        <div className="absolute top-6 sm:top-12 -right-10 sm:right-12 lg:right-28 w-28 sm:w-44 lg:w-64 opacity-25 sm:opacity-90 pointer-events-none select-none animate-pulse">
           <svg viewBox="0 0 240 180" fill="none" className="w-full drop-shadow-2xl">
             {/* Origami Paper Plane Facets */}
             <polygon points="20,130 220,30 140,160" fill="#FFFFFF" />
@@ -69,54 +69,54 @@ export const HeroSection: React.FC = () => {
         </div>
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 sm:pt-6">
         {/* Top Headline Section */}
-        <div className="max-w-3xl mb-12">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-white/20 backdrop-blur-md border border-white/40 rounded-full text-white text-xs font-mono font-bold mb-4 shadow-sm">
-            <Sparkles className="w-3.5 h-3.5 text-sky-200" />
-            <span>SPECIAL EVENT • JUMAT, 27 NOVEMBER 2026</span>
+        <div className="max-w-3xl mb-8 sm:mb-12">
+          <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1 sm:py-1.5 bg-white/20 backdrop-blur-md border border-white/40 rounded-full text-white text-[10px] sm:text-xs font-mono font-bold mb-3 sm:mb-4 shadow-sm max-w-full">
+            <Sparkles className="w-3.5 h-3.5 text-sky-200 flex-shrink-0" />
+            <span className="truncate">SPECIAL EVENT • JUMAT, 27 NOVEMBER 2026</span>
           </div>
 
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-tight uppercase font-mono">
+          <h1 className="text-3xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-tight uppercase font-mono">
             BINARY<span className="text-sky-200">.BITE</span>
           </h1>
 
-          <div className="font-script text-3xl sm:text-5xl text-sky-100 font-bold my-2 tracking-wide transform -rotate-1">
+          <div className="font-script text-2xl sm:text-5xl text-sky-100 font-bold my-1 sm:my-2 tracking-wide transform -rotate-1">
             One Bite, Endless Happiness.
           </div>
 
-          <p className="text-sm sm:text-base text-white/90 font-medium max-w-xl leading-relaxed mt-2 mb-6">
+          <p className="text-xs sm:text-base text-white/95 font-medium max-w-xl leading-relaxed mt-2 mb-5 sm:mb-6">
             Festival kuliner modern persembahan dari <strong>Kelas 12B</strong>. Nikmati 5 pilihan camilan renyah, kue lembut lumer, dan minuman kopi cincau segar dengan harga hemat bersahabat!
           </p>
 
           <button
             onClick={scrollToCatalog}
-            className="inline-flex items-center gap-2 px-6 py-3 bg-white text-[#0284C7] font-extrabold text-sm rounded-full shadow-btn-sky hover:bg-sky-50 active:scale-95 transition-all"
+            className="inline-flex items-center justify-center gap-2 w-full sm:w-auto px-6 py-3 bg-white text-[#0284C7] font-extrabold text-xs sm:text-sm rounded-full shadow-btn-sky hover:bg-sky-50 active:scale-95 transition-all uppercase tracking-wider"
           >
             <span>Jelajahi Menu Lezat</span>
             <ArrowRight className="w-4 h-4" />
           </button>
         </div>
 
-        {/* Floating Quick Search / Order Bar (Modelled directly on the Flights/Hotels bar in reference) */}
-        <div className="bg-white rounded-3xl sm:rounded-4xl shadow-soft-float p-3 sm:p-5 border border-sky-100 mb-14">
-          {/* Top Category Tabs */}
-          <div className="flex items-center gap-2 border-b border-slate-100 pb-3 mb-4 px-2 overflow-x-auto">
+        {/* Floating Quick Search / Order Bar (Clean, compact 2x2 grid on mobile) */}
+        <div className="bg-white rounded-2xl sm:rounded-4xl shadow-soft-float p-3 sm:p-5 border border-sky-100 mb-10 sm:mb-14">
+          {/* Top Category Tabs (Horizontal scroll on mobile) */}
+          <div className="flex items-center gap-1.5 border-b border-slate-100 pb-2.5 mb-3 px-1 overflow-x-auto scrollbar-none flex-nowrap">
             <button
               onClick={() => setActiveTab('Semua')}
-              className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-xs sm:text-sm font-bold transition-all ${
+              className={`flex items-center gap-1.5 px-3.5 py-1.5 sm:px-5 sm:py-2.5 rounded-full text-xs sm:text-sm font-bold whitespace-nowrap flex-shrink-0 transition-all ${
                 activeTab === 'Semua'
                   ? 'bg-[#0284C7] text-white shadow-md'
                   : 'text-slate-600 hover:text-[#0284C7] hover:bg-sky-50'
               }`}
             >
-              <Utensils className="w-4 h-4" />
+              <Utensils className="w-3.5 h-3.5" />
               <span>Semua Menu</span>
             </button>
 
             <button
               onClick={() => setActiveTab('Makanan')}
-              className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-xs sm:text-sm font-bold transition-all ${
+              className={`flex items-center gap-1.5 px-3.5 py-1.5 sm:px-5 sm:py-2.5 rounded-full text-xs sm:text-sm font-bold whitespace-nowrap flex-shrink-0 transition-all ${
                 activeTab === 'Makanan'
                   ? 'bg-[#0284C7] text-white shadow-md'
                   : 'text-slate-600 hover:text-[#0284C7] hover:bg-sky-50'
@@ -127,7 +127,7 @@ export const HeroSection: React.FC = () => {
 
             <button
               onClick={() => setActiveTab('Minuman')}
-              className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-xs sm:text-sm font-bold transition-all ${
+              className={`flex items-center gap-1.5 px-3.5 py-1.5 sm:px-5 sm:py-2.5 rounded-full text-xs sm:text-sm font-bold whitespace-nowrap flex-shrink-0 transition-all ${
                 activeTab === 'Minuman'
                   ? 'bg-[#0284C7] text-white shadow-md'
                   : 'text-slate-600 hover:text-[#0284C7] hover:bg-sky-50'
@@ -137,56 +137,56 @@ export const HeroSection: React.FC = () => {
             </button>
           </div>
 
-          {/* Segmented Inputs Bar */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 items-center px-2">
+          {/* Segmented Inputs Bar (2 columns on mobile, 5 on desktop) */}
+          <div className="grid grid-cols-2 lg:grid-cols-5 gap-2 sm:gap-3 items-center px-1">
             {/* Box 1: Location */}
-            <div className="p-3 bg-slate-50/80 rounded-2xl border border-slate-100">
-              <span className="text-[10px] font-bold text-slate-400 block uppercase tracking-wider">
+            <div className="p-2.5 sm:p-3 bg-slate-50/90 rounded-xl sm:rounded-2xl border border-slate-100">
+              <span className="text-[9px] sm:text-[10px] font-bold text-slate-400 block uppercase tracking-wider">
                 Lokasi Stand
               </span>
-              <div className="flex items-center gap-2 text-xs sm:text-sm font-extrabold text-slate-800 mt-0.5">
-                <MapPin className="w-3.5 h-3.5 text-[#0284C7]" />
-                <span className="truncate">Stand 12B • Lapangan</span>
+              <div className="flex items-center gap-1.5 text-xs sm:text-sm font-extrabold text-slate-800 mt-0.5">
+                <MapPin className="w-3 h-3 text-[#0284C7] flex-shrink-0" />
+                <span className="truncate">Stand 12B</span>
               </div>
             </div>
 
             {/* Box 2: Tanggal */}
-            <div className="p-3 bg-slate-50/80 rounded-2xl border border-slate-100">
-              <span className="text-[10px] font-bold text-slate-400 block uppercase tracking-wider">
+            <div className="p-2.5 sm:p-3 bg-slate-50/90 rounded-xl sm:rounded-2xl border border-slate-100">
+              <span className="text-[9px] sm:text-[10px] font-bold text-slate-400 block uppercase tracking-wider">
                 Tanggal Acara
               </span>
-              <div className="flex items-center gap-2 text-xs sm:text-sm font-extrabold text-slate-800 mt-0.5">
-                <Calendar className="w-3.5 h-3.5 text-[#0284C7]" />
-                <span className="truncate">Jumat, 27 Nov 2026</span>
+              <div className="flex items-center gap-1.5 text-xs sm:text-sm font-extrabold text-slate-800 mt-0.5">
+                <Calendar className="w-3 h-3 text-[#0284C7] flex-shrink-0" />
+                <span className="truncate">27 Nov 2026</span>
               </div>
             </div>
 
             {/* Box 3: Jam Buka */}
-            <div className="p-3 bg-slate-50/80 rounded-2xl border border-slate-100">
-              <span className="text-[10px] font-bold text-slate-400 block uppercase tracking-wider">
-                Waktu Pelayanan
+            <div className="p-2.5 sm:p-3 bg-slate-50/90 rounded-xl sm:rounded-2xl border border-slate-100">
+              <span className="text-[9px] sm:text-[10px] font-bold text-slate-400 block uppercase tracking-wider">
+                Waktu Buka
               </span>
-              <div className="flex items-center gap-2 text-xs sm:text-sm font-extrabold text-slate-800 mt-0.5">
-                <Clock className="w-3.5 h-3.5 text-[#0284C7]" />
-                <span className="truncate">07:00 - Selesai WIB</span>
+              <div className="flex items-center gap-1.5 text-xs sm:text-sm font-extrabold text-slate-800 mt-0.5">
+                <Clock className="w-3 h-3 text-[#0284C7] flex-shrink-0" />
+                <span className="truncate">07:00 WIB</span>
               </div>
             </div>
 
             {/* Box 4: Layanan Antar */}
-            <div className="p-3 bg-slate-50/80 rounded-2xl border border-slate-100">
-              <span className="text-[10px] font-bold text-slate-400 block uppercase tracking-wider">
-                Metode Pengambilan
+            <div className="p-2.5 sm:p-3 bg-slate-50/90 rounded-xl sm:rounded-2xl border border-slate-100">
+              <span className="text-[9px] sm:text-[10px] font-bold text-slate-400 block uppercase tracking-wider">
+                Pengambilan
               </span>
-              <div className="flex items-center gap-2 text-xs sm:text-sm font-extrabold text-slate-800 mt-0.5">
-                <Truck className="w-3.5 h-3.5 text-[#0284C7]" />
-                <span className="truncate">Stand / Antar Kelas</span>
+              <div className="flex items-center gap-1.5 text-xs sm:text-sm font-extrabold text-slate-800 mt-0.5">
+                <Truck className="w-3 h-3 text-[#0284C7] flex-shrink-0" />
+                <span className="truncate">Stand / Kelas</span>
               </div>
             </div>
 
             {/* Box 5: Big Search Button */}
             <button
               onClick={scrollToCatalog}
-              className="w-full h-full py-4 bg-[#0284C7] hover:bg-[#0369A1] text-white font-extrabold text-sm rounded-2xl flex items-center justify-center gap-2 shadow-btn-sky transition-all active:scale-95"
+              className="col-span-2 lg:col-span-1 w-full py-3 sm:py-4 bg-[#0284C7] hover:bg-[#0369A1] text-white font-extrabold text-xs sm:text-sm rounded-xl sm:rounded-2xl flex items-center justify-center gap-2 shadow-btn-sky transition-all active:scale-95 uppercase tracking-wider"
             >
               <Search className="w-4 h-4" />
               <span>Cari Menu</span>

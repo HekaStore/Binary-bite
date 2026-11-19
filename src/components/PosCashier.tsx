@@ -35,55 +35,33 @@ export const PosCashier: React.FC = () => {
 
   // Manual Walk-in Order state
   const [showManualModal, setShowManualModal] = useState(false);
-  const [manualCustomer, setManualCustomer] = useState('Pelanggan Stand Langsung');
+  const [manualCustomer, setManualCustomer] = useState('');
   const [manualCart, setManualCart] = useState<{ [productId: string]: number }>({});
   const [manualFlavor, setManualFlavor] = useState<{ [productId: string]: string }>({
     'es-gabin': 'Milo',
   });
 
-  // Load orders from localStorage
+  // Load orders from localStorage (Starts completely empty)
   const loadOrders = () => {
     try {
       const saved = localStorage.getItem('binary_bite_orders');
       if (saved) {
         setOrders(JSON.parse(saved));
       } else {
-        // Initial sample order for demonstration if empty
-        const initialSample: Order[] = [
-          {
-            id: 'BB-20261127-0001',
-            customerName: 'Nisrina Admin',
-            customerContact: 'Kelas 12B / Stand',
-            pickupMethod: 'Ambil di Stand 12B',
-            notes: 'Pesanan uji coba sistem stand',
-            items: [
-              {
-                productId: 'es-gabin',
-                name: 'Es Gabin',
-                price: 9000,
-                quantity: 2,
-                selectedFlavor: 'Milo',
-                subtotal: 18000,
-              },
-              {
-                productId: 'es-capcin',
-                name: 'Es Capcin',
-                price: 6000,
-                quantity: 1,
-                subtotal: 6000,
-              },
-            ],
-            totalPrice: 24000,
-            totalItems: 3,
-            status: 'Diproses',
-            createdAt: new Date().toISOString(),
-          },
-        ];
-        setOrders(initialSample);
-        localStorage.setItem('binary_bite_orders', JSON.stringify(initialSample));
+        setOrders([]);
       }
     } catch (e) {
       console.error('Failed to load orders', e);
+      setOrders([]);
+    }
+  };
+
+  const handleClearAllOrders = () => {
+    if (confirm('Apakah Anda yakin ingin mengosongkan seluruh riwayat pesanan POS?')) {
+      setOrders([]);
+      try {
+        localStorage.removeItem('binary_bite_orders');
+      } catch {}
     }
   };
 
@@ -272,20 +250,27 @@ export const PosCashier: React.FC = () => {
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
           <button
             onClick={() => setShowManualModal(true)}
-            className="px-4 py-2.5 bg-brand-cobalt text-brand-white text-xs sm:text-sm font-bold rounded-xl border border-brand-cobalt shadow-solid-electric hover:bg-brand-royal flex items-center gap-1.5"
+            className="px-4 py-2.5 bg-[#0284C7] hover:bg-[#0369A1] text-white text-xs sm:text-sm font-bold rounded-xl shadow-btn-sky flex items-center gap-1.5 transition-all"
           >
             <Plus className="w-4 h-4" />
-            <span>+ Input Pesanan Stand Langsung</span>
+            <span>+ Input Pesanan Langsung</span>
           </button>
           <button
             onClick={loadOrders}
-            className="p-2.5 bg-brand-white border-2 border-brand-royal text-brand-cobalt rounded-xl hover:bg-brand-sky"
+            className="p-2.5 bg-white border border-slate-200 text-slate-700 hover:text-[#0284C7] rounded-xl hover:bg-sky-50 shadow-sm"
             title="Refresh Data"
           >
             <RefreshCw className="w-4 h-4" />
+          </button>
+          <button
+            onClick={handleClearAllOrders}
+            className="px-3 py-2 text-xs font-bold text-red-600 bg-red-50 hover:bg-red-100 border border-red-200 rounded-xl transition-colors"
+            title="Kosongkan Semua Riwayat"
+          >
+            Kosongkan Data
           </button>
         </div>
       </div>

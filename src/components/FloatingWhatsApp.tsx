@@ -6,22 +6,23 @@ import { BRAND_INFO } from '@/data/products';
 
 export const FloatingWhatsApp: React.FC = () => {
   return (
-    <aside aria-label="Bantuan WhatsApp" className="fixed bottom-6 left-6 z-40">
+    <aside aria-label="Bantuan WhatsApp" className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40">
       <a
         href={BRAND_INFO.whatsappUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="group flex items-center gap-2.5 px-4 py-3 bg-brand-cobalt text-brand-white rounded-2xl border-2 border-brand-royal shadow-solid-electric hover:bg-brand-royal active:translate-y-0.5 transition-all"
+        className="group flex items-center gap-2.5 p-3 sm:px-4 sm:py-3 bg-[#0284C7] hover:bg-[#0369A1] text-white rounded-full shadow-2xl border-2 border-white/80 active:scale-95 transition-all"
         aria-label="Hubungi Admin Nisrina via WhatsApp"
+        title="Chat WhatsApp Admin Nisrina"
       >
-        <div className="w-8 h-8 rounded-xl bg-brand-electric flex items-center justify-center text-brand-white">
-          <MessageCircle className="w-5 h-5" />
+        <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-white text-[#0284C7] flex items-center justify-center flex-shrink-0">
+          <MessageCircle className="w-4 h-4 fill-current" />
         </div>
-        <div className="text-left hidden sm:block">
-          <div className="text-[10px] font-mono font-bold text-brand-sky uppercase tracking-wider">
-            Tanya Admin Stand
+        <div className="text-left hidden sm:block pr-1">
+          <div className="text-[10px] font-mono font-bold text-sky-100 uppercase tracking-wider">
+            Tanya Stand
           </div>
-          <div className="text-xs font-extrabold text-brand-white">
+          <div className="text-xs font-black text-white">
             Nisrina (WA)
           </div>
         </div>
@@ -29,4 +30,3 @@ export const FloatingWhatsApp: React.FC = () => {
     </aside>
   );
 };
-

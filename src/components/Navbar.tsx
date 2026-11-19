@@ -31,26 +31,26 @@ export const Navbar: React.FC = () => {
     <header className="sticky top-0 z-40 w-full transition-all duration-300">
       <div className="w-full bg-[#0284C7] text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-20">
+          <div className="flex items-center justify-between h-16 sm:h-20">
             {/* Brand Logo with Mascot */}
-            <Link href="/" className="flex items-center gap-3 group">
-              <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-white/80 bg-white shadow-md flex-shrink-0 group-hover:scale-105 transition-transform">
+            <Link href="/" className="flex items-center gap-2.5 sm:gap-3 group min-w-0">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden border-2 border-white/80 bg-white shadow-md flex-shrink-0 group-hover:scale-105 transition-transform">
                 <img
                   src="/images/logo.jpg"
                   alt="Logo BINARY.BITE"
                   className="w-full h-full object-cover"
                 />
               </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <span className="font-extrabold text-xl tracking-tight text-white font-mono">
+              <div className="min-w-0">
+                <div className="flex items-center gap-1.5 sm:gap-2">
+                  <span className="font-extrabold text-lg sm:text-xl tracking-tight text-white font-mono truncate">
                     BINARY<span className="text-sky-200">.BITE</span>
                   </span>
-                  <span className="text-[10px] font-bold px-2 py-0.5 bg-white/20 text-white rounded-full backdrop-blur-sm">
+                  <span className="text-[9px] sm:text-[10px] font-bold px-1.5 sm:px-2 py-0.5 bg-white/20 text-white rounded-full backdrop-blur-sm flex-shrink-0">
                     XII B
                   </span>
                 </div>
-                <p className="text-[11px] font-medium tracking-wider text-sky-100 uppercase">
+                <p className="text-[9px] sm:text-[11px] font-medium tracking-wider text-sky-100 uppercase truncate">
                   Digital Canteen & Food Festival
                 </p>
               </div>
