@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { BRAND_INFO, OFFICIAL_PRODUCTS } from '@/data/products';
 import { calculateNextOrderAllocation } from '@/utils/dailyQuota';
+import { orderService } from '@/services/orderService';
 
 export const HeroSection: React.FC = () => {
   const [activeQuota, setActiveQuota] = useState<{
@@ -29,17 +30,15 @@ export const HeroSection: React.FC = () => {
   });
 
   useEffect(() => {
-    try {
-      const raw = localStorage.getItem('binary_bite_orders');
-      if (raw) {
-        const orders = JSON.parse(raw);
-        const alloc = calculateNextOrderAllocation(orders);
-        setActiveQuota({
-          count: alloc.currentDayOrdersCount,
-          dayIndex: alloc.scheduledDayIndex,
-        });
-      }
-    } catch {}
+    const fetchQuota = async () => {
+      const res = await orderService.getOrders();
+      const alloc = calculateNextOrderAllocation(res.orders);
+      setActiveQuota({
+        count: alloc.currentDayOrdersCount,
+        dayIndex: alloc.scheduledDayIndex,
+      });
+    };
+    fetchQuota();
   }, []);
 
   const scrollToCatalog = () => {

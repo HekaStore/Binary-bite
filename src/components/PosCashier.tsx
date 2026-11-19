@@ -1,10 +1,11 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Order, OrderStatus, Product } from '@/types';
 import { OFFICIAL_PRODUCTS, BRAND_INFO } from '@/data/products';
 import { formatRupiah, generateTransactionId } from '@/utils/formatters';
 import { calculateNextOrderAllocation, getDayQuotaSummaryList, DAILY_ORDER_LIMIT } from '@/utils/dailyQuota';
+import { orderService } from '@/services/orderService';
 import { ReceiptModal } from '@/components/ReceiptModal';
 import {
   ShieldCheck,
@@ -23,6 +24,8 @@ import {
   ArrowRight,
   TrendingUp,
   Calendar,
+  Bell,
+  Radio,
 } from 'lucide-react';
 
 export const PosCashier: React.FC = () => {
@@ -35,6 +38,9 @@ export const PosCashier: React.FC = () => {
   const [dayFilter, setDayFilter] = useState<number | 'Semua'>('Semua');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedReceiptOrder, setSelectedReceiptOrder] = useState<Order | null>(null);
+  const [syncSource, setSyncSource] = useState<'cloud' | 'local'>('local');
+  const [newOrderAlert, setNewOrderAlert] = useState<string | null>(null);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   // Manual Walk-in Order state
   const [showManualModal, setShowManualModal] = useState(false);
@@ -44,32 +50,45 @@ export const PosCashier: React.FC = () => {
     'es-gabin': 'Coklat',
   });
 
-  // Load orders from localStorage (Starts completely empty)
-  const loadOrders = () => {
+  const ordersRef = useRef<Order[]>(orders);
+  ordersRef.current = orders;
+
+  // Load orders from cloud / local
+  const loadOrders = async () => {
+    setIsRefreshing(true);
     try {
-      const saved = localStorage.getItem('binary_bite_orders');
-      if (saved) {
-        setOrders(JSON.parse(saved));
-      } else {
-        setOrders([]);
+      const res = await orderService.getOrders();
+      setSyncSource(res.source);
+
+      // Check if new orders arrived compared to previous state
+      if (ordersRef.current.length > 0 && res.orders.length > ordersRef.current.length) {
+        const latest = res.orders[0];
+        setNewOrderAlert(`Pesanan baru #${latest.id.slice(-4)} masuk dari ${latest.customerName}!`);
       }
+      setOrders(res.orders);
     } catch (e) {
       console.error('Failed to load orders', e);
-      setOrders([]);
+    } finally {
+      setIsRefreshing(false);
     }
   };
 
-  const handleClearAllOrders = () => {
+  const handleClearAllOrders = async () => {
     if (confirm('Apakah Anda yakin ingin mengosongkan seluruh riwayat pesanan POS?')) {
+      await orderService.clearAll('2789');
       setOrders([]);
-      try {
-        localStorage.removeItem('binary_bite_orders');
-      } catch {}
     }
   };
 
   useEffect(() => {
     loadOrders();
+
+    // Auto-poll cloud database every 4 seconds for live sync
+    const interval = setInterval(() => {
+      loadOrders();
+    }, 4000);
+
+    return () => clearInterval(interval);
   }, []);
 
   const handlePinSubmit = (e: React.FormEvent) => {
@@ -82,12 +101,9 @@ export const PosCashier: React.FC = () => {
     }
   };
 
-  const handleUpdateStatus = (orderId: string, newStatus: OrderStatus) => {
-    const updated = orders.map((o) => (o.id === orderId ? { ...o, status: newStatus } : o));
-    setOrders(updated);
-    try {
-      localStorage.setItem('binary_bite_orders', JSON.stringify(updated));
-    } catch {}
+  const handleUpdateStatus = async (orderId: string, newStatus: OrderStatus) => {
+    await orderService.updateStatus(orderId, newStatus);
+    setOrders((prev) => prev.map((o) => (o.id === orderId ? { ...o, status: newStatus } : o)));
   };
 
   // Metrics
@@ -138,7 +154,7 @@ export const PosCashier: React.FC = () => {
   });
 
   // Handle Manual Order Submission
-  const handleCreateManualOrder = (e: React.FormEvent) => {
+  const handleCreateManualOrder = async (e: React.FormEvent) => {
     e.preventDefault();
     const itemsList: any[] = [];
     let calcTotal = 0;
@@ -188,9 +204,7 @@ export const PosCashier: React.FC = () => {
 
     const updated = [newOrder, ...orders];
     setOrders(updated);
-    try {
-      localStorage.setItem('binary_bite_orders', JSON.stringify(updated));
-    } catch {}
+    await orderService.createOrder(newOrder);
 
     // Reset manual form
     setManualCart({});
@@ -251,17 +265,43 @@ export const PosCashier: React.FC = () => {
 
   return (
     <div className="py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-8">
+      {/* Realtime New Order Alert Banner */}
+      {newOrderAlert && (
+        <div className="bg-emerald-600 text-white px-5 py-3.5 rounded-2xl flex items-center justify-between shadow-lg animate-in slide-in-from-top duration-300">
+          <div className="flex items-center gap-2.5">
+            <Bell className="w-5 h-5 text-emerald-200 animate-bounce" />
+            <span className="font-heading font-black text-sm sm:text-base">{newOrderAlert}</span>
+          </div>
+          <button
+            onClick={() => setNewOrderAlert(null)}
+            className="text-xs font-heading font-bold px-3 py-1 bg-white/20 hover:bg-white/30 rounded-full transition-colors"
+          >
+            Tutup
+          </button>
+        </div>
+      )}
+
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b-2 border-brand-line">
         <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-brand-sky border border-brand-royal rounded-full text-xs font-mono font-bold text-brand-cobalt mb-2">
-            <ShieldCheck className="w-3.5 h-3.5 text-brand-electric" />
-            <span>POS TERMINAL STAND 12B • LIVE</span>
+          <div className="flex flex-wrap items-center gap-2 mb-2">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-brand-sky border border-brand-royal rounded-full text-xs font-mono font-bold text-brand-cobalt">
+              <ShieldCheck className="w-3.5 h-3.5 text-brand-electric" />
+              <span>POS TERMINAL STAND 12B</span>
+            </div>
+            <div className={`inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-xs font-bold ${
+              syncSource === 'cloud'
+                ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
+                : 'bg-sky-100 text-sky-800 border border-sky-300'
+            }`}>
+              <span className={`w-2 h-2 rounded-full ${syncSource === 'cloud' ? 'bg-emerald-500 animate-pulse' : 'bg-sky-500'}`} />
+              <span>{syncSource === 'cloud' ? 'Cloud Sync Real-time' : 'Sinkronisasi Server Lokal'}</span>
+            </div>
           </div>
           <h1 className="font-heading font-black text-2xl sm:text-3xl text-brand-cobalt">
             Dashboard Kasir & Manajemen Pesanan
           </h1>
-          <p className="text-xs sm:text-sm text-brand-muted">
+          <p className="text-xs sm:text-sm text-brand-muted mt-1">
             Acara: {BRAND_INFO.eventDateText} • Admin: {BRAND_INFO.adminName}
           </p>
         </div>
@@ -276,10 +316,11 @@ export const PosCashier: React.FC = () => {
           </button>
           <button
             onClick={loadOrders}
-            className="p-2.5 bg-white border border-slate-200 text-slate-700 hover:text-[#0284C7] rounded-xl hover:bg-sky-50 shadow-sm"
-            title="Refresh Data"
+            className="p-2.5 bg-white border border-slate-200 text-slate-700 hover:text-[#0284C7] rounded-xl hover:bg-sky-50 shadow-sm transition-all"
+            title="Refresh Data Pesanan"
+            aria-label="Refresh Data Pesanan"
           >
-            <RefreshCw className="w-4 h-4" />
+            <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin text-[#0284C7]' : ''}`} />
           </button>
           <button
             onClick={handleClearAllOrders}

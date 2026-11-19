@@ -5,6 +5,7 @@ import { useCart } from '@/context/CartContext';
 import { Order, PickupMethod } from '@/types';
 import { generateTransactionId, formatRupiah } from '@/utils/formatters';
 import { calculateNextOrderAllocation, QuotaAllocation } from '@/utils/dailyQuota';
+import { orderService } from '@/services/orderService';
 import { ReceiptModal } from '@/components/ReceiptModal';
 import { ShoppingBag, Send, AlertCircle, User, Phone, MapPin, FileText, ArrowLeft, CheckCircle2, Calendar, Sparkles } from 'lucide-react';
 import Link from 'next/link';
@@ -20,19 +21,19 @@ export const CheckoutSection: React.FC = () => {
   const [errorMsg, setErrorMsg] = useState('');
   const [createdOrder, setCreatedOrder] = useState<Order | null>(null);
   const [existingOrders, setExistingOrders] = useState<Order[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    try {
-      const raw = localStorage.getItem('binary_bite_orders');
-      if (raw) {
-        setExistingOrders(JSON.parse(raw));
-      }
-    } catch {}
+    const loadCloudOrders = async () => {
+      const res = await orderService.getOrders();
+      setExistingOrders(res.orders);
+    };
+    loadCloudOrders();
   }, []);
 
   const allocation: QuotaAllocation = calculateNextOrderAllocation(existingOrders);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (items.length === 0) {
@@ -51,6 +52,7 @@ export const CheckoutSection: React.FC = () => {
     }
 
     setErrorMsg('');
+    setIsSubmitting(true);
 
     const newOrder: Order = {
       id: generateTransactionId(),
@@ -76,13 +78,8 @@ export const CheckoutSection: React.FC = () => {
       isRollover: allocation.isRollover,
     };
 
-    try {
-      const existing = JSON.parse(localStorage.getItem('binary_bite_orders') || '[]');
-      existing.unshift(newOrder);
-      localStorage.setItem('binary_bite_orders', JSON.stringify(existing));
-    } catch (err) {
-      console.error('Failed to save order to localStorage', err);
-    }
+    // Save to Cloud & Local Store via orderService
+    await orderService.createOrder(newOrder);
 
     try {
       confetti({
@@ -95,7 +92,8 @@ export const CheckoutSection: React.FC = () => {
 
     setCreatedOrder(newOrder);
     clearCart();
-    addToast('Pesanan berhasil dibuat! Silakan kirim detailnya via WhatsApp.', 'success');
+    setIsSubmitting(false);
+    addToast('Pesanan berhasil dibuat & tersimpan di sistem kasir stand!', 'success');
   };
 
   return (
@@ -287,14 +285,14 @@ export const CheckoutSection: React.FC = () => {
             <div className="pt-3">
               <button
                 type="submit"
-                disabled={items.length === 0}
+                disabled={items.length === 0 || isSubmitting}
                 className="w-full py-4 bg-[#0284C7] hover:bg-[#0369A1] text-white text-sm font-heading font-black rounded-full shadow-btn-sky transition-all hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 uppercase tracking-wider"
               >
                 <Send className="w-4 h-4" />
-                <span>Buat Struk & Kirim via WhatsApp</span>
+                <span>{isSubmitting ? 'Menyimpan Pesanan...' : 'Buat Struk & Kirim via WhatsApp'}</span>
               </button>
               <p className="text-[11px] text-center text-slate-400 mt-2 font-medium">
-                *Pesanan langsung diarahkan ke WhatsApp Admin Nisrina (0858-4378-8915)
+                *Pesanan otomatis tersimpan di kasir stand & diarahkan ke WhatsApp Admin Nisrina (0858-4378-8915)
               </p>
             </div>
           </form>
