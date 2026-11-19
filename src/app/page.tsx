@@ -4,6 +4,7 @@ import { CountdownSection } from '@/components/CountdownSection';
 import { ProductCatalog } from '@/components/ProductCatalog';
 import { OrderGuide } from '@/components/OrderGuide';
 import { AboutSection } from '@/components/AboutSection';
+import { FaqSection } from '@/components/FaqSection';
 
 export default function HomePage() {
   return (
@@ -13,6 +14,7 @@ export default function HomePage() {
       <ProductCatalog />
       <OrderGuide />
       <AboutSection />
+      <FaqSection />
     </>
   );
 }
