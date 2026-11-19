@@ -41,7 +41,7 @@ export const PosCashier: React.FC = () => {
   const [manualCustomer, setManualCustomer] = useState('');
   const [manualCart, setManualCart] = useState<{ [productId: string]: number }>({});
   const [manualFlavor, setManualFlavor] = useState<{ [productId: string]: string }>({
-    'es-gabin': 'Milo',
+    'es-gabin': 'Coklat',
   });
 
   // Load orders from localStorage (Starts completely empty)
@@ -635,7 +635,7 @@ export const PosCashier: React.FC = () => {
                           {formatRupiah(prod.price)}
                         </div>
                         {prod.flavors && qty > 0 && (
-                          <div className="flex gap-1 mt-1">
+                          <div className="flex flex-wrap gap-1 mt-1">
                             {prod.flavors.map((fl) => (
                               <button
                                 key={fl}

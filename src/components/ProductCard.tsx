@@ -86,9 +86,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         {/* Flavor Selector if product has options (e.g. Es Gabin) */}
         {product.flavors && product.flavors.length > 0 && (
           <div className="mb-3 pt-2 border-t border-slate-100">
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-1.5 flex-wrap">
               <span className="text-[10px] font-bold text-slate-400 uppercase">Rasa:</span>
-              <div className="flex gap-1.5">
+              <div className="flex flex-wrap gap-1.5">
                 {product.flavors.map((flavor) => (
                   <button
                     key={flavor}

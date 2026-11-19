@@ -48,7 +48,7 @@ export const OFFICIAL_PRODUCTS: Product[] = [
     image: '/images/products/es-gabin.jpg',
     alt: 'Gabin Ice Cream tebal dingin Binary Bite',
     isPopular: true,
-    flavors: ['Milo', 'Cokelat'],
+    flavors: ['Coklat', 'Cookies and Cream'],
   },
   {
     id: 'es-capcin',

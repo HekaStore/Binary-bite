@@ -24,7 +24,7 @@
 3. **Roll Abon** — `Rp4.000` (/pcs) — Makanan  
    *Roti gulung lembut berbalut abon gurih melimpah dengan perpaduan rasa manis dan asin yang pas.*
 4. **Es Gabin** — `Rp9.000` (/pcs) — Makanan  
-   *Biskuit gabin renyah dengan isian fla lembut dingin yang tebal, manis, dan menyegarkan (Pilihan: Milo / Cokelat).*
+   *Biskuit gabin renyah dengan isian fla lembut dingin yang tebal, manis, dan menyegarkan (Pilihan: Coklat / Cookies and Cream).*
 5. **Es Capcin** — `Rp6.000` (/pcs) — Minuman  
    *Perpaduan kopi cappuccino dingin yang creamy dengan kenyalnya cincau hitam segar.*
 
