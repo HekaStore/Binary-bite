@@ -45,11 +45,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         </div>
 
         {/* Product Image Container */}
-        <div className="relative aspect-[4/3] rounded-xl overflow-hidden border border-brand-line bg-slate-50 flex items-center justify-center p-3 mb-4 group">
+        <div className="relative aspect-[4/3] rounded-xl overflow-hidden border border-brand-line bg-white flex items-center justify-center mb-4 group">
           <img
             src={product.image}
             alt={product.alt}
-            className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-200"
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
             loading="lazy"
           />
           {currentQuantity > 0 && (

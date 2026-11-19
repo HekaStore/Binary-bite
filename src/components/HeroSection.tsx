@@ -159,9 +159,9 @@ export const HeroSection: React.FC = () => {
                   </div>
                   <div className="my-2 text-center">
                     <img
-                      src="/images/products/es-gabin.svg"
+                      src="/images/products/es-gabin.jpg"
                       alt="Es Gabin"
-                      className="w-20 h-16 mx-auto object-contain"
+                      className="w-20 h-16 mx-auto object-cover rounded-lg border border-brand-line"
                     />
                     <div className="font-bold text-sm text-brand-cobalt mt-1">Es Gabin Ice Cream</div>
                     <div className="font-mono text-xs font-extrabold text-brand-electric">Rp9.000</div>
@@ -179,9 +179,9 @@ export const HeroSection: React.FC = () => {
                   </div>
                   <div className="my-2 text-center">
                     <img
-                      src="/images/products/es-capcin.svg"
+                      src="/images/products/es-capcin.jpg"
                       alt="Es Capcin"
-                      className="w-20 h-16 mx-auto object-contain"
+                      className="w-20 h-16 mx-auto object-cover rounded-lg border border-brand-line"
                     />
                     <div className="font-bold text-sm text-brand-cobalt mt-1">Es Capcin Creamy</div>
                     <div className="font-mono text-xs font-extrabold text-brand-electric">Rp6.000</div>
