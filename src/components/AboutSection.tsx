@@ -31,7 +31,7 @@ export const AboutSection: React.FC = () => {
                 </div>
                 <div>
                   <h4 className="font-extrabold text-sm text-slate-900">
-                    "BINARY" — Presisi Digital & Layanan Cepat
+                    "BINARY": Presisi Digital & Layanan Cepat
                   </h4>
                   <p className="text-xs text-slate-500 mt-1 leading-relaxed">
                     Melambangkan sistem pemesanan modern yang transparan, ID transaksi otomatis, struk digital thermal, serta rekapitulasi data pesanan secara akurat.
@@ -45,7 +45,7 @@ export const AboutSection: React.FC = () => {
                 </div>
                 <div>
                   <h4 className="font-extrabold text-sm text-slate-900">
-                    "BITE" — Kelezatan di Setiap Gigitan
+                    "BITE": Kelezatan di Setiap Gigitan
                   </h4>
                   <p className="text-xs text-slate-500 mt-1 leading-relaxed">
                     Melambangkan keaslian cita rasa pada 5 menu unggulan buatan sendiri: Kue Lipat lumer, Sus Buah segar, Roll Abon gurih, Es Gabin dingin, serta Es Capcin yang creamy.

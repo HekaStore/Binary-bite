@@ -120,7 +120,7 @@ export const HeroSection: React.FC = () => {
 
             {/* Factual Value Proposition */}
             <p className="text-xs sm:text-base text-white/95 font-medium max-w-xl leading-relaxed mt-2 mb-6">
-              Festival kuliner resmi dari <strong>Kelas 12B</strong> di <strong>{BRAND_INFO.standLocation}</strong>. Menyajikan 5 menu pilihan istimewa dengan harga hemat bersahabat <strong>Rp3.000 — Rp9.000</strong>.
+              Festival kuliner resmi dari <strong>Kelas 12B</strong> di <strong>{BRAND_INFO.standLocation}</strong>. Menyajikan 5 menu pilihan istimewa dengan harga hemat bersahabat <strong>Rp3.000 s/d Rp9.000</strong>.
             </p>
 
             {/* Action Buttons & Fast Stats */}
@@ -229,7 +229,7 @@ export const HeroSection: React.FC = () => {
             </div>
             <div className="min-w-0">
               <h4 className="font-extrabold text-xs sm:text-sm text-slate-800 truncate">Harga Pelajar</h4>
-              <p className="text-[10px] sm:text-[11px] text-slate-500 font-medium truncate">Mulai Rp3.000 — Rp9.000</p>
+              <p className="text-[10px] sm:text-[11px] text-slate-500 font-medium truncate">Mulai Rp3.000 s/d Rp9.000</p>
             </div>
           </div>
 

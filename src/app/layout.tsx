@@ -9,7 +9,7 @@ import { Watermark } from '@/components/Watermark';
 import { CartDrawer } from '@/components/CartDrawer';
 
 export const metadata: Metadata = {
-  title: 'BINARY.BITE — One Bite, Endless Happiness! | Stand Kelas 12B',
+  title: 'BINARY.BITE: One Bite, Endless Happiness! | Stand Kelas 12B',
   description:
     'Website pemesanan makanan dan minuman resmi BINARY.BITE kelas 12B untuk acara Jumat, 27 November 2026. Kue Lipat, Sus Buah, Roll Abon, Es Gabin, dan Es Capcin segar!',
   keywords: [
@@ -23,13 +23,13 @@ export const metadata: Metadata = {
     'Es Capcin',
     'Kuliner Sekolah',
   ],
-  authors: [{ name: 'Kelas 12B — BINARY.BITE' }],
+  authors: [{ name: 'Kelas 12B, BINARY.BITE' }],
   icons: {
     icon: '/images/logo.jpg',
     apple: '/images/logo.jpg',
   },
   openGraph: {
-    title: 'BINARY.BITE — One Bite, Endless Happiness!',
+    title: 'BINARY.BITE: One Bite, Endless Happiness!',
     description:
       'Pesan camilan manis, gurih, dan minuman segar spesial dari Stand Kelas 12B untuk acara Jumat, 27 November 2026.',
     url: 'https://binary-bite.vercel.app',

@@ -90,7 +90,7 @@ export const Footer: React.FC = () => {
               </span>
             </div>
             <p className="text-xs sm:text-sm text-sky-100 leading-relaxed max-w-sm font-medium">
-              “{BRAND_INFO.tagline}” — Proyek festival kewirausahaan PKWU dari kelas 12B. Menghadirkan kenikmatan kuliner modern dengan presisi pemesanan digital.
+              “{BRAND_INFO.tagline}” (Proyek festival kewirausahaan PKWU kelas 12B). Menghadirkan kenikmatan kuliner modern dengan presisi pemesanan digital.
             </p>
           </div>
 

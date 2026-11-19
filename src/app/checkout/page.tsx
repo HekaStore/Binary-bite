@@ -3,7 +3,7 @@ import { CheckoutSection } from '@/components/CheckoutSection';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Checkout & Formulir Pemesanan — BINARY.BITE',
+  title: 'Checkout & Formulir Pemesanan | BINARY.BITE',
   description: 'Konfirmasi pemesanan menu BINARY.BITE Kelas 12B via WhatsApp.',
 };
 
