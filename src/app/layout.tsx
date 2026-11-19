@@ -23,6 +23,10 @@ export const metadata: Metadata = {
     'Kuliner Sekolah',
   ],
   authors: [{ name: 'Kelas 12B — BINARY.BITE' }],
+  icons: {
+    icon: '/images/logo.jpg',
+    apple: '/images/logo.jpg',
+  },
   openGraph: {
     title: 'BINARY.BITE — One Bite, Endless Happiness!',
     description:
@@ -31,10 +35,10 @@ export const metadata: Metadata = {
     siteName: 'BINARY.BITE',
     images: [
       {
-        url: '/images/stand-menu.jpg',
-        width: 1080,
-        height: 1080,
-        alt: 'Menu Stand BINARY.BITE',
+        url: '/images/logo.jpg',
+        width: 1024,
+        height: 1024,
+        alt: 'Logo Resmi BINARY.BITE Kelas 12B',
       },
     ],
     locale: 'id_ID',

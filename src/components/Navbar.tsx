@@ -39,10 +39,12 @@ export const Navbar: React.FC = () => {
         <div className="flex items-center justify-between h-20">
           {/* Brand Logo */}
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-11 h-11 bg-brand-cobalt border-2 border-brand-royal rounded-xl flex items-center justify-center text-brand-white shadow-flat-sm group-hover:bg-brand-royal transition-colors">
-              <span className="font-mono font-bold text-sm tracking-tighter text-brand-sky">
-                01
-              </span>
+            <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-brand-royal bg-brand-white shadow-flat-sm flex-shrink-0 group-hover:scale-105 transition-transform">
+              <img
+                src="/images/logo.jpg"
+                alt="Logo Resmi BINARY.BITE XII B"
+                className="w-full h-full object-cover"
+              />
             </div>
             <div>
               <div className="flex items-center gap-1.5">

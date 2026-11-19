@@ -17,8 +17,12 @@ export const Footer: React.FC = () => {
           {/* Col 1: Brand */}
           <div className="md:col-span-5 space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-brand-royal border-2 border-brand-sky rounded-xl flex items-center justify-center font-mono font-bold text-sm text-brand-white">
-                01
+              <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-brand-sky bg-brand-white flex-shrink-0 shadow-flat-sm">
+                <img
+                  src="/images/logo.jpg"
+                  alt="Logo Resmi BINARY.BITE"
+                  className="w-full h-full object-cover"
+                />
               </div>
               <div>
                 <span className="font-mono text-xl font-black tracking-tight text-brand-white">

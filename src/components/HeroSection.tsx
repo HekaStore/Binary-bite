@@ -58,8 +58,11 @@ export const HeroSection: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           {/* Left Column: Headline & Action */}
           <div className="lg:col-span-7 flex flex-col items-start text-left">
-            {/* Event Badge */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-brand-sky border-2 border-brand-royal rounded-xl text-brand-cobalt text-xs font-mono font-bold mb-6">
+            {/* Event Badge with Official Logo Avatar */}
+            <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 bg-brand-sky border-2 border-brand-royal rounded-xl text-brand-cobalt text-xs font-mono font-bold mb-6">
+              <div className="w-6 h-6 rounded-full overflow-hidden border border-brand-royal flex-shrink-0 bg-brand-white">
+                <img src="/images/logo.jpg" alt="Binary Bite Mascot" className="w-full h-full object-cover" />
+              </div>
               <span className="w-2 h-2 rounded-full bg-brand-electric animate-ping" />
               <span>SPECIAL EVENT • JUMAT, 27 NOVEMBER 2026</span>
             </div>
@@ -122,7 +125,11 @@ export const HeroSection: React.FC = () => {
               <div className="bg-brand-white border-2 border-brand-royal rounded-xl p-4 mb-4">
                 <div className="flex items-center justify-between mb-3 pb-2 border-b border-brand-line">
                   <div className="flex items-center gap-2">
-                    <span className="w-3 h-3 rounded-full bg-brand-cobalt" />
+                    <img
+                      src="/images/logo.jpg"
+                      alt="Binary Bite Logo"
+                      className="w-5 h-5 rounded-full object-cover border border-brand-royal"
+                    />
                     <span className="font-mono text-xs font-bold text-brand-cobalt uppercase">
                       STAND BINARY BITE — XII B
                     </span>
