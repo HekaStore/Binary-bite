@@ -34,7 +34,7 @@ export const Navbar: React.FC = () => {
           <div className="flex items-center justify-between h-16 sm:h-20">
             {/* Brand Logo with Mascot */}
             <Link href="/" className="flex items-center gap-2.5 sm:gap-3 group min-w-0">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden border-2 border-white/80 bg-white shadow-md flex-shrink-0 group-hover:scale-105 transition-transform">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden border-2 border-white/80 bg-white shadow-md flex-shrink-0 group-hover:scale-[1.03] transition-transform">
                 <img
                   src="/images/logo.jpg"
                   alt="Logo BINARY.BITE"
@@ -95,39 +95,39 @@ export const Navbar: React.FC = () => {
             <div className="flex items-center gap-3">
               <Link
                 href="/admin"
-                className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-sky-900 bg-white/90 hover:bg-white rounded-full transition-all shadow-sm"
+                className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold text-sky-900 bg-white/90 hover:bg-white rounded-full transition-all shadow-sm hover:-translate-y-0.5 active:translate-y-0"
               >
                 <ShieldCheck className="w-3.5 h-3.5 text-[#0284C7]" />
                 <span>Kasir Stand</span>
               </Link>
 
-              {/* Cart Button */}
+              {/* Cart Button (min 44x44 touch target) */}
               <button
                 onClick={() => setIsCartOpen(true)}
-                className="relative p-2.5 bg-white text-[#0284C7] rounded-full hover:bg-sky-50 shadow-md transition-all active:scale-95"
+                className="relative min-w-[44px] min-h-[44px] p-2.5 bg-white text-[#0284C7] rounded-full hover:bg-sky-50 shadow-md transition-all hover:-translate-y-0.5 active:translate-y-0 active:scale-95 flex items-center justify-center"
                 aria-label="Keranjang Belanja"
               >
                 <ShoppingBag className="w-5 h-5" />
                 {totalItems > 0 && (
-                  <span className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-sky-900 text-white text-[10px] font-bold rounded-full flex items-center justify-center shadow-sm">
+                  <span className="absolute -top-1 -right-1 w-5 h-5 bg-sky-900 text-white text-[10px] font-bold rounded-full flex items-center justify-center shadow-sm">
                     {totalItems}
                   </span>
                 )}
               </button>
 
-              {/* Order Now Pill (styled like the Sign In pill in reference) */}
+              {/* Order Now Pill */}
               <button
                 onClick={() => scrollToSection('katalog')}
-                className="hidden md:inline-flex items-center gap-2 px-5 py-2.5 bg-white text-[#0284C7] font-bold text-xs uppercase tracking-wider rounded-full hover:bg-sky-50 shadow-md hover:shadow-lg transition-all active:scale-95"
+                className="hidden md:inline-flex items-center gap-2 px-5 py-2.5 bg-white text-[#0284C7] font-bold text-xs uppercase tracking-wider rounded-full hover:bg-sky-50 shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5 active:translate-y-0 active:scale-95 min-h-[44px]"
               >
                 <Send className="w-3.5 h-3.5" />
                 <span>Pesan Sekarang</span>
               </button>
 
-              {/* Mobile Menu Toggle */}
+              {/* Mobile Menu Toggle (min 44x44 touch target) */}
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="lg:hidden p-2 text-white hover:bg-white/10 rounded-xl"
+                className="lg:hidden min-w-[44px] min-h-[44px] p-2 text-white hover:bg-white/10 rounded-xl flex items-center justify-center transition-colors"
                 aria-label="Toggle menu"
               >
                 {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}

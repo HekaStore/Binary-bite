@@ -11,7 +11,7 @@ export const FloatingWhatsApp: React.FC = () => {
         href={BRAND_INFO.whatsappUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="group flex items-center gap-2.5 p-3 sm:px-4 sm:py-3 bg-[#0284C7] hover:bg-[#0369A1] text-white rounded-full shadow-2xl border-2 border-white/80 active:scale-95 transition-all"
+        className="group flex items-center gap-2.5 p-3 sm:px-4 sm:py-3 bg-[#0284C7] hover:bg-[#0369A1] text-white rounded-full shadow-2xl border-2 border-white/80 transition-all hover:-translate-y-0.5 active:translate-y-0 active:scale-95 min-h-[48px]"
         aria-label="Hubungi Admin Nisrina via WhatsApp"
         title="Chat WhatsApp Admin Nisrina"
       >

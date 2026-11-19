@@ -32,13 +32,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   };
 
   return (
-    <div className="bg-white rounded-3xl p-3.5 shadow-card-paper hover:shadow-soft-float border border-sky-100 hover:border-sky-300 transition-all duration-300 flex flex-col justify-between group relative">
+    <div className="bg-white rounded-3xl p-3.5 shadow-card-paper hover:shadow-soft-float hover:-translate-y-0.5 border border-sky-100 hover:border-sky-300 transition-all duration-300 flex flex-col justify-between group relative">
       {/* Folded Corner Badge / Dog-Ear Effect */}
       <div className="relative aspect-[4/3] rounded-2xl overflow-hidden mb-3.5 bg-sky-50">
         <img
           src={product.image}
           alt={product.alt}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+          className="w-full h-full object-cover group-hover:scale-[1.025] transition-transform duration-300"
           loading="lazy"
         />
 
@@ -117,31 +117,31 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           <span className="text-[10px] text-slate-400 block font-medium">/ per porsi</span>
         </div>
 
-        {/* Action Button: Circular Pill or Stepper */}
+        {/* Action Button: Circular Pill or Stepper (44px target) */}
         {currentQuantity > 0 ? (
-          <div className="flex items-center gap-1.5 bg-sky-50 border border-sky-200 rounded-full p-1">
+          <div className="flex items-center gap-1.5 bg-sky-50 border border-sky-200 rounded-full p-1 min-h-[44px]">
             <button
               onClick={handleDecrement}
-              className="w-7 h-7 rounded-full bg-white text-[#0284C7] hover:bg-sky-100 flex items-center justify-center font-bold text-xs shadow-sm transition-colors"
+              className="w-8 h-8 rounded-full bg-white text-[#0284C7] hover:bg-sky-100 flex items-center justify-center font-bold text-xs shadow-sm hover:-translate-y-0.5 active:translate-y-0 active:scale-95 transition-all"
               aria-label="Kurangi kuantitas"
             >
-              <Minus className="w-3.5 h-3.5" />
+              <Minus className="w-4 h-4" />
             </button>
             <span className="w-6 text-center font-mono font-bold text-xs text-[#0284C7]">
               {currentQuantity}
             </span>
             <button
               onClick={handleIncrement}
-              className="w-7 h-7 rounded-full bg-[#0284C7] text-white hover:bg-[#0369A1] flex items-center justify-center font-bold text-xs shadow-sm transition-colors"
+              className="w-8 h-8 rounded-full bg-[#0284C7] text-white hover:bg-[#0369A1] flex items-center justify-center font-bold text-xs shadow-sm hover:-translate-y-0.5 active:translate-y-0 active:scale-95 transition-all"
               aria-label="Tambah kuantitas"
             >
-              <Plus className="w-3.5 h-3.5" />
+              <Plus className="w-4 h-4" />
             </button>
           </div>
         ) : (
           <button
             onClick={handleAdd}
-            className="w-10 h-10 rounded-full bg-[#0284C7] hover:bg-[#0369A1] text-white flex items-center justify-center shadow-btn-sky hover:scale-105 active:scale-95 transition-all"
+            className="w-11 h-11 rounded-full bg-[#0284C7] hover:bg-[#0369A1] text-white flex items-center justify-center shadow-btn-sky hover:-translate-y-0.5 active:translate-y-0 active:scale-95 transition-all"
             title="Tambah ke Keranjang"
             aria-label="Tambah ke Keranjang"
           >

@@ -45,6 +45,11 @@ export const metadata: Metadata = {
     locale: 'id_ID',
     type: 'website',
   },
+  other: {
+    'page-type': 'place',
+    'site-kind': 'other',
+    'page-kind': 'place',
+  },
 };
 
 export default function RootLayout({
@@ -53,7 +58,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="id">
+    <html lang="id" data-type="place" data-radius="soft" data-motion="true">
       <body className="min-h-screen flex flex-col bg-brand-white text-brand-slate font-sans antialiased selection:bg-brand-sky selection:text-brand-cobalt">
         <CartProvider>
           <Navbar />

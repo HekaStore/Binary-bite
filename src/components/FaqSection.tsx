@@ -15,7 +15,7 @@ export const FaqSection: React.FC = () => {
   const faqs: FaqItem[] = [
     {
       question: 'Kapan dan di mana stand BINARY.BITE beroperasi?',
-      answer: `Stand BINARY.BITE resmi beroperasi pada ${BRAND_INFO.eventDateText} mulai pukul 07:00 WIB hingga selesai, berlokasi di ${BRAND_INFO.standLocation}.`,
+      answer: `Stand BINARY.BITE resmi beroperasi pada ${BRAND_INFO.eventDateText} mulai pukul 07:00 WIB hingga selesai, bertempat di ${BRAND_INFO.standLocation}.`,
     },
     {
       question: 'Apakah saya bisa melakukan pemesanan lebih awal (Pre-Order)?',
@@ -49,17 +49,17 @@ export const FaqSection: React.FC = () => {
   };
 
   return (
-    <section id="faq" className="py-16 sm:py-24 bg-brand-sky border-b-2 border-brand-cobalt">
+    <section id="faq" className="py-20 sm:py-28 bg-slate-50 border-t border-slate-100">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-brand-white border border-brand-royal rounded-md text-xs font-mono font-bold text-brand-cobalt mb-3">
-            <HelpCircle className="w-3.5 h-3.5 text-brand-electric" />
-            <span>FREQUENTLY ASKED QUESTIONS</span>
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-white border border-sky-200 rounded-full text-xs font-mono font-bold text-[#0284C7] mb-3 shadow-sm">
+            <HelpCircle className="w-3.5 h-3.5 text-[#0284C7]" />
+            <span>PUSAT BANTUAN & TANYA JAWAB</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-brand-cobalt tracking-tight">
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
             Pertanyaan yang Sering Diajukan
           </h2>
-          <p className="text-sm sm:text-base text-brand-slate font-medium mt-1">
+          <p className="text-sm sm:text-base text-slate-500 font-medium mt-1">
             Informasi lengkap seputar pemesanan, lokasi stand, dan teknis acara.
           </p>
         </div>
@@ -70,19 +70,20 @@ export const FaqSection: React.FC = () => {
             return (
               <div
                 key={idx}
-                className="bg-brand-white border-2 border-brand-cobalt rounded-xl overflow-hidden shadow-flat-sm transition-all"
+                className="bg-white border border-slate-200/90 hover:border-sky-300 rounded-2xl overflow-hidden shadow-sm transition-all hover:-translate-y-0.5"
               >
                 <button
                   onClick={() => toggleFaq(idx)}
-                  className="w-full p-4 sm:p-5 text-left flex items-center justify-between gap-4 font-bold text-sm sm:text-base text-brand-cobalt hover:bg-brand-sky/40 transition-colors"
+                  className="w-full p-4 sm:p-5 text-left flex items-center justify-between gap-4 font-bold text-sm sm:text-base text-slate-800 hover:bg-sky-50/40 transition-colors min-h-[52px]"
+                  aria-expanded={isOpen}
                 >
                   <span className="flex items-center gap-2.5">
-                    <span className="font-mono text-xs font-black text-brand-royal">
+                    <span className="font-mono text-xs font-black text-[#0284C7]">
                       0{idx + 1}
                     </span>
                     <span>{faq.question}</span>
                   </span>
-                  <div className="w-7 h-7 rounded-lg bg-brand-sky border border-brand-royal flex items-center justify-center text-brand-cobalt flex-shrink-0">
+                  <div className="w-8 h-8 rounded-full bg-sky-50 border border-sky-200 flex items-center justify-center text-[#0284C7] flex-shrink-0">
                     {isOpen ? (
                       <ChevronUp className="w-4 h-4" />
                     ) : (
@@ -92,7 +93,7 @@ export const FaqSection: React.FC = () => {
                 </button>
 
                 {isOpen && (
-                  <div className="px-5 pb-5 pt-1 text-xs sm:text-sm text-brand-slate leading-relaxed border-t border-brand-line bg-brand-white animate-in fade-in">
+                  <div className="px-5 pb-5 pt-1 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-100 bg-white">
                     {faq.answer}
                   </div>
                 )}
@@ -104,4 +105,3 @@ export const FaqSection: React.FC = () => {
     </section>
   );
 };
-

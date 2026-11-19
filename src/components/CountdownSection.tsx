@@ -78,7 +78,7 @@ export const CountdownSection: React.FC = () => {
             </h2>
             <p className="text-sm text-sky-100 font-medium mt-1 leading-relaxed">
               {timeLeft.isOver
-                ? 'Stand 12B sudah siap melayani! Segera kunjungi stand kami di Jl. AR Hakim No.4, Ditotrunan, Lumajang.'
+                ? 'Stand 12B sudah siap melayani! Segera kunjungi stand kami di Jl. AR Hakim, Ditotrunan, Lumajang.'
                 : 'Pre-order sekarang untuk menjamin porsi favoritmu sebelum stok habis di hari-H!'}
             </p>
           </div>
@@ -88,7 +88,7 @@ export const CountdownSection: React.FC = () => {
             {timeBoxes.map((box, idx) => (
               <div key={box.label} className="flex items-center gap-2 sm:gap-4">
                 <div className="flex flex-col items-center">
-                  <div className="w-16 h-20 sm:w-24 sm:h-28 bg-white rounded-2xl flex flex-col items-center justify-center shadow-soft-float border border-sky-100 relative overflow-hidden group hover:-translate-y-1 transition-transform">
+                  <div className="w-16 h-20 sm:w-24 sm:h-28 bg-white rounded-2xl flex flex-col items-center justify-center shadow-soft-float border border-sky-100 relative overflow-hidden group hover:-translate-y-0.5 transition-transform">
                     {/* Top folded colored tab */}
                     <div className="absolute top-0 inset-x-0 h-1.5 bg-[#0284C7]" />
                     <span className="font-mono text-2xl sm:text-4xl font-black text-slate-800 tracking-tight">

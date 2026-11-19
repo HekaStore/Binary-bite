@@ -132,6 +132,11 @@ export const Footer: React.FC = () => {
           </div>
         </div>
 
+        {/* Consolidated License Credits Line (Rule 1) */}
+        <div className="py-4 text-[11px] text-sky-200/90 text-center sm:text-left border-b border-sky-400/20">
+          Seluruh foto produk asli, resep, dan materi visual © 2026 Tim Stand BINARY.BITE Kelas 12B. Dilisensikan untuk kegiatan festival kewirausahaan PKWU.
+        </div>
+
         <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-sky-200">
           <div className="flex flex-col sm:flex-row items-center gap-2 text-center sm:text-left">
             <span>© 2026 BINARY.BITE • Stand Kelas 12B. All rights reserved.</span>
@@ -149,7 +154,7 @@ export const Footer: React.FC = () => {
           </div>
           <button
             onClick={scrollToTop}
-            className="flex items-center gap-1.5 px-3 py-1 bg-white/10 hover:bg-white/20 text-white rounded-full transition-colors"
+            className="flex items-center gap-1.5 px-3 py-1 bg-white/10 hover:bg-white/20 text-white rounded-full transition-all hover:-translate-y-0.5 active:translate-y-0"
           >
             <span>Kembali ke Atas</span>
             <ArrowUp className="w-3.5 h-3.5" />

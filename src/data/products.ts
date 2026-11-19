@@ -70,7 +70,7 @@ export const BRAND_INFO = {
   tagline: 'ONE BITE, ENDLESS HAPPINESS!',
   eventDateText: 'Jumat, 27 November 2026',
   targetDateTime: '2026-11-27T07:00:00+07:00',
-  standLocation: 'Jl. AR Hakim No.4, Ditotrunan, Kecamatan Lumajang, Kabupaten Lumajang, Jawa Timur 67316',
+  standLocation: 'Jl. AR Hakim, Ditotrunan, Lumajang',
   adminName: 'Nisrina',
   whatsappRaw: '0858-4378-8915',
   whatsappFormatted: '6285843788915',

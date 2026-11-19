@@ -1,105 +1,104 @@
 'use client';
 
 import React from 'react';
-import { Terminal, Code, Sparkles, Coffee, Heart, Check } from 'lucide-react';
+import { Sparkles, Utensils, Heart, Check, Users, Award } from 'lucide-react';
 import { BRAND_INFO } from '@/data/products';
 
 export const AboutSection: React.FC = () => {
   return (
-    <section id="tentang" className="py-16 sm:py-24 bg-brand-white border-b-2 border-brand-cobalt">
+    <section id="tentang" className="py-20 sm:py-28 bg-white border-t border-slate-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-          {/* Left Text */}
+          {/* Left Text: Origin Story & Principles */}
           <div className="lg:col-span-7 space-y-6">
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-brand-sky border border-brand-royal rounded-md text-xs font-mono font-bold text-brand-cobalt">
-              <Code className="w-3.5 h-3.5 text-brand-electric" />
-              <span>TENTANG BINARY.BITE</span>
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-sky-50 border border-sky-200 rounded-full text-xs font-mono font-bold text-[#0284C7]">
+              <Sparkles className="w-3.5 h-3.5 text-[#0284C7]" />
+              <span>TENTANG KAMI • KELAS 12B</span>
             </div>
 
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-brand-cobalt tracking-tight leading-tight">
-              Kombinasi Presisi Digital dan Cita Rasa Kuliner Modern
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">
+              Kombinasi Presisi Digital dan Cita Rasa Kuliner Pilihan
             </h2>
 
-            <p className="text-sm sm:text-base text-brand-slate leading-relaxed font-medium">
-              Nama <strong>BINARY.BITE</strong> lahir dari kolaborasi semangat siswa-siswi <strong>Kelas 12B</strong> dalam menghadirkan pengalaman festival kuliner yang berbeda:
+            <p className="text-sm sm:text-base text-slate-600 leading-relaxed font-medium">
+              Nama <strong>BINARY.BITE</strong> lahir dari kolaborasi semangat kewirausahaan siswa-siswi <strong>Kelas 12B</strong> dalam menghadirkan pengalaman festival kuliner yang profesional dan higienis:
             </p>
 
             <div className="space-y-4">
-              <div className="p-4 bg-brand-sky border border-brand-royal rounded-xl flex items-start gap-3">
-                <div className="w-8 h-8 rounded-lg bg-brand-cobalt text-brand-white flex items-center justify-center font-mono font-bold text-xs flex-shrink-0">
+              <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 flex items-start gap-3.5 hover:-translate-y-0.5 transition-transform">
+                <div className="w-8 h-8 rounded-xl bg-[#0284C7] text-white flex items-center justify-center font-mono font-bold text-xs flex-shrink-0 shadow-sm">
                   01
                 </div>
                 <div>
-                  <h4 className="font-extrabold text-sm text-brand-cobalt">
+                  <h4 className="font-extrabold text-sm text-slate-900">
                     "BINARY" — Presisi Digital & Layanan Cepat
                   </h4>
-                  <p className="text-xs text-brand-slate mt-0.5">
-                    Melambangkan sistem pemesanan modern yang transparan, nomor transaksi otomatis, struk digital, dan kemudahan transaksi berbasis teknologi.
+                  <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+                    Melambangkan sistem pemesanan modern yang transparan, ID transaksi otomatis, struk digital thermal, serta rekapitulasi data pesanan secara akurat.
                   </p>
                 </div>
               </div>
 
-              <div className="p-4 bg-brand-white border-2 border-brand-cobalt rounded-xl flex items-start gap-3 shadow-flat-sm">
-                <div className="w-8 h-8 rounded-lg bg-brand-royal text-brand-white flex items-center justify-center font-mono font-bold text-xs flex-shrink-0">
+              <div className="p-4 bg-sky-50/70 rounded-2xl border border-sky-200 flex items-start gap-3.5 hover:-translate-y-0.5 transition-transform">
+                <div className="w-8 h-8 rounded-xl bg-[#0369A1] text-white flex items-center justify-center font-mono font-bold text-xs flex-shrink-0 shadow-sm">
                   02
                 </div>
                 <div>
-                  <h4 className="font-extrabold text-sm text-brand-cobalt">
+                  <h4 className="font-extrabold text-sm text-slate-900">
                     "BITE" — Kelezatan di Setiap Gigitan
                   </h4>
-                  <p className="text-xs text-brand-slate mt-0.5">
-                    Melambangkan cita rasa autentik pada 5 menu unggulan: Kue Lipat lumer, Sus Buah segar, Roll Abon gurih, Es Gabin dingin, serta Es Capcin creamy yang menyegarkan.
+                  <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+                    Melambangkan keaslian cita rasa pada 5 menu unggulan buatan sendiri: Kue Lipat lumer, Sus Buah segar, Roll Abon gurih, Es Gabin dingin, serta Es Capcin yang creamy.
                   </p>
                 </div>
               </div>
             </div>
 
-            <div className="pt-2 flex flex-wrap gap-4 text-xs font-mono font-bold text-brand-cobalt">
-              <div className="flex items-center gap-1.5">
-                <Check className="w-4 h-4 text-brand-electric" />
+            {/* Stand Facts (Rule 9: Street & District only) */}
+            <div className="pt-2 flex flex-wrap gap-4 text-xs font-mono font-bold text-slate-700">
+              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 border border-slate-200">
+                <Check className="w-4 h-4 text-[#0284C7]" />
                 <span>Kelas 12B Official</span>
               </div>
-              <div className="flex items-center gap-1.5">
-                <Check className="w-4 h-4 text-brand-electric" />
-                <span>Jl. AR Hakim No.4, Lumajang</span>
+              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 border border-slate-200">
+                <Check className="w-4 h-4 text-[#0284C7]" />
+                <span>Jl. AR Hakim, Ditotrunan</span>
               </div>
-              <div className="flex items-center gap-1.5">
-                <Check className="w-4 h-4 text-brand-electric" />
+              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 border border-slate-200">
+                <Check className="w-4 h-4 text-[#0284C7]" />
                 <span>27 November 2026</span>
               </div>
             </div>
           </div>
 
-          {/* Right Visual Box */}
+          {/* Right Visual: Stand Photo & Showcase Card */}
           <div className="lg:col-span-5">
-            <div className="bg-brand-sky border-2 border-brand-cobalt rounded-2xl p-6 shadow-solid-cobalt">
-              {/* Terminal Code Box */}
-              <div className="bg-brand-cobalt text-brand-white rounded-xl p-4 font-mono text-xs border border-brand-royal space-y-2">
-                <div className="flex items-center justify-between pb-2 border-b border-brand-royal/60">
-                  <div className="flex items-center gap-1.5">
-                    <span className="w-2.5 h-2.5 rounded-full bg-red-500" />
-                    <span className="w-2.5 h-2.5 rounded-full bg-amber-400" />
-                    <span className="w-2.5 h-2.5 rounded-full bg-green-500" />
-                  </div>
-                  <span className="text-[10px] text-brand-sky font-bold">binary-bite.config.ts</span>
-                </div>
-                <div className="space-y-1 text-brand-sky/90 text-[11px] pt-1">
-                  <div><span className="text-amber-400">const</span> brand = <span className="text-green-300">"BINARY.BITE"</span>;</div>
-                  <div><span className="text-amber-400">const</span> schoolClass = <span className="text-green-300">"12B"</span>;</div>
-                  <div><span className="text-amber-400">const</span> eventDate = <span className="text-green-300">"2026-11-27"</span>;</div>
-                  <div><span className="text-amber-400">const</span> products = [<span className="text-green-300">"Kue Lipat"</span>, <span className="text-green-300">"Sus Buah"</span>, <span className="text-green-300">"Roll Abon"</span>, <span className="text-green-300">"Es Gabin"</span>, <span className="text-green-300">"Es Capcin"</span>];</div>
-                  <div><span className="text-amber-400">const</span> happiness = <span className="text-blue-300">Infinity</span>;</div>
-                  <div className="pt-2 text-brand-white font-bold">// Output: ONE BITE, ENDLESS HAPPINESS!</div>
-                </div>
+            <div className="bg-white rounded-3xl p-5 shadow-card-paper border border-sky-100 relative overflow-hidden group hover:-translate-y-0.5 transition-all">
+              {/* Origami Folded Corner */}
+              <div className="absolute top-0 right-0 bg-[#0284C7] text-white px-3.5 py-1 rounded-bl-2xl text-[10px] font-mono font-bold tracking-wider">
+                DOKUMENTASI STAND
               </div>
 
-              {/* Info banner */}
-              <div className="mt-4 p-4 bg-brand-white border border-brand-royal rounded-xl">
-                <h4 className="font-extrabold text-sm text-brand-cobalt mb-1">
-                  Prakarya & Kewirausahaan (PKWU)
-                </h4>
-                <p className="text-xs text-brand-slate leading-relaxed">
-                  Proyek ini merupakan bukti nyata kreativitas siswa dalam mengintegrasikan strategi bisnis kuliner dengan solusi digital e-commerce dan kasir modern.
+              {/* Real Stand Photo (Rule 6: More and better real photographs) */}
+              <div className="aspect-[4/3] rounded-2xl overflow-hidden mb-4 bg-sky-50 border border-slate-200">
+                <img
+                  src="/images/stand-menu.jpg"
+                  alt="Poster Menu Stand Resmi BINARY.BITE Kelas 12B"
+                  className="w-full h-full object-cover group-hover:scale-[1.025] transition-transform duration-300"
+                  loading="lazy"
+                />
+              </div>
+
+              {/* PKWU Program Note */}
+              <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200">
+                <div className="flex items-center gap-2 mb-1 text-[#0284C7]">
+                  <Award className="w-4 h-4" />
+                  <h4 className="font-extrabold text-xs sm:text-sm text-slate-800">
+                    Proyek Prakarya & Kewirausahaan (PKWU)
+                  </h4>
+                </div>
+                <p className="text-xs text-slate-500 leading-relaxed">
+                  Dirancang dan diproduksi mandiri oleh seluruh siswa-siswi Kelas 12B sebagai implementasi nyata tata kelola usaha kuliner modern dan efisien.
                 </p>
               </div>
             </div>
@@ -109,4 +108,3 @@ export const AboutSection: React.FC = () => {
     </section>
   );
 };
-

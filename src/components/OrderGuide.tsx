@@ -52,8 +52,8 @@ export const OrderGuide: React.FC = () => {
               const Icon = step.icon;
               return (
                 <div key={step.num} className="flex flex-col items-center text-center relative group">
-                  {/* Origami-styled Icon Badge */}
-                  <div className="w-16 h-16 rounded-2xl bg-white border-2 border-sky-100 group-hover:border-[#0284C7] shadow-card-paper flex items-center justify-center text-[#0284C7] mb-4 transition-all duration-300 group-hover:-translate-y-1">
+                  {/* Origami-styled Icon Badge (Rule 5: lifts 2px) */}
+                  <div className="w-16 h-16 rounded-2xl bg-white border-2 border-sky-100 group-hover:border-[#0284C7] shadow-card-paper flex items-center justify-center text-[#0284C7] mb-4 transition-all duration-300 group-hover:-translate-y-0.5">
                     <Icon className="w-8 h-8" />
                   </div>
 
