@@ -23,6 +23,7 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://binary-bite.vercel.app'),
   title: 'BINARY.BITE: One Bite, Endless Happiness! | Stand Kelas 12B',
   description:
     'Website pemesanan makanan dan minuman resmi BINARY.BITE kelas 12B untuk acara Jumat, 27 November 2026. Kue Lipat, Sus Buah, Roll Abon, Es Gabin, dan Es Capcin segar!',
