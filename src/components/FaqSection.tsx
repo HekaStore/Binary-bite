@@ -33,9 +33,9 @@ export const FaqSection: React.FC = () => {
         'Kami menerima pembayaran tunai (cash) langsung di stand kasir 12B saat pengambilan, serta transfer bank atau QRIS digital saat konfirmasi melalui WhatsApp Admin.',
     },
     {
-      question: 'Bagaimana sistem alokasi kuota produksi per hari?',
+      question: 'Bagaimana ketentuan kuota dan jadwal pengambilan pesanan?',
       answer:
-        'Sistem produksi kami berjalan secara sekuensial: setiap hari memproduksi maksimal 125 produk (25 pcs per varian menu). Hari ke-1 harus habis terjual 125 produk terlebih dahulu, baru kemudian sistem membuka pesanan untuk hari selanjutnya (Hari ke-2, lalu Hari ke-3). Apabila varian menu tertentu sudah mencapai kuota 25 pcs di hari berjalan, pesanan untuk menu tersebut otomatis dialihkan ke hari berikutnya.',
+        'Anda bebas memilih tanggal pengambilan pesanan antara tanggal 27, 28, atau 29 November 2026 di Stand Kelas 12B. Setiap hari kami memproduksi maksimal 25 pcs per varian menu dengan total kapasitas 125 porsi/hari demi menjaga kualitas dan kesegaran bahan. Jika kuota menu pada tanggal yang dipilih telah penuh, Anda dapat memilih tanggal lainnya.',
     },
     {
       question: 'Bagaimana cara mendapatkan struk fisik atau digital?',

@@ -126,15 +126,12 @@ export interface AvailabilityCheckResult {
   dayTotalSold: number;
   dayRemainingCapacity: number;
   isDayCapacityExceeded: boolean;
-  isDayLocked?: boolean;
-  lockedReason?: string;
   recommendedDayIndex: number;
 }
 
 /**
  * Checks if the requested items can fit within a specific day's 25 pcs/product and 125 pcs/day limits.
- * In sequential production, Day 1 must be filled first (up to 125 pcs or 25 pcs per menu)
- * before orders can be placed on Day 2, and Day 2 before Day 3.
+ * Customers can freely choose any of the 3 days (27, 28, or 29 Nov 2026) as long as capacity remains.
  */
 export function checkItemsAvailabilityForDay(
   orders: Order[],
@@ -153,41 +150,6 @@ export function checkItemsAvailabilityForDay(
     requestedPerProduct[item.productId] =
       (requestedPerProduct[item.productId] || 0) + item.quantity;
   });
-
-  // Check if prior days could have taken this order (sequential production enforcement)
-  if (dayIndex > 1) {
-    for (let prevDay = 1; prevDay < dayIndex; prevDay++) {
-      const prevSales = getProductSalesForDay(orders, prevDay);
-      const prevTotal = getTotalPortionsForDay(orders, prevDay);
-      let prevFits = prevTotal + totalPcsRequested <= DAILY_TOTAL_CAPACITY;
-
-      if (prevFits) {
-        for (const prodId of Object.keys(requestedPerProduct)) {
-          const req = requestedPerProduct[prodId];
-          const sold = prevSales[prodId] || 0;
-          if (sold + req > DAILY_PRODUCT_LIMIT) {
-            prevFits = false;
-            break;
-          }
-        }
-      }
-
-      if (prevFits) {
-        // Prior day can still accommodate this order! Must be filled first!
-        return {
-          isAvailable: false,
-          exceededProducts: [],
-          totalPcsRequested,
-          dayTotalSold,
-          dayRemainingCapacity: Math.max(0, DAILY_TOTAL_CAPACITY - dayTotalSold),
-          isDayCapacityExceeded: false,
-          isDayLocked: true,
-          lockedReason: `Hari ke-${prevDay} belum terpenuhi (${prevTotal}/125 porsi). Pesanan wajib dialokasikan ke Hari ke-${prevDay} terlebih dahulu.`,
-          recommendedDayIndex: prevDay,
-        };
-      }
-    }
-  }
 
   OFFICIAL_PRODUCTS.forEach((prod) => {
     const requested = requestedPerProduct[prod.id] || 0;
@@ -209,10 +171,11 @@ export function checkItemsAvailabilityForDay(
   const isDayCapacityExceeded = dayTotalSold + totalPcsRequested > DAILY_TOTAL_CAPACITY;
   const isAvailable = exceededProducts.length === 0 && !isDayCapacityExceeded;
 
-  // Find next recommended day if not available
+  // Find next recommended day if not available on selected day
   let recommendedDayIndex = dayIndex;
   if (!isAvailable) {
-    for (let nextDay = dayIndex + 1; nextDay <= 3; nextDay++) {
+    for (let nextDay = 1; nextDay <= 3; nextDay++) {
+      if (nextDay === dayIndex) continue;
       const nextSales = getProductSalesForDay(orders, nextDay);
       const nextTotal = getTotalPortionsForDay(orders, nextDay);
       let fits = nextTotal + totalPcsRequested <= DAILY_TOTAL_CAPACITY;
@@ -242,7 +205,6 @@ export function checkItemsAvailabilityForDay(
     dayTotalSold,
     dayRemainingCapacity: Math.max(0, DAILY_TOTAL_CAPACITY - dayTotalSold),
     isDayCapacityExceeded,
-    isDayLocked: false,
     recommendedDayIndex,
   };
 }
@@ -371,25 +333,9 @@ export function getDayQuotaSummaryList(orders: Order[]): DayQuotaSummary[] {
     const percentage = Math.min(100, Math.round((totalSoldPcs / DAILY_TOTAL_CAPACITY) * 100));
     const remainingPcs = Math.max(0, DAILY_TOTAL_CAPACITY - totalSoldPcs);
 
-    // Sequential unlocking logic
-    let isUnlocked = true;
-    let lockReason = '';
-
-    if (day.dayIndex === 1) {
-      isUnlocked = true;
-    } else if (day.dayIndex === 2) {
-      const day1 = summaries[0];
-      if (day1 && !day1.isFull && day1.totalSoldPcs < DAILY_TOTAL_CAPACITY) {
-        isUnlocked = false;
-        lockReason = `Menunggu Hari ke-1 mencapai 125 porsi (saat ini ${day1.totalSoldPcs}/125)`;
-      }
-    } else if (day.dayIndex === 3) {
-      const day2 = summaries[1];
-      if (day2 && (!day2.isUnlocked || (!day2.isFull && day2.totalSoldPcs < DAILY_TOTAL_CAPACITY))) {
-        isUnlocked = false;
-        lockReason = `Menunggu Hari ke-2 mencapai 125 porsi (saat ini ${day2 ? day2.totalSoldPcs : 0}/125)`;
-      }
-    }
+    // All event days (27, 28, 29 Nov 2026) are open for pre-orders
+    const isUnlocked = true;
+    const lockReason = '';
 
     summaries.push({
       dayIndex: day.dayIndex,

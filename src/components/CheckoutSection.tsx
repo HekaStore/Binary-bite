@@ -91,25 +91,18 @@ export const CheckoutSection: React.FC = () => {
     }
 
     if (!availability.isAvailable) {
-      if (availability.isDayLocked) {
-        setErrorMsg(
-          availability.lockedReason ||
-            'Hari ke-1 harus terpenuhi 125 produk terlebih dahulu sebelum pesanan dialokasikan ke hari selanjutnya.'
-        );
-        return;
-      }
       if (availability.exceededProducts.length > 0) {
         const prodDetails = availability.exceededProducts
-          .map((p) => `${p.name} (sisa hari ini: ${p.remaining} pcs)`)
+          .map((p) => `${p.name} (sisa untuk tanggal ini: ${p.remaining} pcs)`)
           .join(', ');
         setErrorMsg(
-          `Menu ${prodDetails} melebihi kuota produksi 25 pcs per hari. Silakan alihkan jadwal ke Hari ${availability.recommendedDayIndex} atau sesuaikan porsi.`
+          `Menu ${prodDetails} melebihi kuota produksi 25 pcs per hari. Silakan pilih tanggal pengambilan lain (Hari ${availability.recommendedDayIndex}) atau sesuaikan porsi.`
         );
         return;
       }
       if (availability.isDayCapacityExceeded) {
         setErrorMsg(
-          `Total pesanan untuk ${allocation.scheduledDate} sudah mencapai kapasitas maksimal 125 porsi. Silakan pilih Hari ${availability.recommendedDayIndex}.`
+          `Total pesanan untuk ${allocation.scheduledDate} sudah mencapai kapasitas maksimal 125 porsi. Silakan pilih tanggal pengambilan lain (Hari ${availability.recommendedDayIndex}).`
         );
         return;
       }
@@ -222,8 +215,7 @@ export const CheckoutSection: React.FC = () => {
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
                 {daySummaries.map((day) => {
                   const isSelected = selectedDayIndex === day.dayIndex;
-                  const isLocked = !day.isUnlocked && !day.isFull;
-                  const isDisabled = day.isFull || isLocked;
+                  const isDisabled = day.isFull;
                   return (
                     <button
                       key={day.dayIndex}
@@ -246,11 +238,6 @@ export const CheckoutSection: React.FC = () => {
                           <span className="text-[9px] font-bold text-rose-700 bg-rose-100 px-1.5 py-0.5 rounded">
                             Penuh
                           </span>
-                        ) : isLocked ? (
-                          <span className="text-[9px] font-bold text-slate-500 bg-slate-200 px-1.5 py-0.5 rounded flex items-center gap-1">
-                            <Lock className="w-2.5 h-2.5" />
-                            <span>Terkunci</span>
-                          </span>
                         ) : (
                           <span className="text-[10px] font-semibold text-slate-600">
                             {day.totalSoldPcs}/125 porsi
@@ -262,20 +249,14 @@ export const CheckoutSection: React.FC = () => {
                         {day.dateShort} 2026
                       </div>
 
-                      {isLocked ? (
-                        <p className="text-[9px] text-slate-400 mt-1 leading-tight">
-                          Terbuka jika Hari ke-{day.dayIndex - 1} penuh 125 produk
-                        </p>
-                      ) : (
-                        <div className="w-full bg-slate-200 h-1.5 rounded-full mt-2 overflow-hidden">
-                          <div
-                            className={`h-full rounded-full transition-all duration-300 ${
-                              day.isFull ? 'bg-rose-500' : 'bg-[#0284C7]'
-                            }`}
-                            style={{ width: `${day.percentage}%` }}
-                          />
-                        </div>
-                      )}
+                      <div className="w-full bg-slate-200 h-1.5 rounded-full mt-2 overflow-hidden">
+                        <div
+                          className={`h-full rounded-full transition-all duration-300 ${
+                            day.isFull ? 'bg-rose-500' : 'bg-[#0284C7]'
+                          }`}
+                          style={{ width: `${day.percentage}%` }}
+                        />
+                      </div>
                     </button>
                   );
                 })}
@@ -287,14 +268,10 @@ export const CheckoutSection: React.FC = () => {
                   <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                     <div>
                       <span className="font-heading font-black block text-amber-900">
-                        {availability.isDayLocked
-                          ? '⚠️ Jadwal Belum Terbuka (Aturan Penjualan Sekuensial)'
-                          : '⚠️ Kuota Menu Terpenuhi untuk Hari Ini (Maksimal 25 Pcs/Menu)'}
+                        ⚠️ Kuota Menu Terpenuhi untuk Hari Ini (Maksimal 25 Pcs/Menu)
                       </span>
                       <p className="text-[11px] text-amber-800 mt-0.5 leading-relaxed">
-                        {availability.isDayLocked
-                          ? availability.lockedReason
-                          : availability.exceededProducts.length > 0
+                        {availability.exceededProducts.length > 0
                           ? `Menu ${availability.exceededProducts
                               .map((p) => `${p.name} (tersisa ${p.remaining} pcs)`)
                               .join(', ')} telah mencapai batas target 25 pcs per hari.`
