@@ -34,7 +34,7 @@ export const HeroSection: React.FC = () => {
       const res = await orderService.getOrders();
       const alloc = calculateNextOrderAllocation(res.orders);
       setActiveQuota({
-        count: alloc.currentDayOrdersCount,
+        count: alloc.currentDayPortionsCount,
         dayIndex: alloc.scheduledDayIndex,
       });
     };
@@ -103,9 +103,9 @@ export const HeroSection: React.FC = () => {
                 <Sparkles className="w-3.5 h-3.5 text-amber-300" />
                 <span>STAND KULINER KELAS 12B • 27 S/D 29 NOVEMBER 2026</span>
               </div>
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-white/20 backdrop-blur-md border border-white/25 rounded-full text-white text-[11px] sm:text-xs font-semibold shadow-sm">
+              <div className="inline-flex items-center gap-1.5 px-3.5 py-1 bg-white/20 backdrop-blur-md border border-white/25 rounded-full text-white text-[11px] sm:text-xs font-semibold shadow-sm">
                 <Clock className="w-3.5 h-3.5 text-sky-200" />
-                <span>Kapasitas Segar: 25 Porsi/Hari ({activeQuota.count}/25)</span>
+                <span>Kapasitas Segar: 25 Pcs/Menu • 125 Pcs/Hari ({activeQuota.count}/125 Pcs)</span>
               </div>
             </div>
 
@@ -265,8 +265,8 @@ export const HeroSection: React.FC = () => {
               <Calendar className="w-5 h-5" />
             </div>
             <div className="min-w-0">
-              <h4 className="font-heading font-bold text-xs sm:text-sm text-slate-800 truncate">Target 25 / Hari</h4>
-              <p className="text-[10px] sm:text-[11px] text-slate-500 font-medium truncate">Fresh order rollover</p>
+              <h4 className="font-heading font-bold text-xs sm:text-sm text-slate-800 truncate">Target 125 / Hari</h4>
+              <p className="text-[10px] sm:text-[11px] text-slate-500 font-medium truncate">25 pcs per menu fresh</p>
             </div>
           </div>
         </div>

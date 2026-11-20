@@ -10,7 +10,8 @@ import {
   calculateAllocationForDay,
   getDayQuotaSummaryList,
   OFFICIAL_EVENT_DAYS,
-  DAILY_ORDER_LIMIT,
+  DAILY_PRODUCT_LIMIT,
+  DAILY_TOTAL_CAPACITY,
 } from '@/utils/dailyQuota';
 import { orderService } from '@/services/orderService';
 import { ReceiptModal } from '@/components/ReceiptModal';
@@ -286,7 +287,7 @@ export const PosCashier: React.FC = () => {
       order.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
       order.customerContact.toLowerCase().includes(searchTerm.toLowerCase());
 
-    const assignedDay = order.scheduledDayIndex || Math.floor(idx / DAILY_ORDER_LIMIT) + 1;
+    const assignedDay = order.scheduledDayIndex || 1;
     const matchesDay = dayFilter === 'Semua' || assignedDay === dayFilter;
 
     return matchesStatus && matchesSearch && matchesDay;
@@ -576,12 +577,12 @@ export const PosCashier: React.FC = () => {
             <div className="flex items-center gap-2">
               <Calendar className="w-5 h-5 text-[#0284C7]" />
               <h2 className="font-heading font-black text-lg sm:text-xl text-slate-900">
-                Alokasi Jadwal & Kuota 3 Hari Acara (27 s/d 29 Nov 2026)
+                Alokasi Jadwal & Kuota Produksi (25 Pcs / Menu • Total 125 Porsi / Hari)
               </h2>
             </div>
             <p className="text-xs text-slate-500 mt-1">
-              Setiap hari memiliki kuota produksi segar 25 pesanan (Total kapasitas 75 pesanan). Klik salah satu kartu
-              untuk memfilter daftar pesanan.
+              Setiap menu diproduksi maksimal 25 pcs per hari (total 125 pcs/hari). Jika kuota 25 pcs untuk suatu menu
+              telah terpenuhi, pesanan menu tersebut otomatis dialihkan ke hari selanjutnya.
             </p>
           </div>
 
@@ -595,7 +596,7 @@ export const PosCashier: React.FC = () => {
               </button>
             )}
             <span className="text-xs font-mono font-bold px-3 py-1 rounded-full bg-slate-100 text-slate-700 border border-slate-200">
-              Kapasitas: 25/Hari
+              Kapasitas: 125 Pcs/Hari
             </span>
           </div>
         </div>
@@ -604,7 +605,6 @@ export const PosCashier: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {daySummaries.map((summary) => {
             const isSelected = dayFilter === summary.dayIndex;
-            const pct = Math.min(100, (summary.count / summary.limit) * 100);
 
             return (
               <div
@@ -628,38 +628,68 @@ export const PosCashier: React.FC = () => {
                     className={`text-[10px] font-bold px-2.5 py-1 rounded-full ${
                       summary.isFull
                         ? 'bg-rose-100 text-rose-800 border border-rose-200'
-                        : summary.count >= 20
+                        : summary.totalSoldPcs >= 100
                         ? 'bg-amber-100 text-amber-800 border border-amber-200'
                         : 'bg-emerald-100 text-emerald-800 border border-emerald-200'
                     }`}
                   >
-                    {summary.isFull ? 'KUOTA PENUH' : `Sisa ${summary.remaining}`}
+                    {summary.isFull ? 'KUOTA PENUH' : `Sisa ${summary.remainingPcs} pcs`}
                   </span>
                 </div>
 
                 {/* Progress bar */}
                 <div className="space-y-1.5">
                   <div className="flex justify-between text-[11px] font-mono">
-                    <span className="text-slate-500">Kapasitas Terisi:</span>
+                    <span className="text-slate-500">Total Produksi Terisi:</span>
                     <span className="font-bold text-slate-800">
-                      {summary.count} / {summary.limit} Pesanan
+                      {summary.totalSoldPcs} / 125 Porsi ({summary.percentage}%)
                     </span>
                   </div>
                   <div className="w-full h-2.5 bg-slate-200 rounded-full overflow-hidden">
                     <div
                       className={`h-full rounded-full transition-all duration-500 ${
-                        summary.isFull ? 'bg-rose-500' : summary.count >= 20 ? 'bg-amber-500' : 'bg-[#0284C7]'
+                        summary.isFull
+                          ? 'bg-rose-500'
+                          : summary.totalSoldPcs >= 100
+                          ? 'bg-amber-500'
+                          : 'bg-[#0284C7]'
                       }`}
-                      style={{ width: `${pct}%` }}
+                      style={{ width: `${summary.percentage}%` }}
                     />
                   </div>
                 </div>
 
-                <div className="mt-3 pt-3 border-t border-slate-200/60 flex items-center justify-between text-[11px]">
+                {/* 5 Menu Breakdown Chips */}
+                <div className="mt-3.5 pt-3 border-t border-slate-200/70">
+                  <span className="text-[10px] font-heading font-bold text-slate-400 uppercase tracking-wider block mb-1.5">
+                    Produksi Menu (Maks 25/Menu):
+                  </span>
+                  <div className="grid grid-cols-2 gap-1.5 text-[10px]">
+                    {summary.productQuotas.map((pq) => (
+                      <div
+                        key={pq.productId}
+                        className={`px-2 py-1 rounded-lg border flex items-center justify-between ${
+                          pq.isFull
+                            ? 'bg-rose-50 text-rose-800 border-rose-200 font-bold'
+                            : pq.sold >= 20
+                            ? 'bg-amber-50 text-amber-800 border-amber-200 font-medium'
+                            : 'bg-white text-slate-700 border-slate-200'
+                        }`}
+                      >
+                        <span className="truncate mr-1">{pq.productName}:</span>
+                        <span className="font-mono font-bold whitespace-nowrap">{pq.sold}/25</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="mt-3 pt-2.5 border-t border-slate-200/60 flex items-center justify-between text-[11px]">
                   <span className="text-slate-400 font-medium">
                     {isSelected ? '✓ Aktif memfilter daftar' : 'Klik untuk filter tabel'}
                   </span>
-                  <ChevronRight className={`w-4 h-4 text-slate-400 ${isSelected ? 'text-[#0284C7] font-bold' : ''}`} />
+                  <ChevronRight
+                    className={`w-4 h-4 text-slate-400 ${isSelected ? 'text-[#0284C7] font-bold' : ''}`}
+                  />
                 </div>
               </div>
             );

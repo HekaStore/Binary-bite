@@ -52,7 +52,7 @@ export const ProductCatalog: React.FC = () => {
               Katalog Sajian Kuliner Pilihan
             </h2>
             <p className="text-xs sm:text-sm text-slate-600 font-medium mt-1">
-              Target kapasitas 25 pesanan per hari. Setiap menu diolah higienis untuk kenikmatan maksimal.
+              Kapasitas 25 pcs per menu setiap hari (Total 125 porsi/hari). Jika kuota harian terpenuhi, pesanan dialihkan ke hari berikutnya.
             </p>
           </div>
 

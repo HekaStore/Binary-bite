@@ -7,6 +7,7 @@ import { generateTransactionId, formatRupiah } from '@/utils/formatters';
 import {
   calculateAllocationForDay,
   getDayQuotaSummaryList,
+  checkItemsAvailabilityForDay,
   OFFICIAL_EVENT_DAYS,
   QuotaAllocation,
 } from '@/utils/dailyQuota';
@@ -56,6 +57,11 @@ export const CheckoutSection: React.FC = () => {
 
   const daySummaries = getDayQuotaSummaryList(existingOrders);
   const allocation: QuotaAllocation = calculateAllocationForDay(existingOrders, selectedDayIndex);
+  const availability = checkItemsAvailabilityForDay(
+    existingOrders,
+    selectedDayIndex,
+    items.map((i) => ({ productId: i.product.id, name: i.product.name, quantity: i.quantity }))
+  );
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -80,11 +86,22 @@ export const CheckoutSection: React.FC = () => {
       return;
     }
 
-    if (allocation.isFull) {
-      setErrorMsg(
-        `Kuota untuk ${allocation.scheduledDate} sudah mencapai batas 25 pesanan. Silakan pilih tanggal hari lainnya (28 atau 29 Nov).`
-      );
-      return;
+    if (!availability.isAvailable) {
+      if (availability.exceededProducts.length > 0) {
+        const prodDetails = availability.exceededProducts
+          .map((p) => `${p.name} (sisa hari ini: ${p.remaining} pcs)`)
+          .join(', ');
+        setErrorMsg(
+          `Menu ${prodDetails} melebihi kuota produksi 25 pcs per hari. Silakan alihkan jadwal ke Hari ${availability.recommendedDayIndex} atau sesuaikan porsi.`
+        );
+        return;
+      }
+      if (availability.isDayCapacityExceeded) {
+        setErrorMsg(
+          `Total pesanan untuk ${allocation.scheduledDate} sudah mencapai kapasitas maksimal 125 porsi. Silakan pilih Hari ${availability.recommendedDayIndex}.`
+        );
+        return;
+      }
     }
 
     setErrorMsg('');
@@ -186,7 +203,9 @@ export const CheckoutSection: React.FC = () => {
                   <Calendar className="w-3.5 h-3.5 text-[#0284C7]" />
                   <span>Pilih Tanggal Pengambilan Stand (27 s/d 29 Nov 2026) *</span>
                 </span>
-                <span className="text-[10px] text-slate-400 font-normal">Kapasitas: 25 Porsi/Hari</span>
+                <span className="text-[10px] text-slate-400 font-normal">
+                  Target: 25 Pcs/Menu (125 Porsi/Hari)
+                </span>
               </label>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
@@ -198,7 +217,7 @@ export const CheckoutSection: React.FC = () => {
                       type="button"
                       disabled={day.isFull}
                       onClick={() => setSelectedDayIndex(day.dayIndex)}
-                      className={`p-3.5 rounded-2xl border text-left transition-all relative min-h-[76px] flex flex-col justify-between ${
+                      className={`p-3.5 rounded-2xl border text-left transition-all relative min-h-[82px] flex flex-col justify-between ${
                         day.isFull
                           ? 'bg-slate-50 border-slate-200 opacity-60 cursor-not-allowed'
                           : isSelected
@@ -211,12 +230,12 @@ export const CheckoutSection: React.FC = () => {
                           {day.dayLabel}
                         </span>
                         {day.isFull ? (
-                          <span className="text-[9px] font-bold text-red-700 bg-red-100 px-1.5 py-0.5 rounded">
+                          <span className="text-[9px] font-bold text-rose-700 bg-rose-100 px-1.5 py-0.5 rounded">
                             Penuh
                           </span>
                         ) : (
                           <span className="text-[10px] font-semibold text-slate-600">
-                            {day.count}/25 porsi
+                            {day.totalSoldPcs}/125 porsi
                           </span>
                         )}
                       </div>
@@ -229,7 +248,7 @@ export const CheckoutSection: React.FC = () => {
                       <div className="w-full bg-slate-200 h-1.5 rounded-full mt-2 overflow-hidden">
                         <div
                           className={`h-full rounded-full transition-all duration-300 ${
-                            day.isFull ? 'bg-red-500' : 'bg-[#0284C7]'
+                            day.isFull ? 'bg-rose-500' : 'bg-[#0284C7]'
                           }`}
                           style={{ width: `${day.percentage}%` }}
                         />
@@ -238,6 +257,36 @@ export const CheckoutSection: React.FC = () => {
                   );
                 })}
               </div>
+
+              {/* Warning if selected day quota is exceeded for any cart item */}
+              {!availability.isAvailable && items.length > 0 && (
+                <div className="mt-3 p-3.5 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 text-xs">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                    <div>
+                      <span className="font-heading font-black block text-amber-900">
+                        ⚠️ Kuota Menu Terpenuhi untuk Hari Ini (Maksimal 25 Pcs/Menu)
+                      </span>
+                      <p className="text-[11px] text-amber-800 mt-0.5 leading-relaxed">
+                        {availability.exceededProducts.length > 0
+                          ? `Menu ${availability.exceededProducts
+                              .map((p) => `${p.name} (tersisa ${p.remaining} pcs)`)
+                              .join(', ')} telah mencapai batas target 25 pcs per hari.`
+                          : 'Kapasitas maksimal 125 porsi untuk hari ini telah penuh.'}
+                      </p>
+                    </div>
+
+                    {availability.recommendedDayIndex !== selectedDayIndex && (
+                      <button
+                        type="button"
+                        onClick={() => setSelectedDayIndex(availability.recommendedDayIndex)}
+                        className="px-3.5 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-heading font-bold text-xs whitespace-nowrap transition-all shadow-xs self-end sm:self-center hover:-translate-y-0.5 active:translate-y-0"
+                      >
+                        Alihkan ke Hari {availability.recommendedDayIndex} →
+                      </button>
+                    )}
+                  </div>
+                </div>
+              )}
 
               {/* Status info chosen day */}
               <div className="mt-2.5 p-3 rounded-2xl bg-sky-50/70 border border-sky-100 flex items-center justify-between text-xs">
@@ -248,7 +297,7 @@ export const CheckoutSection: React.FC = () => {
                   </span>
                 </div>
                 <span className="font-heading font-bold text-[#0284C7] text-[11px]">
-                  Antrean #{allocation.dailyOrderNumber} / 25
+                  Terisi {daySummaries.find((d) => d.dayIndex === selectedDayIndex)?.totalSoldPcs || 0} / 125 Pcs
                 </span>
               </div>
             </div>

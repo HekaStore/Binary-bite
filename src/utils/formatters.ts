@@ -35,9 +35,9 @@ export function createWhatsAppOrderUrl(order: Order): string {
   const notesText = order.notes.trim() ? order.notes.trim() : '-';
 
   const scheduleLine = order.scheduledDate
-    ? `Jadwal Ambil: ${order.scheduledDate} (Hari ke-${order.scheduledDayIndex || 1})\nUrutan Kuota: Pesanan ke-${order.dailyOrderNumber || 1} dari 25 (Target Harian)${
+    ? `Jadwal Ambil: ${order.scheduledDate} (Hari ke-${order.scheduledDayIndex || 1})\nUrutan Kuota: Pesanan ke-${order.dailyOrderNumber || 1} (Target 25 pcs/menu • 125 pcs/hari)${
         order.isRollover
-          ? '\n*Catatan Kuota: Kuota hari sebelumnya telah penuh (25 pesanan), pesanan ini dialihkan ke hari selanjutnya.*'
+          ? '\n*Catatan Kuota: Kuota menu hari sebelumnya telah penuh (25 pcs/menu), pesanan ini dialihkan ke hari selanjutnya.*'
           : ''
       }`
     : `Jadwal Ambil: ${BRAND_INFO.eventDateText}`;

@@ -33,9 +33,9 @@ export const FaqSection: React.FC = () => {
         'Kami menerima pembayaran tunai (cash) langsung di stand kasir 12B saat pengambilan, serta transfer bank atau QRIS digital saat konfirmasi melalui WhatsApp Admin.',
     },
     {
-      question: 'Berapa batas kuota pesanan per hari?',
+      question: 'Berapa batas kapasitas produksi per hari?',
       answer:
-        'Kami menetapkan kapasitas target 25 pesanan per hari untuk memastikan setiap olahan makanan dan minuman disajikan dalam kondisi segar berkualitas tinggi. Jika pesanan pada suatu hari telah mencapai kuota 25 pesanan, pesanan berikutnya secara otomatis dialokasikan untuk disiapkan pada hari selanjutnya.',
+        'Kami memproduksi maksimal 25 pcs untuk masing-masing varian menu per hari, dengan total kapasitas penjualan 125 pcs/hari (5 menu x 25 pcs). Hal ini demi menjaga cita rasa dan kualitas kesegaran setiap olahan. Jika kuota menu pada hari yang dipilih telah mencapai 25 pcs atau kapasitas harian telah terpenuhi, pesanan otomatis dialihkan ke hari berikutnya.',
     },
     {
       question: 'Bagaimana cara mendapatkan struk fisik atau digital?',

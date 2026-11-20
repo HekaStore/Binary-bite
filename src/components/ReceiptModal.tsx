@@ -64,7 +64,7 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({ order, onClose }) =>
     y += 4;
     doc.text(`Jadwal  : ${order.scheduledDate || BRAND_INFO.eventDateText}`, leftMargin, y);
     y += 4;
-    doc.text(`Kuota   : Hari ke-${order.scheduledDayIndex || 1} (#${order.dailyOrderNumber || 1}/25 per hari)`, leftMargin, y);
+    doc.text(`Kuota   : Hari ke-${order.scheduledDayIndex || 1} (Kapasitas 125 pcs/hari)`, leftMargin, y);
     if (order.isRollover) {
       y += 4;
       doc.text(`*Dialihkan ke hari selanjutnya`, leftMargin, y);
@@ -209,12 +209,12 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({ order, onClose }) =>
             <div className="flex justify-between">
               <span className="text-brand-muted">Kuota:</span>
               <span className="font-semibold text-brand-cobalt">
-                Hari ke-{order.scheduledDayIndex || 1} (#{order.dailyOrderNumber || 1}/25 per hari)
+                Hari ke-{order.scheduledDayIndex || 1} (Kapasitas 125 pcs/hari)
               </span>
             </div>
             {order.isRollover && (
               <div className="text-[10px] text-amber-800 bg-amber-50 p-1 rounded border border-amber-200">
-                *Dialihkan ke hari selanjutnya (kuota harian 25 penuh)
+                *Dialihkan ke hari selanjutnya (kuota menu / harian terpenuhi)
               </div>
             )}
             <div className="flex justify-between">
