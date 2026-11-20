@@ -86,7 +86,8 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({ order, onClose }) =>
 
     order.items.forEach((item) => {
       y += 5;
-      const flavorStr = item.selectedFlavor ? ` (${item.selectedFlavor})` : '';
+      const cleanFlavor = item.selectedFlavor === 'Milo' ? 'Coklat' : item.selectedFlavor;
+      const flavorStr = cleanFlavor ? ` (${cleanFlavor})` : '';
       doc.text(`${item.name}${flavorStr}`, leftMargin, y);
       y += 4;
       const calcStr = `${formatRupiah(item.price)} x ${item.quantity} pcs`;
@@ -239,7 +240,8 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({ order, onClose }) =>
               <div key={idx} className="space-y-0.5">
                 <div className="font-bold text-brand-cobalt">
                   {item.name}
-                  {item.selectedFlavor && ` (${item.selectedFlavor})`}
+                  {item.selectedFlavor &&
+                    ` (${item.selectedFlavor === 'Milo' ? 'Coklat' : item.selectedFlavor})`}
                 </div>
                 <div className="flex justify-between text-brand-muted text-[11px]">
                   <span>

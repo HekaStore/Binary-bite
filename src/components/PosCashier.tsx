@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { Order, OrderStatus, Product } from '@/types';
+import { Order, OrderStatus, Product, PickupMethod } from '@/types';
 import { OFFICIAL_PRODUCTS, BRAND_INFO } from '@/data/products';
 import { formatRupiah, generateTransactionId } from '@/utils/formatters';
 import {
@@ -57,6 +57,7 @@ export const PosCashier: React.FC = () => {
   const [showManualModal, setShowManualModal] = useState(false);
   const [manualCustomer, setManualCustomer] = useState('');
   const [manualSelectedDay, setManualSelectedDay] = useState<number>(1);
+  const [manualPickupMethod, setManualPickupMethod] = useState<PickupMethod>('Ambil di Stand 12B');
   const [manualCart, setManualCart] = useState<{ [productId: string]: number }>({});
   const [manualFlavor, setManualFlavor] = useState<{ [productId: string]: string }>({
     'es-gabin': 'Coklat',
@@ -205,8 +206,11 @@ export const PosCashier: React.FC = () => {
       id: generateTransactionId(),
       customerName: manualCustomer.trim() || 'Pembeli Stand Langsung',
       customerContact: 'Pembelian Langsung Stand 12B',
-      pickupMethod: 'Stand Langsung',
-      notes: 'Transaksi Langsung Stand Lumajang Kota',
+      pickupMethod: manualPickupMethod,
+      notes:
+        manualPickupMethod === 'Diantar di Lumajang Kota (Free Delivery)'
+          ? 'Transaksi Diantar Stand Lumajang Kota'
+          : 'Transaksi Langsung Stand Lumajang Kota',
       items: itemsList,
       totalPrice: calcTotal,
       totalItems: calcPortions,
@@ -669,6 +673,16 @@ export const PosCashier: React.FC = () => {
                           Hari ke-{order.scheduledDayIndex || 1} (#{order.dailyOrderNumber || 1}/25)
                         </span>
 
+                        {order.pickupMethod?.includes('Diantar') || order.pickupMethod === 'Lumajang Kota' ? (
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200">
+                            🚚 Diantar (Free Delivery)
+                          </span>
+                        ) : (
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-sky-50 text-[#0284C7] border border-sky-200">
+                            🏪 Ambil di Stand 12B
+                          </span>
+                        )}
+
                         {order.isRollover && (
                           <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-md bg-amber-50 text-amber-800 border border-amber-200">
                             Rollover
@@ -684,15 +698,19 @@ export const PosCashier: React.FC = () => {
                     {/* Items */}
                     <td className="py-4 px-4">
                       <div className="space-y-1 max-w-xs">
-                        {order.items.map((i, idx) => (
-                          <div key={idx} className="text-slate-700 text-[11px]">
-                            • {i.name}{' '}
-                            {i.selectedFlavor && (
-                              <span className="text-[#0284C7] font-semibold">({i.selectedFlavor})</span>
-                            )}{' '}
-                            <strong className="text-slate-900 font-mono">x{i.quantity}</strong>
-                          </div>
-                        ))}
+                        {order.items.map((i, idx) => {
+                          const cleanFlavor =
+                            i.selectedFlavor === 'Milo' ? 'Coklat' : i.selectedFlavor;
+                          return (
+                            <div key={idx} className="text-slate-700 text-[11px]">
+                              • {i.name}{' '}
+                              {cleanFlavor && (
+                                <span className="text-[#0284C7] font-semibold">({cleanFlavor})</span>
+                              )}{' '}
+                              <strong className="text-slate-900 font-mono">x{i.quantity}</strong>
+                            </div>
+                          );
+                        })}
                       </div>
                     </td>
 
@@ -808,6 +826,48 @@ export const PosCashier: React.FC = () => {
                       </span>
                     </button>
                   ))}
+                </div>
+              </div>
+
+              {/* Pickup / Delivery Method selection for Walk-in */}
+              <div>
+                <label className="block text-xs font-heading font-bold text-slate-800 mb-1.5">
+                  Metode Pengambilan / Pengiriman:
+                </label>
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setManualPickupMethod('Ambil di Stand 12B')}
+                    className={`p-2.5 rounded-xl border text-left transition-all ${
+                      manualPickupMethod === 'Ambil di Stand 12B'
+                        ? 'border-[#0284C7] bg-sky-50 text-[#0284C7] ring-1 ring-[#0284C7]'
+                        : 'border-slate-200 bg-slate-50 text-slate-600 hover:border-slate-300'
+                    }`}
+                  >
+                    <span className="font-heading font-bold text-xs block">
+                      Ambil di Stand 12B
+                    </span>
+                    <span className="text-[10px] text-slate-500 block mt-0.5">
+                      Diambil di lokasi stand
+                    </span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setManualPickupMethod('Diantar di Lumajang Kota (Free Delivery)')}
+                    className={`p-2.5 rounded-xl border text-left transition-all ${
+                      manualPickupMethod === 'Diantar di Lumajang Kota (Free Delivery)'
+                        ? 'border-emerald-600 bg-emerald-50 text-emerald-800 ring-1 ring-emerald-600'
+                        : 'border-slate-200 bg-slate-50 text-slate-600 hover:border-slate-300'
+                    }`}
+                  >
+                    <span className="font-heading font-bold text-xs block">
+                      Diantar Lumajang Kota
+                    </span>
+                    <span className="text-[10px] text-emerald-600 font-semibold block mt-0.5">
+                      Free Delivery
+                    </span>
+                  </button>
                 </div>
               </div>
 

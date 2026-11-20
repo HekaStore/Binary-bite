@@ -7,6 +7,18 @@ export interface FetchOrdersResult {
   source: 'cloud' | 'local';
 }
 
+function normalizeOrder(order: Order): Order {
+  if (!order || !Array.isArray(order.items)) return order;
+  return {
+    ...order,
+    items: order.items.map((item) => ({
+      ...item,
+      selectedFlavor:
+        item.selectedFlavor === 'Milo' ? 'Coklat' : item.selectedFlavor,
+    })),
+  };
+}
+
 export const orderService = {
   // Fetch all orders from backend with localStorage fallback
   async getOrders(): Promise<FetchOrdersResult> {
@@ -18,11 +30,12 @@ export const orderService = {
       if (res.ok) {
         const data = await res.json();
         if (data.success && Array.isArray(data.orders)) {
+          const normalized = data.orders.map(normalizeOrder);
           // Backup to local storage
           try {
-            localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(data.orders));
+            localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(normalized));
           } catch {}
-          return { orders: data.orders, source: data.source || 'cloud' };
+          return { orders: normalized, source: data.source || 'cloud' };
         }
       }
     } catch (err) {
@@ -35,7 +48,7 @@ export const orderService = {
       if (raw) {
         const parsed = JSON.parse(raw);
         if (Array.isArray(parsed)) {
-          return { orders: parsed, source: 'local' };
+          return { orders: parsed.map(normalizeOrder), source: 'local' };
         }
       }
     } catch {}
@@ -45,11 +58,12 @@ export const orderService = {
 
   // Save a new order to backend with localStorage backup
   async createOrder(order: Order): Promise<boolean> {
+    const cleanOrder = normalizeOrder(order);
     // 1. Always backup to local storage first for resilience
     try {
       const raw = localStorage.getItem(LOCAL_STORAGE_KEY);
       const existing: Order[] = raw ? JSON.parse(raw) : [];
-      const updated = [order, ...existing.filter((o) => o.id !== order.id)];
+      const updated = [cleanOrder, ...existing.filter((o) => o.id !== cleanOrder.id)];
       localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updated));
     } catch (e) {
       console.error('Failed to write order to localStorage:', e);
@@ -60,7 +74,7 @@ export const orderService = {
       const res = await fetch('/api/orders', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(order),
+        body: JSON.stringify(cleanOrder),
       });
 
       if (res.ok) {

@@ -23,9 +23,9 @@ export const FaqSection: React.FC = () => {
         'Sangat disarankan! Dengan melakukan pemesanan sekarang melalui website ini dan konfirmasi via WhatsApp ke Admin Nisrina, porsi menu pilihanmu sudah terjamin aman dan tidak akan kehabisan saat acara berlangsung.',
     },
     {
-      question: 'Bagaimana metode pengambilan pesanan?',
+      question: 'Bagaimana metode pengambilan dan pengiriman pesanan?',
       answer:
-        `Metode pengambilan pesanan dilayani khusus area "Lumajang Kota". Lokasi stand resmi berada di ${BRAND_INFO.standLocation}. Anda dapat mengambil pesanan langsung di stand atau berkoordinasi via WhatsApp Admin saat pesanan siap.`,
+        `Tersedia 2 pilihan metode: (1) Ambil langsung di Stand Kelas 12B (${BRAND_INFO.standLocation}) saat jam buka stand mulai 07:00 WIB, atau (2) Diantar langsung ke alamat / sekolah / lokasi Anda di wilayah Lumajang Kota dengan fasilitas Free Delivery (Gratis Ongkir).`,
     },
     {
       question: 'Metode pembayaran apa saja yang didukung?',

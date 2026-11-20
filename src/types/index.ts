@@ -29,7 +29,11 @@ export type OrderStatus =
   | 'Selesai'
   | 'Dibatalkan';
 
-export type PickupMethod = 'Lumajang Kota' | 'Stand Langsung';
+export type PickupMethod =
+  | 'Ambil di Stand 12B'
+  | 'Diantar di Lumajang Kota (Free Delivery)'
+  | 'Lumajang Kota'
+  | 'Stand Langsung';
 
 export interface OrderItem {
   productId: string;

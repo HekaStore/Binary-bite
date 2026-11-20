@@ -10,6 +10,7 @@ import {
   OFFICIAL_EVENT_DAYS,
   QuotaAllocation,
 } from '@/utils/dailyQuota';
+import { BRAND_INFO } from '@/data/products';
 import { orderService } from '@/services/orderService';
 import { ReceiptModal } from '@/components/ReceiptModal';
 import {
@@ -25,6 +26,8 @@ import {
   Calendar,
   Sparkles,
   Clock,
+  Store,
+  Truck,
 } from 'lucide-react';
 import Link from 'next/link';
 import confetti from 'canvas-confetti';
@@ -34,7 +37,8 @@ export const CheckoutSection: React.FC = () => {
 
   const [customerName, setCustomerName] = useState('');
   const [customerContact, setCustomerContact] = useState('');
-  const [pickupMethod, setPickupMethod] = useState<PickupMethod>('Lumajang Kota');
+  const [pickupMethod, setPickupMethod] = useState<PickupMethod>('Ambil di Stand 12B');
+  const [deliveryAddress, setDeliveryAddress] = useState('');
   const [selectedDayIndex, setSelectedDayIndex] = useState<number>(1);
   const [notes, setNotes] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
@@ -71,6 +75,11 @@ export const CheckoutSection: React.FC = () => {
       return;
     }
 
+    if (pickupMethod === 'Diantar di Lumajang Kota (Free Delivery)' && !deliveryAddress.trim()) {
+      setErrorMsg('Alamat / lokasi pengantaran di Lumajang Kota wajib diisi untuk fasilitas Free Delivery.');
+      return;
+    }
+
     if (allocation.isFull) {
       setErrorMsg(
         `Kuota untuk ${allocation.scheduledDate} sudah mencapai batas 25 pesanan. Silakan pilih tanggal hari lainnya (28 atau 29 Nov).`
@@ -81,20 +90,29 @@ export const CheckoutSection: React.FC = () => {
     setErrorMsg('');
     setIsSubmitting(true);
 
+    const finalNotes =
+      pickupMethod === 'Diantar di Lumajang Kota (Free Delivery)'
+        ? `[DIANTAR] Alamat: ${deliveryAddress.trim()}${notes.trim() ? ` • Catatan: ${notes.trim()}` : ''}`
+        : (notes.trim() || '-');
+
     const newOrder: Order = {
       id: generateTransactionId(),
       customerName: customerName.trim(),
       customerContact: customerContact.trim(),
       pickupMethod,
-      notes: notes.trim() || '-',
-      items: items.map((item) => ({
-        productId: item.product.id,
-        name: item.product.name,
-        price: item.product.price,
-        quantity: item.quantity,
-        selectedFlavor: item.selectedFlavor,
-        subtotal: item.product.price * item.quantity,
-      })),
+      notes: finalNotes,
+      items: items.map((item) => {
+        const cleanFlavor =
+          item.selectedFlavor === 'Milo' ? 'Coklat' : item.selectedFlavor;
+        return {
+          productId: item.product.id,
+          name: item.product.name,
+          price: item.product.price,
+          quantity: item.quantity,
+          selectedFlavor: cleanFlavor,
+          subtotal: item.product.price * item.quantity,
+        };
+      }),
       totalPrice,
       totalItems,
       status: 'Menunggu konfirmasi',
@@ -265,29 +283,98 @@ export const CheckoutSection: React.FC = () => {
               />
             </div>
 
+            {/* Metode Pengambilan & Pengiriman Pesanan */}
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1.5 flex items-center gap-1.5">
-                <MapPin className="w-3.5 h-3.5 text-[#0284C7]" />
-                <span>Metode Pengambilan Pesanan</span>
+              <label className="block text-xs font-heading font-bold text-slate-700 mb-2 flex items-center justify-between">
+                <span className="flex items-center gap-1.5">
+                  <MapPin className="w-3.5 h-3.5 text-[#0284C7]" />
+                  <span>Pilihan Metode Pengambilan / Pengiriman *</span>
+                </span>
+                <span className="text-[10px] text-emerald-600 font-bold bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
+                  Lumajang Kota Free Delivery
+                </span>
               </label>
-              <div className="p-3.5 sm:p-4 rounded-2xl border bg-sky-50/80 border-[#0284C7] shadow-sm flex items-start justify-between gap-3">
-                <div>
-                  <div className="flex items-center gap-2">
-                    <span className="font-heading font-black text-xs sm:text-sm text-slate-900">
-                      Lumajang Kota
-                    </span>
-                    <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#0284C7] text-white">
-                      Metode Resmi
-                    </span>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {/* Opsi 1: Ambil di Stand 12B */}
+                <button
+                  type="button"
+                  onClick={() => setPickupMethod('Ambil di Stand 12B')}
+                  className={`p-4 rounded-2xl border text-left transition-all flex flex-col justify-between ${
+                    pickupMethod === 'Ambil di Stand 12B'
+                      ? 'bg-sky-50/90 border-[#0284C7] ring-2 ring-[#0284C7] shadow-sm'
+                      : 'bg-white border-slate-200 hover:border-sky-300 hover:bg-slate-50'
+                  }`}
+                >
+                  <div>
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="inline-flex items-center gap-1 text-[10px] font-heading font-bold uppercase px-2 py-0.5 rounded bg-sky-100 text-[#0284C7]">
+                        <Store className="w-3 h-3" />
+                        <span>AMBIL LANGSUNG</span>
+                      </span>
+                      {pickupMethod === 'Ambil di Stand 12B' && (
+                        <CheckCircle2 className="w-4 h-4 text-[#0284C7]" />
+                      )}
+                    </div>
+                    <div className="font-heading font-black text-sm text-slate-900">
+                      Ambil di Stand 12B
+                    </div>
+                    <p className="text-[11px] text-slate-500 font-medium mt-1 leading-relaxed">
+                      Ambil langsung di Stand Kelas 12B ({BRAND_INFO.standLocation}) saat jam buka 07:00 WIB.
+                    </p>
                   </div>
-                  <p className="text-[11px] sm:text-xs text-slate-600 mt-1 font-medium leading-relaxed">
-                    Stand Resmi: Jl. AR Hakim, Ditotrunan, Lumajang (07:00 WIB s/d selesai)
+                </button>
+
+                {/* Opsi 2: Diantar di Lumajang Kota */}
+                <button
+                  type="button"
+                  onClick={() => setPickupMethod('Diantar di Lumajang Kota (Free Delivery)')}
+                  className={`p-4 rounded-2xl border text-left transition-all flex flex-col justify-between ${
+                    pickupMethod === 'Diantar di Lumajang Kota (Free Delivery)'
+                      ? 'bg-sky-50/90 border-[#0284C7] ring-2 ring-[#0284C7] shadow-sm'
+                      : 'bg-white border-slate-200 hover:border-sky-300 hover:bg-slate-50'
+                  }`}
+                >
+                  <div>
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="inline-flex items-center gap-1 text-[10px] font-heading font-bold uppercase px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">
+                        <Truck className="w-3 h-3" />
+                        <span>GRATIS ONGKIR</span>
+                      </span>
+                      {pickupMethod === 'Diantar di Lumajang Kota (Free Delivery)' && (
+                        <CheckCircle2 className="w-4 h-4 text-[#0284C7]" />
+                      )}
+                    </div>
+                    <div className="font-heading font-black text-sm text-slate-900">
+                      Diantar di Lumajang Kota
+                    </div>
+                    <p className="text-[11px] text-slate-500 font-medium mt-1 leading-relaxed">
+                      Free delivery! Pesanan diantar langsung ke rumah, sekolah, atau kantormu di wilayah Lumajang Kota.
+                    </p>
+                  </div>
+                </button>
+              </div>
+
+              {/* Input Alamat Khusus Pengantaran Lumajang Kota */}
+              {pickupMethod === 'Diantar di Lumajang Kota (Free Delivery)' && (
+                <div className="mt-3 p-3.5 rounded-2xl bg-emerald-50/80 border border-emerald-200 space-y-1.5 animate-in fade-in duration-200">
+                  <label className="block text-xs font-heading font-bold text-emerald-900 flex items-center gap-1.5">
+                    <Truck className="w-3.5 h-3.5 text-emerald-600" />
+                    <span>Alamat / Lokasi Pengantaran di Lumajang Kota *</span>
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={deliveryAddress}
+                    onChange={(e) => setDeliveryAddress(e.target.value)}
+                    placeholder="Contoh: Jl. Panjaitan No. 45 / Gedung X Ruang 3, Lumajang"
+                    className="w-full px-3.5 py-2.5 bg-white border border-emerald-300 rounded-xl text-xs font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all"
+                  />
+                  <p className="text-[10px] text-emerald-700 font-medium">
+                    *Fasilitas Free Delivery khusus Lumajang Kota. Pastikan nomor WhatsApp aktif untuk koordinasi kurir.
                   </p>
                 </div>
-                <div className="w-6 h-6 rounded-full bg-[#0284C7] text-white flex items-center justify-center flex-shrink-0 mt-0.5 shadow-sm">
-                  <CheckCircle2 className="w-4 h-4" />
-                </div>
-              </div>
+              )}
             </div>
 
             <div>

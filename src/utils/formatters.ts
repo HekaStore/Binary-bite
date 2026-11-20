@@ -26,7 +26,8 @@ export function generateTransactionId(): string {
 export function createWhatsAppOrderUrl(order: Order): string {
   const itemsText = order.items
     .map((item, index) => {
-      const flavorText = item.selectedFlavor ? ` (${item.selectedFlavor})` : '';
+      const cleanFlavor = item.selectedFlavor === 'Milo' ? 'Coklat' : item.selectedFlavor;
+      const flavorText = cleanFlavor ? ` (${cleanFlavor})` : '';
       return `${index + 1}. ${item.name}${flavorText}\n   Jumlah: ${item.quantity} pcs\n   Subtotal: ${formatRupiah(item.subtotal)}`;
     })
     .join('\n');
