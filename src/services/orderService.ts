@@ -119,6 +119,61 @@ export const orderService = {
     return true;
   },
 
+  // Update an entire order
+  async updateOrder(order: Order): Promise<boolean> {
+    const cleanOrder = normalizeOrder(order);
+
+    // 1. Update local storage immediately
+    try {
+      const raw = localStorage.getItem(LOCAL_STORAGE_KEY);
+      if (raw) {
+        const existing: Order[] = JSON.parse(raw);
+        const updated = existing.map((o) => (o.id === cleanOrder.id ? cleanOrder : o));
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updated));
+      }
+    } catch {}
+
+    // 2. Sync to cloud API
+    try {
+      const res = await fetch('/api/orders', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(cleanOrder),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        return data.success === true;
+      }
+    } catch (err) {
+      console.warn('Failed to sync updated order to cloud API:', err);
+    }
+
+    return true;
+  },
+
+  // Delete a single order (with admin PIN)
+  async deleteOrder(orderId: string, pin: string = '2789'): Promise<boolean> {
+    try {
+      const raw = localStorage.getItem(LOCAL_STORAGE_KEY);
+      if (raw) {
+        const existing: Order[] = JSON.parse(raw);
+        const updated = existing.filter((o) => o.id !== orderId);
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updated));
+      }
+    } catch {}
+
+    try {
+      const res = await fetch(
+        `/api/orders?pin=${encodeURIComponent(pin)}&orderId=${encodeURIComponent(orderId)}`,
+        { method: 'DELETE' }
+      );
+      return res.ok;
+    } catch {
+      return false;
+    }
+  },
+
   // Clear all orders (with admin PIN)
   async clearAll(pin: string): Promise<boolean> {
     try {

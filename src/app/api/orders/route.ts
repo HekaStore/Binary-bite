@@ -133,6 +133,53 @@ export async function POST(request: NextRequest) {
   }
 }
 
+// PUT: Update an entire order
+export async function PUT(request: NextRequest) {
+  try {
+    const updatedOrder: Order = await request.json();
+
+    if (!updatedOrder.id || !updatedOrder.customerName || !updatedOrder.items) {
+      return NextResponse.json(
+        { success: false, error: 'Data pesanan tidak lengkap' },
+        { status: 400 }
+      );
+    }
+
+    const firebaseUrl = getFirebaseUrl();
+
+    if (firebaseUrl) {
+      try {
+        const cleanUrl = firebaseUrl.replace(/\/$/, '');
+        const res = await fetch(`${cleanUrl}/orders/${updatedOrder.id}.json`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(updatedOrder),
+        });
+
+        if (res.ok) {
+          const current = readLocalOrders();
+          const updated = current.map((o) => (o.id === updatedOrder.id ? updatedOrder : o));
+          writeLocalOrders(updated);
+          return NextResponse.json({ success: true, order: updatedOrder, source: 'cloud' });
+        }
+      } catch (err) {
+        console.error('Error updating order in Firebase RTDB, falling back to local store:', err);
+      }
+    }
+
+    const current = readLocalOrders();
+    const updated = current.map((o) => (o.id === updatedOrder.id ? updatedOrder : o));
+    writeLocalOrders(updated);
+
+    return NextResponse.json({ success: true, order: updatedOrder, source: 'local' });
+  } catch (err: any) {
+    return NextResponse.json(
+      { success: false, error: err.message || 'Gagal memperbarui data pesanan' },
+      { status: 500 }
+    );
+  }
+}
+
 // PATCH: Update status of an order
 export async function PATCH(request: NextRequest) {
   try {

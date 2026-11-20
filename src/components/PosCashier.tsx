@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { Order, OrderStatus, Product, PickupMethod } from '@/types';
+import { Order, OrderStatus, Product, PickupMethod, OrderItem } from '@/types';
 import { OFFICIAL_PRODUCTS, BRAND_INFO } from '@/data/products';
 import { formatRupiah, generateTransactionId } from '@/utils/formatters';
 import {
@@ -37,6 +37,10 @@ import {
   AlertTriangle,
   Store,
   Layers,
+  Pencil,
+  Trash2,
+  Truck,
+  Minus,
 } from 'lucide-react';
 
 export const PosCashier: React.FC = () => {
@@ -62,6 +66,124 @@ export const PosCashier: React.FC = () => {
   const [manualFlavor, setManualFlavor] = useState<{ [productId: string]: string }>({
     'es-gabin': 'Coklat',
   });
+
+  // Edit Order Modal state
+  const [editingOrder, setEditingOrder] = useState<Order | null>(null);
+  const [editCustomerName, setEditCustomerName] = useState('');
+  const [editCustomerContact, setEditCustomerContact] = useState('');
+  const [editPickupMethod, setEditPickupMethod] = useState<PickupMethod>('Ambil di Stand 12B');
+  const [editScheduledDayIndex, setEditScheduledDayIndex] = useState<number>(1);
+  const [editNotes, setEditNotes] = useState('');
+  const [editStatus, setEditStatus] = useState<OrderStatus>('Menunggu konfirmasi');
+  const [editItems, setEditItems] = useState<OrderItem[]>([]);
+  const [isSavingEdit, setIsSavingEdit] = useState(false);
+
+  const handleStartEditOrder = (order: Order) => {
+    setEditingOrder(order);
+    setEditCustomerName(order.customerName);
+    setEditCustomerContact(order.customerContact);
+    setEditPickupMethod(
+      order.pickupMethod?.includes('Stand') || order.pickupMethod === 'Stand Langsung'
+        ? 'Ambil di Stand 12B'
+        : 'Diantar di Lumajang Kota (Free Delivery)'
+    );
+    setEditScheduledDayIndex(order.scheduledDayIndex || 1);
+    setEditNotes(order.notes && order.notes !== '-' ? order.notes : '');
+    setEditStatus(order.status);
+    setEditItems(
+      order.items.map((i) => ({
+        ...i,
+        selectedFlavor: i.selectedFlavor === 'Milo' ? 'Coklat' : i.selectedFlavor,
+      }))
+    );
+  };
+
+  const handleUpdateItemQuantity = (index: number, newQty: number) => {
+    if (newQty <= 0) {
+      setEditItems((prev) => prev.filter((_, idx) => idx !== index));
+    } else {
+      setEditItems((prev) =>
+        prev.map((item, idx) =>
+          idx === index
+            ? { ...item, quantity: newQty, subtotal: item.price * newQty }
+            : item
+        )
+      );
+    }
+  };
+
+  const handleAddItemToEdit = (prod: Product, flavor?: string) => {
+    const existingIndex = editItems.findIndex(
+      (item) => item.productId === prod.id && (flavor ? item.selectedFlavor === flavor : true)
+    );
+
+    if (existingIndex >= 0) {
+      handleUpdateItemQuantity(existingIndex, editItems[existingIndex].quantity + 1);
+    } else {
+      const newItem: OrderItem = {
+        productId: prod.id,
+        name: prod.name,
+        price: prod.price,
+        quantity: 1,
+        selectedFlavor: flavor,
+        subtotal: prod.price,
+      };
+      setEditItems((prev) => [...prev, newItem]);
+    }
+  };
+
+  const handleSaveEditOrder = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingOrder) return;
+    if (editItems.length === 0) {
+      alert('Pesanan harus memiliki minimal satu item menu!');
+      return;
+    }
+
+    setIsSavingEdit(true);
+    const targetDay =
+      OFFICIAL_EVENT_DAYS.find((d) => d.dayIndex === editScheduledDayIndex) ||
+      OFFICIAL_EVENT_DAYS[0];
+
+    const calcTotal = editItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    const calcPortions = editItems.reduce((sum, item) => sum + item.quantity, 0);
+
+    const updatedOrder: Order = {
+      ...editingOrder,
+      customerName: editCustomerName.trim() || editingOrder.customerName,
+      customerContact: editCustomerContact.trim() || editingOrder.customerContact,
+      pickupMethod: editPickupMethod,
+      notes: editNotes.trim() || '-',
+      status: editStatus,
+      scheduledDayIndex: editScheduledDayIndex,
+      scheduledDate: targetDay.dateStr,
+      items: editItems.map((i) => ({
+        ...i,
+        subtotal: i.price * i.quantity,
+        selectedFlavor: i.selectedFlavor === 'Milo' ? 'Coklat' : i.selectedFlavor,
+      })),
+      totalPrice: calcTotal,
+      totalItems: calcPortions,
+    };
+
+    await orderService.updateOrder(updatedOrder);
+    setOrders((prev) => prev.map((o) => (o.id === updatedOrder.id ? updatedOrder : o)));
+    setIsSavingEdit(false);
+    setEditingOrder(null);
+  };
+
+  const handleDeleteCurrentOrder = async () => {
+    if (!editingOrder) return;
+    if (
+      confirm(
+        `Apakah Anda yakin ingin menghapus pesanan #${editingOrder.id} (${editingOrder.customerName}) secara permanen?`
+      )
+    ) {
+      await orderService.deleteOrder(editingOrder.id, '2789');
+      setOrders((prev) => prev.filter((o) => o.id !== editingOrder.id));
+      setEditingOrder(null);
+    }
+  };
 
   const ordersRef = useRef<Order[]>(orders);
   ordersRef.current = orders;
@@ -746,13 +868,25 @@ export const PosCashier: React.FC = () => {
 
                     {/* Action */}
                     <td className="py-4 px-4 text-right">
-                      <button
-                        onClick={() => setSelectedReceiptOrder(order)}
-                        className="px-3 py-1.5 bg-white border border-slate-200 text-slate-700 hover:text-[#0284C7] hover:border-sky-300 rounded-xl hover:bg-sky-50 flex items-center gap-1.5 ml-auto font-heading font-bold text-xs transition-all shadow-sm hover:-translate-y-0.5 active:translate-y-0"
-                      >
-                        <Printer className="w-3.5 h-3.5 text-[#0284C7]" />
-                        <span>Struk</span>
-                      </button>
+                      <div className="flex items-center justify-end gap-1.5">
+                        <button
+                          onClick={() => handleStartEditOrder(order)}
+                          className="px-2.5 py-1.5 bg-sky-50 hover:bg-sky-100 border border-sky-200 text-[#0284C7] rounded-xl flex items-center gap-1 font-heading font-bold text-xs transition-all shadow-xs hover:-translate-y-0.5 active:translate-y-0"
+                          title="Edit Pesanan Ini"
+                        >
+                          <Pencil className="w-3.5 h-3.5" />
+                          <span>Edit</span>
+                        </button>
+
+                        <button
+                          onClick={() => setSelectedReceiptOrder(order)}
+                          className="px-2.5 py-1.5 bg-white border border-slate-200 text-slate-700 hover:text-[#0284C7] hover:border-sky-300 rounded-xl hover:bg-sky-50 flex items-center gap-1 font-heading font-bold text-xs transition-all shadow-xs hover:-translate-y-0.5 active:translate-y-0"
+                          title="Cetak Struk Thermal"
+                        >
+                          <Printer className="w-3.5 h-3.5 text-[#0284C7]" />
+                          <span>Struk</span>
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))
@@ -954,6 +1088,337 @@ export const PosCashier: React.FC = () => {
               >
                 Simpan & Cetak Struk Langsung
               </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Order Modal */}
+      {editingOrder && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm overflow-y-auto">
+          <div className="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl relative my-8 border border-sky-100 max-h-[90vh] flex flex-col">
+            {/* Header */}
+            <div className="flex items-center justify-between pb-4 mb-4 border-b border-slate-100 flex-shrink-0">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-sky-50 text-[#0284C7] flex items-center justify-center border border-sky-200">
+                  <Pencil className="w-5 h-5" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-heading font-black text-lg text-slate-900">
+                      Edit Transaksi #{editingOrder.id}
+                    </h3>
+                    <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">
+                      {editingOrder.createdAt
+                        ? new Date(editingOrder.createdAt).toLocaleTimeString('id-ID', {
+                            hour: '2-digit',
+                            minute: '2-digit',
+                          })
+                        : ''}
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-slate-500 font-medium">
+                    Sesuaikan identitas pemesan, tanggal acara, metode pengiriman, dan item menu.
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setEditingOrder(null)}
+                className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold flex items-center justify-center transition-colors text-sm flex-shrink-0"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Scrollable Form Body */}
+            <form onSubmit={handleSaveEditOrder} className="space-y-4 overflow-y-auto flex-1 pr-1">
+              {/* Row 1: Customer Name & WhatsApp */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-heading font-bold text-slate-800 mb-1">
+                    Nama Pemesan *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={editCustomerName}
+                    onChange={(e) => setEditCustomerName(e.target.value)}
+                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0284C7] focus:bg-white"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-heading font-bold text-slate-800 mb-1">
+                    Kelas / No. WhatsApp / Kontak *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={editCustomerContact}
+                    onChange={(e) => setEditCustomerContact(e.target.value)}
+                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0284C7] focus:bg-white"
+                  />
+                </div>
+              </div>
+
+              {/* Row 2: Scheduled Day Selector (3 Hari Acara) */}
+              <div>
+                <label className="block text-xs font-heading font-bold text-slate-800 mb-1.5 flex items-center gap-1.5">
+                  <Calendar className="w-3.5 h-3.5 text-[#0284C7]" />
+                  <span>Jadwal Pengambilan Stand (27 s/d 29 Nov 2026):</span>
+                </label>
+                <div className="grid grid-cols-3 gap-2">
+                  {OFFICIAL_EVENT_DAYS.map((day) => (
+                    <button
+                      key={day.dayIndex}
+                      type="button"
+                      onClick={() => setEditScheduledDayIndex(day.dayIndex)}
+                      className={`p-2.5 rounded-xl border text-left transition-all ${
+                        editScheduledDayIndex === day.dayIndex
+                          ? 'border-[#0284C7] bg-sky-50 text-[#0284C7] ring-1 ring-[#0284C7] font-bold'
+                          : 'border-slate-200 bg-slate-50 text-slate-600 hover:border-slate-300'
+                      }`}
+                    >
+                      <span className="font-mono text-[9px] uppercase block">
+                        Hari ke-{day.dayIndex}
+                      </span>
+                      <span className="text-[11px] font-heading font-black block truncate">
+                        {day.dayName}, {day.dateShort}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Row 3: Pickup / Delivery Method */}
+              <div>
+                <label className="block text-xs font-heading font-bold text-slate-800 mb-1.5 flex items-center gap-1.5">
+                  <Truck className="w-3.5 h-3.5 text-[#0284C7]" />
+                  <span>Pilihan Metode Pengambilan / Pengiriman:</span>
+                </label>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                  <button
+                    type="button"
+                    onClick={() => setEditPickupMethod('Ambil di Stand 12B')}
+                    className={`p-3 rounded-xl border text-left transition-all flex items-center justify-between ${
+                      editPickupMethod === 'Ambil di Stand 12B'
+                        ? 'border-[#0284C7] bg-sky-50 text-[#0284C7] ring-1 ring-[#0284C7]'
+                        : 'border-slate-200 bg-slate-50 text-slate-600 hover:border-slate-300'
+                    }`}
+                  >
+                    <div>
+                      <span className="font-heading font-black text-xs block">
+                        Ambil di Stand 12B
+                      </span>
+                      <span className="text-[10px] text-slate-500 block">
+                        Ambil langsung di lokasi acara
+                      </span>
+                    </div>
+                    {editPickupMethod === 'Ambil di Stand 12B' && (
+                      <CheckCircle className="w-4 h-4 text-[#0284C7]" />
+                    )}
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setEditPickupMethod('Diantar di Lumajang Kota (Free Delivery)')
+                    }
+                    className={`p-3 rounded-xl border text-left transition-all flex items-center justify-between ${
+                      editPickupMethod === 'Diantar di Lumajang Kota (Free Delivery)'
+                        ? 'border-emerald-600 bg-emerald-50 text-emerald-800 ring-1 ring-emerald-600'
+                        : 'border-slate-200 bg-slate-50 text-slate-600 hover:border-slate-300'
+                    }`}
+                  >
+                    <div>
+                      <span className="font-heading font-black text-xs block">
+                        Diantar di Lumajang Kota
+                      </span>
+                      <span className="text-[10px] text-emerald-700 font-semibold block">
+                        Free Delivery / Gratis Ongkir
+                      </span>
+                    </div>
+                    {editPickupMethod === 'Diantar di Lumajang Kota (Free Delivery)' && (
+                      <CheckCircle className="w-4 h-4 text-emerald-600" />
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {/* Row 4: Notes / Address & Status */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div className="sm:col-span-2">
+                  <label className="block text-xs font-heading font-bold text-slate-800 mb-1">
+                    Catatan / Alamat Pengantaran
+                  </label>
+                  <input
+                    type="text"
+                    value={editNotes}
+                    onChange={(e) => setEditNotes(e.target.value)}
+                    placeholder="Contoh: Jl. Panjaitan No. 12 / tanpa sambal"
+                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0284C7] focus:bg-white"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-heading font-bold text-slate-800 mb-1">
+                    Status Pesanan
+                  </label>
+                  <select
+                    value={editStatus}
+                    onChange={(e) => setEditStatus(e.target.value as OrderStatus)}
+                    className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-heading font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0284C7] cursor-pointer"
+                  >
+                    <option value="Menunggu konfirmasi">Menunggu konfirmasi</option>
+                    <option value="Diproses">Diproses</option>
+                    <option value="Siap diambil">Siap diambil</option>
+                    <option value="Selesai">Selesai</option>
+                    <option value="Dibatalkan">Dibatalkan</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Row 5: Order Items List & Modification */}
+              <div className="space-y-2 border border-slate-200 rounded-2xl p-3.5 bg-slate-50/70">
+                <div className="flex items-center justify-between pb-1.5 border-b border-slate-200">
+                  <span className="text-[11px] font-heading font-bold text-slate-700 uppercase tracking-wider">
+                    Daftar Menu Pesanan:
+                  </span>
+                  <span className="text-xs font-mono font-bold text-[#0284C7]">
+                    {editItems.reduce((sum, item) => sum + item.quantity, 0)} pcs •{' '}
+                    {formatRupiah(
+                      editItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
+                    )}
+                  </span>
+                </div>
+
+                {editItems.length === 0 ? (
+                  <div className="py-4 text-center text-xs text-rose-600 font-medium">
+                    Belum ada menu di pesanan ini. Silakan klik menu di bawah untuk menambahkan.
+                  </div>
+                ) : (
+                  <div className="space-y-1.5 max-h-48 overflow-y-auto pr-1">
+                    {editItems.map((item, idx) => (
+                      <div
+                        key={`${item.productId}-${item.selectedFlavor || 'default'}-${idx}`}
+                        className="flex items-center justify-between p-2 bg-white border border-slate-200 rounded-xl shadow-xs"
+                      >
+                        <div className="flex-1 min-w-0 pr-2">
+                          <div className="font-heading font-bold text-xs text-slate-900 truncate">
+                            {item.name}
+                            {item.selectedFlavor && (
+                              <span className="text-[#0284C7] font-semibold ml-1">
+                                ({item.selectedFlavor})
+                              </span>
+                            )}
+                          </div>
+                          <div className="text-[10px] font-mono text-slate-500">
+                            {formatRupiah(item.price)} x {item.quantity} ={' '}
+                            <strong className="text-slate-800">
+                              {formatRupiah(item.price * item.quantity)}
+                            </strong>
+                          </div>
+                        </div>
+
+                        {/* Stepper + Delete */}
+                        <div className="flex items-center gap-1.5">
+                          <div className="flex items-center gap-1 bg-slate-100 rounded-lg p-0.5 border border-slate-200">
+                            <button
+                              type="button"
+                              onClick={() => handleUpdateItemQuantity(idx, item.quantity - 1)}
+                              className="w-6 h-6 rounded bg-white text-slate-700 font-bold flex items-center justify-center text-xs shadow-xs hover:bg-slate-50"
+                            >
+                              -
+                            </button>
+                            <span className="w-5 text-center font-mono font-bold text-xs text-slate-900">
+                              {item.quantity}
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => handleUpdateItemQuantity(idx, item.quantity + 1)}
+                              className="w-6 h-6 rounded bg-[#0284C7] text-white font-bold flex items-center justify-center text-xs shadow-xs hover:bg-[#0369A1]"
+                            >
+                              +
+                            </button>
+                          </div>
+
+                          <button
+                            type="button"
+                            onClick={() => handleUpdateItemQuantity(idx, 0)}
+                            className="p-1 text-slate-400 hover:text-rose-600 rounded-lg hover:bg-rose-50 transition-colors"
+                            title="Hapus menu ini"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Quick Add Menu Buttons */}
+                <div className="pt-2 border-t border-slate-200">
+                  <span className="text-[10px] font-heading font-bold text-slate-500 uppercase block mb-1.5">
+                    + Tambah Menu ke Pesanan:
+                  </span>
+                  <div className="flex flex-wrap gap-1.5">
+                    {OFFICIAL_PRODUCTS.map((prod) => {
+                      if (prod.flavors && prod.flavors.length > 0) {
+                        return prod.flavors.map((flavor) => (
+                          <button
+                            key={`${prod.id}-${flavor}`}
+                            type="button"
+                            onClick={() => handleAddItemToEdit(prod, flavor)}
+                            className="px-2.5 py-1 bg-white hover:bg-sky-50 border border-slate-200 hover:border-sky-300 rounded-lg text-[10px] font-heading font-bold text-slate-700 hover:text-[#0284C7] transition-all shadow-xs"
+                          >
+                            + {prod.name} ({flavor})
+                          </button>
+                        ));
+                      }
+                      return (
+                        <button
+                          key={prod.id}
+                          type="button"
+                          onClick={() => handleAddItemToEdit(prod)}
+                          className="px-2.5 py-1 bg-white hover:bg-sky-50 border border-slate-200 hover:border-sky-300 rounded-lg text-[10px] font-heading font-bold text-slate-700 hover:text-[#0284C7] transition-all shadow-xs"
+                        >
+                          + {prod.name}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+
+              {/* Bottom Actions */}
+              <div className="pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3 flex-shrink-0">
+                <button
+                  type="button"
+                  onClick={handleDeleteCurrentOrder}
+                  className="w-full sm:w-auto px-4 py-2.5 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 rounded-xl text-xs font-heading font-bold transition-colors flex items-center justify-center gap-1.5"
+                >
+                  <Trash2 className="w-4 h-4 text-rose-600" />
+                  <span>Hapus Pesanan Ini</span>
+                </button>
+
+                <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+                  <button
+                    type="button"
+                    onClick={() => setEditingOrder(null)}
+                    className="flex-1 sm:flex-none px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-heading font-bold transition-colors"
+                  >
+                    Batal
+                  </button>
+
+                  <button
+                    type="submit"
+                    disabled={isSavingEdit || editItems.length === 0}
+                    className="flex-1 sm:flex-none px-5 py-2.5 bg-[#0284C7] hover:bg-[#0369A1] text-white rounded-xl text-xs font-heading font-black shadow-btn-sky transition-all hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50"
+                  >
+                    {isSavingEdit ? 'Menyimpan...' : 'Simpan Perubahan'}
+                  </button>
+                </div>
+              </div>
             </form>
           </div>
         </div>
