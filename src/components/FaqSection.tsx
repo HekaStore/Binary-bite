@@ -33,9 +33,9 @@ export const FaqSection: React.FC = () => {
         'Kami menerima pembayaran tunai (cash) langsung di stand kasir 12B saat pengambilan, serta transfer bank atau QRIS digital saat konfirmasi melalui WhatsApp Admin.',
     },
     {
-      question: 'Berapa batas kapasitas produksi per hari?',
+      question: 'Bagaimana sistem alokasi kuota produksi per hari?',
       answer:
-        'Kami memproduksi maksimal 25 pcs untuk masing-masing varian menu per hari, dengan total kapasitas penjualan 125 pcs/hari (5 menu x 25 pcs). Hal ini demi menjaga cita rasa dan kualitas kesegaran setiap olahan. Jika kuota menu pada hari yang dipilih telah mencapai 25 pcs atau kapasitas harian telah terpenuhi, pesanan otomatis dialihkan ke hari berikutnya.',
+        'Sistem produksi kami berjalan secara sekuensial: setiap hari memproduksi maksimal 125 produk (25 pcs per varian menu). Hari ke-1 harus habis terjual 125 produk terlebih dahulu, baru kemudian sistem membuka pesanan untuk hari selanjutnya (Hari ke-2, lalu Hari ke-3). Apabila varian menu tertentu sudah mencapai kuota 25 pcs di hari berjalan, pesanan untuk menu tersebut otomatis dialihkan ke hari berikutnya.',
     },
     {
       question: 'Bagaimana cara mendapatkan struk fisik atau digital?',

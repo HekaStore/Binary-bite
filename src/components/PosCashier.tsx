@@ -577,12 +577,11 @@ export const PosCashier: React.FC = () => {
             <div className="flex items-center gap-2">
               <Calendar className="w-5 h-5 text-[#0284C7]" />
               <h2 className="font-heading font-black text-lg sm:text-xl text-slate-900">
-                Alokasi Jadwal & Kuota Produksi (25 Pcs / Menu • Total 125 Porsi / Hari)
+                Alokasi Jadwal & Kuota Produksi Sekuensial (25 Pcs / Menu • Total 125 Porsi / Hari)
               </h2>
             </div>
             <p className="text-xs text-slate-500 mt-1">
-              Setiap menu diproduksi maksimal 25 pcs per hari (total 125 pcs/hari). Jika kuota 25 pcs untuk suatu menu
-              telah terpenuhi, pesanan menu tersebut otomatis dialihkan ke hari selanjutnya.
+              Sistem Penjualan Sekuensial: Setiap hari memproduksi 125 produk (maksimal 25 pcs per varian). Hari ke-1 harus habis terjual 125 produk terlebih dahulu, baru pesanan dibuka untuk hari selanjutnya.
             </p>
           </div>
 
@@ -628,12 +627,18 @@ export const PosCashier: React.FC = () => {
                     className={`text-[10px] font-bold px-2.5 py-1 rounded-full ${
                       summary.isFull
                         ? 'bg-rose-100 text-rose-800 border border-rose-200'
+                        : !summary.isUnlocked
+                        ? 'bg-slate-100 text-slate-600 border border-slate-200'
                         : summary.totalSoldPcs >= 100
                         ? 'bg-amber-100 text-amber-800 border border-amber-200'
                         : 'bg-emerald-100 text-emerald-800 border border-emerald-200'
                     }`}
                   >
-                    {summary.isFull ? 'KUOTA PENUH' : `Sisa ${summary.remainingPcs} pcs`}
+                    {summary.isFull
+                      ? 'KUOTA PENUH'
+                      : !summary.isUnlocked
+                      ? 'BELUM DIBUKA'
+                      : `Sisa ${summary.remainingPcs} pcs`}
                   </span>
                 </div>
 
@@ -650,6 +655,8 @@ export const PosCashier: React.FC = () => {
                       className={`h-full rounded-full transition-all duration-500 ${
                         summary.isFull
                           ? 'bg-rose-500'
+                          : !summary.isUnlocked
+                          ? 'bg-slate-400'
                           : summary.totalSoldPcs >= 100
                           ? 'bg-amber-500'
                           : 'bg-[#0284C7]'
@@ -658,6 +665,13 @@ export const PosCashier: React.FC = () => {
                     />
                   </div>
                 </div>
+
+                {!summary.isUnlocked && (
+                  <div className="mt-2 text-[10px] text-slate-500 bg-slate-100/90 px-2.5 py-1 rounded-lg border border-slate-200 flex items-center gap-1.5">
+                    <Lock className="w-3 h-3 text-slate-400 flex-shrink-0" />
+                    <span className="truncate">{summary.lockReason}</span>
+                  </div>
+                )}
 
                 {/* 5 Menu Breakdown Chips */}
                 <div className="mt-3.5 pt-3 border-t border-slate-200/70">
