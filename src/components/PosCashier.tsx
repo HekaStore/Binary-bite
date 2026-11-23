@@ -184,7 +184,7 @@ export const PosCashier: React.FC = () => {
         `Apakah Anda yakin ingin menghapus pesanan #${editingOrder.id} (${editingOrder.customerName}) secara permanen?`
       )
     ) {
-      await orderService.deleteOrder(editingOrder.id, '2789');
+      await orderService.deleteOrder(editingOrder.id, '1290');
       setOrders((prev) => prev.filter((o) => o.id !== editingOrder.id));
       setEditingOrder(null);
     }
@@ -215,7 +215,7 @@ export const PosCashier: React.FC = () => {
 
   const handleClearAllOrders = async () => {
     if (confirm('Apakah Anda yakin ingin mengosongkan seluruh riwayat pesanan POS?')) {
-      await orderService.clearAll('2789');
+      await orderService.clearAll('1290');
       setOrders([]);
     }
   };
@@ -242,7 +242,7 @@ export const PosCashier: React.FC = () => {
 
   const handlePinSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (pinInput === '2789') {
+    if (pinInput === '1290') {
       setIsAuthenticated(true);
       setPinError(false);
       setPinInput('');

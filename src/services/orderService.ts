@@ -153,7 +153,7 @@ export const orderService = {
   },
 
   // Delete a single order (with admin PIN)
-  async deleteOrder(orderId: string, pin: string = '2789'): Promise<boolean> {
+  async deleteOrder(orderId: string, pin: string = '1290'): Promise<boolean> {
     try {
       const raw = localStorage.getItem(LOCAL_STORAGE_KEY);
       if (raw) {

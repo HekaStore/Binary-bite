@@ -235,7 +235,7 @@ export async function DELETE(request: NextRequest) {
     const pin = searchParams.get('pin');
     const orderId = searchParams.get('orderId');
 
-    if (pin !== '2789') {
+    if (pin !== '1290') {
       return NextResponse.json({ success: false, error: 'Akses PIN ditolak' }, { status: 401 });
     }
 
