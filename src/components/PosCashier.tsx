@@ -420,12 +420,11 @@ export const PosCashier: React.FC = () => {
             </button>
           </form>
 
-          <div className="mt-6 pt-5 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
+          <div className="mt-6 pt-5 border-t border-slate-100 flex items-center justify-center text-[11px] text-slate-400">
             <Link href="/" className="hover:text-[#0284C7] font-medium flex items-center gap-1 transition-colors">
               <ArrowLeft className="w-3.5 h-3.5" />
               <span>Kembali ke Toko</span>
             </Link>
-            <span className="font-mono text-[10px]">PIN Default: 2789</span>
           </div>
         </div>
       </div>
