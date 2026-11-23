@@ -231,11 +231,21 @@ export const PosCashier: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
+  // Ensure PIN input is strictly cleared on initial page mount (prevents browser autofill)
+  useEffect(() => {
+    setPinInput('');
+    const timer = setTimeout(() => {
+      setPinInput('');
+    }, 150);
+    return () => clearTimeout(timer);
+  }, []);
+
   const handlePinSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (pinInput === '2789') {
       setIsAuthenticated(true);
       setPinError(false);
+      setPinInput('');
     } else {
       setPinError(true);
     }
@@ -393,14 +403,22 @@ export const PosCashier: React.FC = () => {
             Masukkan PIN 4-digit kasir untuk mengelola data transaksi, kuota 3 hari, dan mencetak struk Stand 12B.
           </p>
 
-          <form onSubmit={handlePinSubmit} className="mt-8 space-y-4">
+          <form onSubmit={handlePinSubmit} className="mt-8 space-y-4" autoComplete="off">
             <div className="space-y-2">
               <input
                 type="password"
+                name="cashier_security_pin_code"
+                id="cashier_security_pin_code"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                autoComplete="one-time-code"
                 maxLength={4}
                 autoFocus
                 value={pinInput}
-                onChange={(e) => setPinInput(e.target.value)}
+                onChange={(e) => {
+                  const val = e.target.value.replace(/\D/g, '');
+                  setPinInput(val);
+                }}
                 placeholder="••••"
                 className="w-full text-center font-mono text-3xl tracking-[0.6em] py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0284C7] focus:bg-white transition-all"
               />
@@ -512,6 +530,18 @@ export const PosCashier: React.FC = () => {
             title="Kosongkan Semua Riwayat"
           >
             Kosongkan Data
+          </button>
+
+          <button
+            onClick={() => {
+              setIsAuthenticated(false);
+              setPinInput('');
+            }}
+            className="px-3 py-2 text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-2xl transition-colors flex items-center gap-1.5"
+            title="Kunci Layar Kasir"
+          >
+            <Lock className="w-3.5 h-3.5 text-slate-600" />
+            <span>Kunci</span>
           </button>
 
           <Link
