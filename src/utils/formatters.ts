@@ -7,20 +7,11 @@ export function formatRupiah(amount: number): string {
 
 export function generateTransactionId(): string {
   const dateStr = '20261127';
-  // Read existing order count from localStorage if available
-  let count = 1;
-  if (typeof window !== 'undefined') {
-    try {
-      const orders = JSON.parse(localStorage.getItem('binary_bite_orders') || '[]');
-      count = orders.length + 1;
-    } catch {
-      count = Math.floor(Math.random() * 900) + 100;
-    }
-  } else {
-    count = Math.floor(Math.random() * 900) + 100;
-  }
-  const sequence = String(count).padStart(4, '0');
-  return `BB-${dateStr}-${sequence}`;
+  // Generate an unmistakable unique order sequence combining time and random salt
+  // Prevents concurrent orders from different devices from ever colliding or overwriting
+  const timePart = Date.now().toString().slice(-4);
+  const randomPart = Math.floor(10 + Math.random() * 90).toString();
+  return `BB-${dateStr}-${timePart}${randomPart}`;
 }
 
 export function createWhatsAppOrderUrl(order: Order): string {

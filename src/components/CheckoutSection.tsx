@@ -153,13 +153,15 @@ export const CheckoutSection: React.FC = () => {
       qrisExpiresAt: new Date(Date.now() + 3600 * 1000).toISOString(),
     };
 
-    // If QRIS, redirect to the dedicated QRIS payment page
+    // If QRIS, save order immediately to Cloud so cashier can see it, then redirect
     if (paymentMethod === 'QRIS') {
+      await orderService.createOrder(newOrder);
       try {
         localStorage.setItem('binary_bite_pending_qris', JSON.stringify(newOrder));
       } catch (err) {
         console.error('Failed to save pending QRIS order:', err);
       }
+      clearCart();
       setIsSubmitting(false);
       addToast('Mengarahkan ke halaman pembayaran QRIS...', 'info');
       router.push('/checkout/qris');
