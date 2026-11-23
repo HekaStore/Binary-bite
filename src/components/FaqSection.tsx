@@ -30,7 +30,7 @@ export const FaqSection: React.FC = () => {
     {
       question: 'Metode pembayaran apa saja yang didukung?',
       answer:
-        'Kami menerima pembayaran tunai (cash) langsung di stand kasir 12B saat pengambilan, serta transfer bank atau QRIS digital saat konfirmasi melalui WhatsApp Admin.',
+        'Kami menyediakan 2 metode pembayaran: 1) Pembayaran Tunai (Cash) saat pesanan diambil di stand atau saat diantar kurir, dan 2) QRIS Resmi (Aurea) bebas biaya admin yang dapat di-scan dari seluruh aplikasi mobile banking (BCA, Mandiri, BRI, BNI) serta e-wallet (Dana, GoPay, OVO, ShopeePay). Anda memiliki waktu 1 jam untuk menyelesaikan transfer QRIS dan mengunggah bukti transaksinya.',
     },
     {
       question: 'Bagaimana ketentuan kuota dan jadwal pengambilan pesanan?',

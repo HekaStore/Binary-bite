@@ -1,8 +1,9 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { useCart } from '@/context/CartContext';
-import { Order, PickupMethod } from '@/types';
+import { Order, PickupMethod, PaymentMethod } from '@/types';
 import { generateTransactionId, formatRupiah } from '@/utils/formatters';
 import {
   calculateAllocationForDay,
@@ -31,16 +32,21 @@ import {
   Store,
   Truck,
   Lock,
+  QrCode,
+  Banknote,
+  ArrowRight,
 } from 'lucide-react';
 import Link from 'next/link';
 import confetti from 'canvas-confetti';
 
 export const CheckoutSection: React.FC = () => {
+  const router = useRouter();
   const { items, totalPrice, totalItems, clearCart, addToast } = useCart();
 
   const [customerName, setCustomerName] = useState('');
   const [customerContact, setCustomerContact] = useState('');
   const [pickupMethod, setPickupMethod] = useState<PickupMethod>('Ambil di Stand 12B');
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('Tunai');
   const [deliveryAddress, setDeliveryAddress] = useState('');
   const [selectedDayIndex, setSelectedDayIndex] = useState<number>(1);
   const [notes, setNotes] = useState('');
@@ -121,6 +127,8 @@ export const CheckoutSection: React.FC = () => {
       customerName: customerName.trim(),
       customerContact: customerContact.trim(),
       pickupMethod,
+      paymentMethod,
+      paymentStatus: 'Belum dibayar',
       notes: finalNotes,
       items: items.map((item) => {
         const cleanFlavor =
@@ -142,9 +150,23 @@ export const CheckoutSection: React.FC = () => {
       scheduledDayIndex: selectedDayIndex,
       dailyOrderNumber: allocation.dailyOrderNumber,
       isRollover: false,
+      qrisExpiresAt: new Date(Date.now() + 3600 * 1000).toISOString(),
     };
 
-    // Save to Cloud & Local Store via orderService
+    // If QRIS, redirect to the dedicated QRIS payment page
+    if (paymentMethod === 'QRIS') {
+      try {
+        localStorage.setItem('binary_bite_pending_qris', JSON.stringify(newOrder));
+      } catch (err) {
+        console.error('Failed to save pending QRIS order:', err);
+      }
+      setIsSubmitting(false);
+      addToast('Mengarahkan ke halaman pembayaran QRIS...', 'info');
+      router.push('/checkout/qris');
+      return;
+    }
+
+    // Save to Cloud & Local Store via orderService (for Tunai)
     await orderService.createOrder(newOrder);
 
     try {
@@ -430,6 +452,77 @@ export const CheckoutSection: React.FC = () => {
               )}
             </div>
 
+            {/* 04: Pilihan Metode Pembayaran (Tunai vs QRIS) */}
+            <div>
+              <label className="block text-xs font-heading font-bold text-slate-700 mb-1.5 flex items-center justify-between">
+                <span className="flex items-center gap-1.5">
+                  <Banknote className="w-3.5 h-3.5 text-[#0284C7]" />
+                  <span>Metode Pembayaran *</span>
+                </span>
+                <span className="text-[10px] text-slate-400 font-mono">Bebas Biaya Admin</span>
+              </label>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {/* Opsi 1: Bayar Tunai */}
+                <button
+                  type="button"
+                  onClick={() => setPaymentMethod('Tunai')}
+                  className={`p-4 rounded-2xl border text-left transition-all flex flex-col justify-between ${
+                    paymentMethod === 'Tunai'
+                      ? 'bg-sky-50/90 border-[#0284C7] ring-2 ring-[#0284C7] shadow-sm'
+                      : 'bg-white border-slate-200 hover:border-sky-300 hover:bg-slate-50'
+                  }`}
+                >
+                  <div>
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="inline-flex items-center gap-1 text-[10px] font-heading font-bold uppercase px-2 py-0.5 rounded bg-slate-100 text-slate-700">
+                        <Banknote className="w-3 h-3" />
+                        <span>TUNAI / CASH</span>
+                      </span>
+                      {paymentMethod === 'Tunai' && (
+                        <CheckCircle2 className="w-4 h-4 text-[#0284C7]" />
+                      )}
+                    </div>
+                    <div className="font-heading font-black text-sm text-slate-900">
+                      Bayar Tunai di Stand
+                    </div>
+                    <p className="text-[11px] text-slate-500 font-medium mt-1 leading-relaxed">
+                      Bayar cash langsung saat pengambilan pesanan di stand atau saat kurir mengantar.
+                    </p>
+                  </div>
+                </button>
+
+                {/* Opsi 2: QRIS (Aurea) */}
+                <button
+                  type="button"
+                  onClick={() => setPaymentMethod('QRIS')}
+                  className={`p-4 rounded-2xl border text-left transition-all flex flex-col justify-between ${
+                    paymentMethod === 'QRIS'
+                      ? 'bg-sky-50/90 border-[#0284C7] ring-2 ring-[#0284C7] shadow-sm'
+                      : 'bg-white border-slate-200 hover:border-sky-300 hover:bg-slate-50'
+                  }`}
+                >
+                  <div>
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="inline-flex items-center gap-1 text-[10px] font-heading font-bold uppercase px-2 py-0.5 rounded bg-sky-100 text-[#0284C7]">
+                        <QrCode className="w-3 h-3" />
+                        <span>NON-TUNAI</span>
+                      </span>
+                      {paymentMethod === 'QRIS' && (
+                        <CheckCircle2 className="w-4 h-4 text-[#0284C7]" />
+                      )}
+                    </div>
+                    <div className="font-heading font-black text-sm text-slate-900 flex items-center gap-1.5">
+                      <span>QRIS (Semua Bank & E-Wallet)</span>
+                    </div>
+                    <p className="text-[11px] text-slate-500 font-medium mt-1 leading-relaxed">
+                      Scan kode QRIS Aurea via BCA, Mandiri, BRI, BNI, Dana, GoPay, OVO, ShopeePay.
+                    </p>
+                  </div>
+                </button>
+              </div>
+            </div>
+
             <div>
               <label className="block text-xs font-bold text-slate-700 mb-1.5 flex items-center gap-1.5">
                 <FileText className="w-3.5 h-3.5 text-[#0284C7]" />
@@ -450,11 +543,22 @@ export const CheckoutSection: React.FC = () => {
                 disabled={items.length === 0 || isSubmitting || allocation.isFull}
                 className="w-full py-4 bg-[#0284C7] hover:bg-[#0369A1] text-white text-sm font-heading font-black rounded-full shadow-btn-sky transition-all hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 uppercase tracking-wider"
               >
-                <Send className="w-4 h-4" />
-                <span>{isSubmitting ? 'Menyimpan Pesanan...' : 'Buat Struk & Kirim via WhatsApp'}</span>
+                {paymentMethod === 'QRIS' ? (
+                  <>
+                    <QrCode className="w-4 h-4" />
+                    <span>{isSubmitting ? 'Mempersiapkan QRIS...' : 'Lanjut ke Pembayaran QRIS →'}</span>
+                  </>
+                ) : (
+                  <>
+                    <Send className="w-4 h-4" />
+                    <span>{isSubmitting ? 'Menyimpan Pesanan...' : 'Buat Struk & Kirim via WhatsApp'}</span>
+                  </>
+                )}
               </button>
               <p className="text-[11px] text-center text-slate-400 mt-2 font-medium">
-                *Pesanan otomatis tersimpan di kasir stand & diarahkan ke WhatsApp Admin Nisrina (0858-4378-8915)
+                {paymentMethod === 'QRIS'
+                  ? '*Anda akan diarahkan ke halaman pembayaran QRIS dengan waktu bayar 1 jam'
+                  : '*Pesanan otomatis tersimpan di kasir stand & diarahkan ke WhatsApp Admin Nisrina (0858-4378-8915)'}
               </p>
             </div>
           </form>

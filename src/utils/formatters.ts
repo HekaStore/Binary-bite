@@ -42,6 +42,11 @@ export function createWhatsAppOrderUrl(order: Order): string {
       }`
     : `Jadwal Ambil: ${BRAND_INFO.eventDateText}`;
 
+  const paymentLine =
+    order.paymentMethod === 'QRIS'
+      ? `Metode Bayar: QRIS (Aurea)\nStatus Bayar: Menunggu Verifikasi Bukti Transfer\n*Bukti transfer sudah saya upload di sistem website.*`
+      : `Metode Bayar: Tunai / Cash (Bayar saat pengambilan)`;
+
   const message = `HALO BINARY.BITE!
 
 Saya ingin melakukan pemesanan untuk acara ${BRAND_INFO.eventDateText}.
@@ -51,6 +56,7 @@ No. Transaksi: ${order.id}
 Nama: ${order.customerName}
 Kelas / No. WA: ${order.customerContact}
 Metode Ambil: ${order.pickupMethod}
+${paymentLine}
 ${scheduleLine}
 
 DAFTAR PRODUK:

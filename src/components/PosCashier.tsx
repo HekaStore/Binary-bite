@@ -42,6 +42,9 @@ import {
   Trash2,
   Truck,
   Minus,
+  QrCode,
+  Image as ImageIcon,
+  Eye,
 } from 'lucide-react';
 
 export const PosCashier: React.FC = () => {
@@ -54,6 +57,7 @@ export const PosCashier: React.FC = () => {
   const [dayFilter, setDayFilter] = useState<number | 'Semua'>('Semua');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedReceiptOrder, setSelectedReceiptOrder] = useState<Order | null>(null);
+  const [selectedProofOrder, setSelectedProofOrder] = useState<Order | null>(null);
   const [syncSource, setSyncSource] = useState<'cloud' | 'local'>('local');
   const [newOrderAlert, setNewOrderAlert] = useState<string | null>(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -353,6 +357,19 @@ export const PosCashier: React.FC = () => {
     setManualCart({});
     setShowManualModal(false);
     setSelectedReceiptOrder(newOrder);
+  };
+
+  const handleVerifyQrisPayment = async (orderId: string) => {
+    const target = orders.find((o) => o.id === orderId);
+    if (!target) return;
+    const updated: Order = {
+      ...target,
+      paymentStatus: 'Lunas',
+      status: target.status === 'Menunggu konfirmasi' ? 'Diproses' : target.status,
+    };
+    await orderService.updateOrder(updated);
+    setOrders((prev) => prev.map((o) => (o.id === orderId ? updated : o)));
+    setSelectedProofOrder(null);
   };
 
   // If not authenticated, show modern PIN gate card
@@ -865,9 +882,35 @@ export const PosCashier: React.FC = () => {
                       </div>
                     </td>
 
-                    {/* Total */}
-                    <td className="py-4 px-4 font-mono font-black text-slate-900 text-sm">
-                      {formatRupiah(order.totalPrice)}
+                    {/* Total & Payment Method */}
+                    <td className="py-4 px-4">
+                      <div className="font-mono font-black text-slate-900 text-sm">
+                        {formatRupiah(order.totalPrice)}
+                      </div>
+                      <div className="mt-1 flex flex-wrap items-center gap-1">
+                        {order.paymentMethod === 'QRIS' ? (
+                          <span className="text-[10px] font-heading font-black px-1.5 py-0.5 rounded bg-indigo-50 text-indigo-700 border border-indigo-200 inline-flex items-center gap-0.5">
+                            <QrCode className="w-2.5 h-2.5" />
+                            <span>QRIS</span>
+                          </span>
+                        ) : (
+                          <span className="text-[10px] font-heading font-bold px-1.5 py-0.5 rounded bg-slate-100 text-slate-600">
+                            Tunai
+                          </span>
+                        )}
+
+                        {order.paymentProof && (
+                          <button
+                            type="button"
+                            onClick={() => setSelectedProofOrder(order)}
+                            className="text-[10px] font-heading font-bold px-1.5 py-0.5 rounded bg-sky-100 hover:bg-sky-200 text-[#0284C7] border border-sky-300 inline-flex items-center gap-1 transition-colors"
+                            title="Klik untuk melihat bukti transfer QRIS"
+                          >
+                            <Eye className="w-2.5 h-2.5" />
+                            <span>Bukti</span>
+                          </button>
+                        )}
+                      </div>
                     </td>
 
                     {/* Status Dropdown */}
@@ -1459,6 +1502,107 @@ export const PosCashier: React.FC = () => {
           order={selectedReceiptOrder}
           onClose={() => setSelectedReceiptOrder(null)}
         />
+      )}
+
+      {/* Modal Preview Bukti Transfer QRIS */}
+      {selectedProofOrder && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white rounded-3xl p-6 sm:p-7 max-w-lg w-full shadow-2xl border border-sky-100 relative max-h-[90vh] flex flex-col animate-in zoom-in-95 duration-200">
+            {/* Header */}
+            <div className="flex items-center justify-between pb-4 border-b border-slate-100 flex-shrink-0">
+              <div className="flex items-center gap-2">
+                <div className="w-9 h-9 rounded-xl bg-indigo-50 border border-indigo-200 flex items-center justify-center text-indigo-600">
+                  <QrCode className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-heading font-black text-base text-slate-900">
+                    Bukti Pembayaran QRIS
+                  </h3>
+                  <span className="text-[11px] font-mono text-slate-400">
+                    {selectedProofOrder.id} • {selectedProofOrder.customerName}
+                  </span>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setSelectedProofOrder(null)}
+                className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition-colors"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Content: Image Preview & Details */}
+            <div className="overflow-y-auto py-4 space-y-3 flex-1">
+              <div className="p-3 bg-slate-50 rounded-2xl border border-slate-200 flex items-center justify-between text-xs">
+                <div>
+                  <span className="text-slate-400 text-[10px] uppercase font-bold block">Total Tagihan</span>
+                  <span className="text-base font-mono font-black text-slate-900">
+                    {formatRupiah(selectedProofOrder.totalPrice)}
+                  </span>
+                </div>
+                <div className="text-right">
+                  <span className="text-slate-400 text-[10px] uppercase font-bold block">Status Bayar</span>
+                  <span
+                    className={`font-bold px-2 py-0.5 rounded text-[10px] ${
+                      selectedProofOrder.paymentStatus === 'Lunas'
+                        ? 'bg-emerald-100 text-emerald-800'
+                        : 'bg-amber-100 text-amber-800'
+                    }`}
+                  >
+                    {selectedProofOrder.paymentStatus || 'Menunggu verifikasi'}
+                  </span>
+                </div>
+              </div>
+
+              {selectedProofOrder.paymentProof ? (
+                <div className="rounded-2xl border-2 border-slate-200 overflow-hidden bg-slate-100 text-center relative group">
+                  <img
+                    src={selectedProofOrder.paymentProof}
+                    alt="Bukti Transfer QRIS"
+                    className="w-full h-auto max-h-[50vh] object-contain mx-auto"
+                  />
+                  <a
+                    href={selectedProofOrder.paymentProof}
+                    target="_blank"
+                    rel="noreferrer"
+                    download={`Bukti-QRIS-${selectedProofOrder.id}.jpg`}
+                    className="absolute bottom-3 right-3 px-3 py-1.5 bg-slate-900/80 hover:bg-slate-900 text-white rounded-xl text-xs font-heading font-bold shadow-sm backdrop-blur-xs flex items-center gap-1.5 transition-all"
+                  >
+                    <span>Buka Penuh / Unduh</span>
+                  </a>
+                </div>
+              ) : (
+                <div className="py-12 text-center text-slate-400 text-xs">
+                  Tidak ada gambar bukti yang dilampirkan.
+                </div>
+              )}
+            </div>
+
+            {/* Bottom Actions */}
+            <div className="pt-4 border-t border-slate-100 flex items-center justify-between gap-3 flex-shrink-0">
+              <button
+                type="button"
+                onClick={() => setSelectedProofOrder(null)}
+                className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-heading font-bold transition-colors"
+              >
+                Tutup
+              </button>
+
+              {selectedProofOrder.paymentStatus !== 'Lunas' && (
+                <button
+                  type="button"
+                  onClick={() => handleVerifyQrisPayment(selectedProofOrder.id)}
+                  className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-heading font-black shadow-md flex items-center gap-1.5 transition-all active:scale-95"
+                >
+                  <CheckCheck className="w-4 h-4" />
+                  <span>Verifikasi & Tandai Lunas</span>
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

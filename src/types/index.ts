@@ -29,6 +29,15 @@ export type OrderStatus =
   | 'Selesai'
   | 'Dibatalkan';
 
+export type PaymentMethod = 'Tunai' | 'QRIS';
+
+export type PaymentStatus =
+  | 'Belum dibayar'
+  | 'Menunggu verifikasi'
+  | 'Lunas'
+  | 'Dibatalkan'
+  | 'Kedaluwarsa';
+
 export type PickupMethod =
   | 'Ambil di Stand 12B'
   | 'Diantar di Lumajang Kota (Free Delivery)'
@@ -49,6 +58,11 @@ export interface Order {
   customerName: string;
   customerContact: string; // Kelas / No WhatsApp
   pickupMethod: PickupMethod;
+  paymentMethod?: PaymentMethod;
+  paymentStatus?: PaymentStatus;
+  paymentProof?: string; // Base64 data URL
+  paymentProofName?: string;
+  qrisExpiresAt?: string;
   notes: string;
   items: OrderItem[];
   totalPrice: number;

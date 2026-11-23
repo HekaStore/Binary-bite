@@ -74,7 +74,9 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({ order, onClose }) =>
     y += 4;
     doc.text(`Kontak  : ${order.customerContact}`, leftMargin, y);
     y += 4;
-    doc.text(`Metode  : ${order.pickupMethod}`, leftMargin, y);
+    doc.text(`Ambil   : ${order.pickupMethod}`, leftMargin, y);
+    y += 4;
+    doc.text(`Bayar   : ${order.paymentMethod || 'Tunai'}${order.paymentMethod === 'QRIS' ? ' (Aurea)' : ''}`, leftMargin, y);
 
     y += 4;
     doc.text('------------------------------------------'.slice(0, is58 ? 28 : 38), centerPos, y, { align: 'center' });
@@ -228,6 +230,12 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({ order, onClose }) =>
             <div className="flex justify-between">
               <span className="text-brand-muted">Metode:</span>
               <span className="font-semibold text-brand-royal">{order.pickupMethod}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-brand-muted">Pembayaran:</span>
+              <span className={`font-bold ${order.paymentMethod === 'QRIS' ? 'text-indigo-600' : 'text-slate-800'}`}>
+                {order.paymentMethod || 'Tunai'} {order.paymentMethod === 'QRIS' ? '(QRIS Aurea)' : ''}
+              </span>
             </div>
           </div>
 
