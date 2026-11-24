@@ -10,7 +10,7 @@ import { MaintenanceScreen } from './MaintenanceScreen';
  *         The Cashier Portal (/admin) remains fully functional for the 12B stand team.
  * - false: Website is 100% live for all public visitors.
  */
-export const IS_MAINTENANCE_MODE = true;
+export const IS_MAINTENANCE_MODE = false;
 
 interface MaintenanceGuardProps {
   children: React.ReactNode;
