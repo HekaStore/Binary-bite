@@ -623,11 +623,11 @@ export const PosCashier: React.FC = () => {
             <div className="flex items-center gap-2">
               <Calendar className="w-5 h-5 text-[#0284C7]" />
               <h2 className="font-heading font-black text-lg sm:text-xl text-slate-900">
-                Alokasi Jadwal & Kuota Produksi (25 Pcs / Menu • Total 125 Porsi / Hari)
+                Alokasi Jadwal & Kuota Produksi (Maks 25 Pcs/Menu • Es Gabin Jumat 50 Pcs)
               </h2>
             </div>
             <p className="text-xs text-slate-500 mt-1">
-              Kapasitas produksi harian maksimal 25 pcs per varian menu (total 125 porsi/hari). Pelanggan bebas memilih jadwal pengambilan pada tanggal 27, 28, atau 29 November 2026.
+              Kapasitas produksi harian maksimal 25 pcs per menu (khusus Es Gabin hari Jumat 50 pcs, total kapasitas 150 porsi). Pelanggan bebas memilih jadwal pengambilan pada tanggal 27, 28, atau 29 November 2026.
             </p>
           </div>
 
@@ -641,7 +641,7 @@ export const PosCashier: React.FC = () => {
               </button>
             )}
             <span className="text-xs font-mono font-bold px-3 py-1 rounded-full bg-slate-100 text-slate-700 border border-slate-200">
-              Kapasitas: 125 Pcs/Hari
+              Kapasitas: 125 - 150 Pcs/Hari
             </span>
           </div>
         </div>
@@ -687,7 +687,7 @@ export const PosCashier: React.FC = () => {
                   <div className="flex justify-between text-[11px] font-mono">
                     <span className="text-slate-500">Total Produksi Terisi:</span>
                     <span className="font-bold text-slate-800">
-                      {summary.totalSoldPcs} / 125 Porsi ({summary.percentage}%)
+                      {summary.totalSoldPcs} / {summary.totalCapacityPcs} Porsi ({summary.percentage}%)
                     </span>
                   </div>
                   <div className="w-full h-2.5 bg-slate-200 rounded-full overflow-hidden">
@@ -707,7 +707,7 @@ export const PosCashier: React.FC = () => {
                 {/* 5 Menu Breakdown Chips */}
                 <div className="mt-3.5 pt-3 border-t border-slate-200/70">
                   <span className="text-[10px] font-heading font-bold text-slate-400 uppercase tracking-wider block mb-1.5">
-                    Produksi Menu (Maks 25/Menu):
+                    Produksi Menu ({summary.dayIndex === 1 ? 'Maks 25/Menu • Es Gabin 50' : 'Maks 25/Menu'}):
                   </span>
                   <div className="grid grid-cols-2 gap-1.5 text-[10px]">
                     {summary.productQuotas.map((pq) => (
@@ -722,7 +722,7 @@ export const PosCashier: React.FC = () => {
                         }`}
                       >
                         <span className="truncate mr-1">{pq.productName}:</span>
-                        <span className="font-mono font-bold whitespace-nowrap">{pq.sold}/25</span>
+                        <span className="font-mono font-bold whitespace-nowrap">{pq.sold}/{pq.limit}</span>
                       </div>
                     ))}
                   </div>

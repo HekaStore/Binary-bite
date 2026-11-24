@@ -52,7 +52,7 @@ export const ProductCatalog: React.FC = () => {
               Katalog Sajian Kuliner Pilihan
             </h2>
             <p className="text-xs sm:text-sm text-slate-600 font-medium mt-1">
-              Kapasitas 25 pcs per menu setiap hari (Total 125 porsi/hari). Jika kuota harian terpenuhi, pesanan dialihkan ke hari berikutnya.
+              Kapasitas 25 pcs per menu setiap hari (khusus Es Gabin hari Jumat 50 pcs). Bebas pilih tanggal 27, 28, atau 29 November 2026.
             </p>
           </div>
 

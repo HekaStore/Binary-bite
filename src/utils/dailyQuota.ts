@@ -1,9 +1,32 @@
 import { Order } from '@/types';
 import { OFFICIAL_PRODUCTS } from '@/data/products';
 
-export const DAILY_PRODUCT_LIMIT = 25; // 25 pcs per menu item per day
+export const DAILY_PRODUCT_LIMIT = 25; // 25 pcs per menu item per day (default)
 export const TOTAL_PRODUCTS_COUNT = 5; // 5 official products
-export const DAILY_TOTAL_CAPACITY = DAILY_PRODUCT_LIMIT * TOTAL_PRODUCTS_COUNT; // 125 pcs total per day
+export const DAILY_TOTAL_CAPACITY = DAILY_PRODUCT_LIMIT * TOTAL_PRODUCTS_COUNT; // 125 pcs total per day (default)
+
+/**
+ * Returns the maximum production target for a product on a specific day.
+ * Special Rule: On Friday (Day 1), Es Gabin target is increased to 50 pcs.
+ */
+export function getProductLimitForDay(productId: string, dayIndex: number): number {
+  if (dayIndex === 1 && productId === 'es-gabin') {
+    return 50; // Khusus hari Jumat, target Es Gabin 50 pcs
+  }
+  return DAILY_PRODUCT_LIMIT; // 25 pcs default
+}
+
+/**
+ * Returns total capacity of portions for a given day.
+ * Day 1 (Friday): 50 (Es Gabin) + 4 * 25 = 150 pcs
+ * Day 2 & 3: 5 * 25 = 125 pcs
+ */
+export function getTotalCapacityForDay(dayIndex: number): number {
+  if (dayIndex === 1) {
+    return 150; // 50 Es Gabin + 100 menu lain
+  }
+  return DAILY_TOTAL_CAPACITY; // 125 pcs
+}
 
 export interface EventDay {
   dayIndex: number;
@@ -155,20 +178,22 @@ export function checkItemsAvailabilityForDay(
     const requested = requestedPerProduct[prod.id] || 0;
     if (requested > 0) {
       const sold = currentSales[prod.id] || 0;
-      if (sold + requested > DAILY_PRODUCT_LIMIT) {
+      const limit = getProductLimitForDay(prod.id, dayIndex);
+      if (sold + requested > limit) {
         exceededProducts.push({
           productId: prod.id,
           name: prod.name,
           sold,
           requested,
-          remaining: Math.max(0, DAILY_PRODUCT_LIMIT - sold),
-          limit: DAILY_PRODUCT_LIMIT,
+          remaining: Math.max(0, limit - sold),
+          limit,
         });
       }
     }
   });
 
-  const isDayCapacityExceeded = dayTotalSold + totalPcsRequested > DAILY_TOTAL_CAPACITY;
+  const dayCapacity = getTotalCapacityForDay(dayIndex);
+  const isDayCapacityExceeded = dayTotalSold + totalPcsRequested > dayCapacity;
   const isAvailable = exceededProducts.length === 0 && !isDayCapacityExceeded;
 
   // Find next recommended day if not available on selected day
@@ -178,13 +203,15 @@ export function checkItemsAvailabilityForDay(
       if (nextDay === dayIndex) continue;
       const nextSales = getProductSalesForDay(orders, nextDay);
       const nextTotal = getTotalPortionsForDay(orders, nextDay);
-      let fits = nextTotal + totalPcsRequested <= DAILY_TOTAL_CAPACITY;
+      const nextCapacity = getTotalCapacityForDay(nextDay);
+      let fits = nextTotal + totalPcsRequested <= nextCapacity;
 
       if (fits) {
         for (const prodId of Object.keys(requestedPerProduct)) {
           const req = requestedPerProduct[prodId];
           const sold = nextSales[prodId] || 0;
-          if (sold + req > DAILY_PRODUCT_LIMIT) {
+          const limit = getProductLimitForDay(prodId, nextDay);
+          if (sold + req > limit) {
             fits = false;
             break;
           }
@@ -203,7 +230,7 @@ export function checkItemsAvailabilityForDay(
     exceededProducts,
     totalPcsRequested,
     dayTotalSold,
-    dayRemainingCapacity: Math.max(0, DAILY_TOTAL_CAPACITY - dayTotalSold),
+    dayRemainingCapacity: Math.max(0, dayCapacity - dayTotalSold),
     isDayCapacityExceeded,
     recommendedDayIndex,
   };
@@ -218,6 +245,7 @@ export interface QuotaAllocation {
   currentDayOrdersCount: number; // backward compatibility
   dayLabel: string;
   isFull: boolean;
+  totalCapacityPcs?: number;
 }
 
 /**
@@ -229,7 +257,8 @@ export function calculateAllocationForDay(
 ): QuotaAllocation {
   const dayOrders = getActiveOrdersForDay(orders, chosenDayIndex);
   const totalPortions = getTotalPortionsForDay(orders, chosenDayIndex);
-  const isFull = totalPortions >= DAILY_TOTAL_CAPACITY;
+  const dayCapacity = getTotalCapacityForDay(chosenDayIndex);
+  const isFull = totalPortions >= dayCapacity;
   const eventDay = getEventDay(chosenDayIndex);
 
   return {
@@ -241,6 +270,7 @@ export function calculateAllocationForDay(
     currentDayOrdersCount: totalPortions,
     dayLabel: eventDay.dayLabel,
     isFull,
+    totalCapacityPcs: dayCapacity,
   };
 }
 
@@ -309,19 +339,21 @@ export function getDayQuotaSummaryList(orders: Order[]): DayQuotaSummary[] {
     const dayOrders = getActiveOrdersForDay(orders, day.dayIndex);
     const totalSoldPcs = getTotalPortionsForDay(orders, day.dayIndex);
     const productSales = getProductSalesForDay(orders, day.dayIndex);
+    const dayCapacity = getTotalCapacityForDay(day.dayIndex);
 
     const productQuotas: ProductQuotaStatus[] = OFFICIAL_PRODUCTS.map((prod) => {
       const sold = productSales[prod.id] || 0;
-      const remaining = Math.max(0, DAILY_PRODUCT_LIMIT - sold);
-      const isFull = sold >= DAILY_PRODUCT_LIMIT;
-      const percentage = Math.min(100, Math.round((sold / DAILY_PRODUCT_LIMIT) * 100));
+      const limit = getProductLimitForDay(prod.id, day.dayIndex);
+      const remaining = Math.max(0, limit - sold);
+      const isFull = sold >= limit;
+      const percentage = Math.min(100, Math.round((sold / limit) * 100));
 
       return {
         productId: prod.id,
         productCode: prod.code,
         productName: prod.name,
         sold,
-        limit: DAILY_PRODUCT_LIMIT,
+        limit,
         remaining,
         isFull,
         percentage,
@@ -329,9 +361,9 @@ export function getDayQuotaSummaryList(orders: Order[]): DayQuotaSummary[] {
     });
 
     const isFull =
-      totalSoldPcs >= DAILY_TOTAL_CAPACITY || productQuotas.every((pq) => pq.isFull);
-    const percentage = Math.min(100, Math.round((totalSoldPcs / DAILY_TOTAL_CAPACITY) * 100));
-    const remainingPcs = Math.max(0, DAILY_TOTAL_CAPACITY - totalSoldPcs);
+      totalSoldPcs >= dayCapacity || productQuotas.every((pq) => pq.isFull);
+    const percentage = Math.min(100, Math.round((totalSoldPcs / dayCapacity) * 100));
+    const remainingPcs = Math.max(0, dayCapacity - totalSoldPcs);
 
     // All event days (27, 28, 29 Nov 2026) are open for pre-orders
     const isUnlocked = true;
@@ -343,7 +375,7 @@ export function getDayQuotaSummaryList(orders: Order[]): DayQuotaSummary[] {
       dateStr: day.dateStr,
       dateShort: day.dateShort,
       totalSoldPcs,
-      totalCapacityPcs: DAILY_TOTAL_CAPACITY,
+      totalCapacityPcs: dayCapacity,
       remainingPcs,
       ordersCount: dayOrders.length,
       isFull,
@@ -354,7 +386,7 @@ export function getDayQuotaSummaryList(orders: Order[]): DayQuotaSummary[] {
       orders: dayOrders,
       // Backward compatibility aliases
       count: totalSoldPcs,
-      limit: DAILY_TOTAL_CAPACITY,
+      limit: dayCapacity,
       remaining: remainingPcs,
     });
   }

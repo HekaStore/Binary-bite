@@ -102,13 +102,13 @@ export const CheckoutSection: React.FC = () => {
           .map((p) => `${p.name} (sisa untuk tanggal ini: ${p.remaining} pcs)`)
           .join(', ');
         setErrorMsg(
-          `Menu ${prodDetails} melebihi kuota produksi 25 pcs per hari. Silakan pilih tanggal pengambilan lain (Hari ${availability.recommendedDayIndex}) atau sesuaikan porsi.`
+          `Menu ${prodDetails} melebihi kuota produksi harian. Silakan pilih tanggal pengambilan lain (Hari ${availability.recommendedDayIndex}) atau sesuaikan porsi.`
         );
         return;
       }
       if (availability.isDayCapacityExceeded) {
         setErrorMsg(
-          `Total pesanan untuk ${allocation.scheduledDate} sudah mencapai kapasitas maksimal 125 porsi. Silakan pilih tanggal pengambilan lain (Hari ${availability.recommendedDayIndex}).`
+          `Total pesanan untuk ${allocation.scheduledDate} sudah mencapai kapasitas maksimal ${allocation.totalCapacityPcs || 125} porsi. Silakan pilih tanggal pengambilan lain (Hari ${availability.recommendedDayIndex}).`
         );
         return;
       }
@@ -232,7 +232,7 @@ export const CheckoutSection: React.FC = () => {
                   <span>Pilih Tanggal Pengambilan Stand (27 s/d 29 Nov 2026) *</span>
                 </span>
                 <span className="text-[10px] text-slate-400 font-normal">
-                  Target: 25 Pcs/Menu (125 Porsi/Hari)
+                  Target: 25 Pcs/Menu (Khusus Gabin Jumat 50 Pcs)
                 </span>
               </label>
 
@@ -264,7 +264,7 @@ export const CheckoutSection: React.FC = () => {
                           </span>
                         ) : (
                           <span className="text-[10px] font-semibold text-slate-600">
-                            {day.totalSoldPcs}/125 porsi
+                            {day.totalSoldPcs}/{day.totalCapacityPcs} porsi
                           </span>
                         )}
                       </div>
@@ -292,14 +292,14 @@ export const CheckoutSection: React.FC = () => {
                   <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                     <div>
                       <span className="font-heading font-black block text-amber-900">
-                        ⚠️ Kuota Menu Terpenuhi untuk Hari Ini (Maksimal 25 Pcs/Menu)
+                        ⚠️ Kuota Menu Terpenuhi untuk Hari Ini
                       </span>
                       <p className="text-[11px] text-amber-800 mt-0.5 leading-relaxed">
                         {availability.exceededProducts.length > 0
                           ? `Menu ${availability.exceededProducts
-                              .map((p) => `${p.name} (tersisa ${p.remaining} pcs)`)
-                              .join(', ')} telah mencapai batas target 25 pcs per hari.`
-                          : 'Kapasitas maksimal 125 porsi untuk hari ini telah penuh.'}
+                              .map((p) => `${p.name} (tersisa ${p.remaining} pcs dari kuota ${p.limit} pcs)`)
+                              .join(', ')} telah mencapai batas target produksi.`
+                          : 'Kapasitas maksimal porsi untuk hari ini telah penuh.'}
                       </p>
                     </div>
 
@@ -325,7 +325,7 @@ export const CheckoutSection: React.FC = () => {
                   </span>
                 </div>
                 <span className="font-heading font-bold text-[#0284C7] text-[11px]">
-                  Terisi {daySummaries.find((d) => d.dayIndex === selectedDayIndex)?.totalSoldPcs || 0} / 125 Pcs
+                  Terisi {daySummaries.find((d) => d.dayIndex === selectedDayIndex)?.totalSoldPcs || 0} / {daySummaries.find((d) => d.dayIndex === selectedDayIndex)?.totalCapacityPcs || 125} Pcs
                 </span>
               </div>
             </div>
