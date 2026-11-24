@@ -8,6 +8,7 @@ import { ToastNotification } from '@/components/ToastNotification';
 import { FloatingWhatsApp } from '@/components/FloatingWhatsApp';
 import { Watermark } from '@/components/Watermark';
 import { CartDrawer } from '@/components/CartDrawer';
+import { MaintenanceGuard } from '@/components/MaintenanceGuard';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -92,12 +93,14 @@ export default function RootLayout({
     <html lang="id" data-type="place" data-radius="soft" data-motion="true" className={`${inter.variable} ${poppins.variable}`}>
       <body className="min-h-screen flex flex-col bg-brand-white text-brand-slate font-sans antialiased selection:bg-brand-sky selection:text-brand-cobalt">
         <CartProvider>
-          <Navbar />
-          <main className="flex-1">{children}</main>
-          <Footer />
-          <CartDrawer />
+          <MaintenanceGuard>
+            <Navbar />
+            <main className="flex-1">{children}</main>
+            <Footer />
+            <CartDrawer />
+            <FloatingWhatsApp />
+          </MaintenanceGuard>
           <ToastNotification />
-          <FloatingWhatsApp />
           <Watermark />
         </CartProvider>
       </body>
