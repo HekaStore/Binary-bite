@@ -232,7 +232,7 @@ export const CheckoutSection: React.FC = () => {
                   <span>Pilih Tanggal Pengambilan Stand (27 s/d 29 Nov 2026) *</span>
                 </span>
                 <span className="text-[10px] text-slate-400 font-normal">
-                  Target: 25 Pcs/Menu (Khusus Gabin Jumat 50 Pcs)
+                  Target: 25 Pcs/Menu (Khusus Gabin Jumat 75 Pcs)
                 </span>
               </label>
 

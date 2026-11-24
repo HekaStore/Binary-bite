@@ -7,23 +7,23 @@ export const DAILY_TOTAL_CAPACITY = DAILY_PRODUCT_LIMIT * TOTAL_PRODUCTS_COUNT; 
 
 /**
  * Returns the maximum production target for a product on a specific day.
- * Special Rule: On Friday (Day 1), Es Gabin target is increased to 50 pcs.
+ * Special Rule: On Friday (Day 1), Es Gabin target is increased to 75 pcs.
  */
 export function getProductLimitForDay(productId: string, dayIndex: number): number {
   if (dayIndex === 1 && productId === 'es-gabin') {
-    return 50; // Khusus hari Jumat, target Es Gabin 50 pcs
+    return 75; // Khusus hari Jumat, target Es Gabin 75 pcs
   }
   return DAILY_PRODUCT_LIMIT; // 25 pcs default
 }
 
 /**
  * Returns total capacity of portions for a given day.
- * Day 1 (Friday): 50 (Es Gabin) + 4 * 25 = 150 pcs
+ * Day 1 (Friday): 75 (Es Gabin) + 4 * 25 = 175 pcs
  * Day 2 & 3: 5 * 25 = 125 pcs
  */
 export function getTotalCapacityForDay(dayIndex: number): number {
   if (dayIndex === 1) {
-    return 150; // 50 Es Gabin + 100 menu lain
+    return 175; // 75 Es Gabin + 100 menu lain = 175 pcs
   }
   return DAILY_TOTAL_CAPACITY; // 125 pcs
 }
