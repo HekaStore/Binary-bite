@@ -1,31 +1,24 @@
 import { Order } from '@/types';
 import { OFFICIAL_PRODUCTS } from '@/data/products';
 
-export const DAILY_PRODUCT_LIMIT = 25; // 25 pcs per menu item per day (default)
+export const DAILY_PRODUCT_LIMIT = 75; // 75 pcs per menu item per day (Jumat s/d Minggu)
 export const TOTAL_PRODUCTS_COUNT = 5; // 5 official products
-export const DAILY_TOTAL_CAPACITY = DAILY_PRODUCT_LIMIT * TOTAL_PRODUCTS_COUNT; // 125 pcs total per day (default)
+export const DAILY_TOTAL_CAPACITY = DAILY_PRODUCT_LIMIT * TOTAL_PRODUCTS_COUNT; // 375 pcs total per day
 
 /**
  * Returns the maximum production target for a product on a specific day.
- * Special Rule: On Friday (Day 1), Es Gabin target is increased to 75 pcs.
+ * All 5 products from Friday to Sunday have a limit of 75 pcs.
  */
-export function getProductLimitForDay(productId: string, dayIndex: number): number {
-  if (dayIndex === 1 && productId === 'es-gabin') {
-    return 75; // Khusus hari Jumat, target Es Gabin 75 pcs
-  }
-  return DAILY_PRODUCT_LIMIT; // 25 pcs default
+export function getProductLimitForDay(productId?: string, dayIndex?: number): number {
+  return DAILY_PRODUCT_LIMIT; // 75 pcs untuk semua produk (Jumat - Minggu)
 }
 
 /**
  * Returns total capacity of portions for a given day.
- * Day 1 (Friday): 75 (Es Gabin) + 4 * 25 = 175 pcs
- * Day 2 & 3: 5 * 25 = 125 pcs
+ * 75 pcs * 5 products = 375 pcs total per day (Jumat - Minggu)
  */
-export function getTotalCapacityForDay(dayIndex: number): number {
-  if (dayIndex === 1) {
-    return 175; // 75 Es Gabin + 100 menu lain = 175 pcs
-  }
-  return DAILY_TOTAL_CAPACITY; // 125 pcs
+export function getTotalCapacityForDay(dayIndex?: number): number {
+  return DAILY_TOTAL_CAPACITY; // 375 pcs
 }
 
 export interface EventDay {
@@ -153,7 +146,7 @@ export interface AvailabilityCheckResult {
 }
 
 /**
- * Checks if the requested items can fit within a specific day's 25 pcs/product and 125 pcs/day limits.
+ * Checks if the requested items can fit within a specific day's 75 pcs/product and 375 pcs/day limits.
  * Customers can freely choose any of the 3 days (27, 28, or 29 Nov 2026) as long as capacity remains.
  */
 export function checkItemsAvailabilityForDay(
@@ -326,10 +319,8 @@ export interface DayQuotaSummary {
 }
 
 /**
- * Returns a comprehensive 3-day breakdown of orders, total portions (max 125),
- * and per-product quotas (max 25 each).
- * Enforces sequential production: Day 2 is locked until Day 1 reaches 125 pcs;
- * Day 3 is locked until Day 2 reaches 125 pcs.
+ * Returns a comprehensive 3-day breakdown of orders, total portions (max 375),
+ * and per-product quotas (max 75 each).
  */
 export function getDayQuotaSummaryList(orders: Order[]): DayQuotaSummary[] {
   const summaries: DayQuotaSummary[] = [];

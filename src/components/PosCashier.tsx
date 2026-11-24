@@ -623,11 +623,11 @@ export const PosCashier: React.FC = () => {
             <div className="flex items-center gap-2">
               <Calendar className="w-5 h-5 text-[#0284C7]" />
               <h2 className="font-heading font-black text-lg sm:text-xl text-slate-900">
-                Alokasi Jadwal & Kuota Produksi (Maks 25 Pcs/Menu • Es Gabin Jumat 75 Pcs)
+                Alokasi Jadwal & Kuota Produksi (75 Pcs / Menu • Total 375 Porsi / Hari)
               </h2>
             </div>
             <p className="text-xs text-slate-500 mt-1">
-              Kapasitas produksi harian maksimal 25 pcs per menu (khusus Es Gabin hari Jumat 75 pcs, total kapasitas 175 porsi). Pelanggan bebas memilih jadwal pengambilan pada tanggal 27, 28, atau 29 November 2026.
+              Kapasitas produksi harian maksimal 75 pcs per menu (total kapasitas 375 porsi/hari). Pelanggan bebas memilih jadwal pengambilan pada tanggal 27, 28, atau 29 November 2026.
             </p>
           </div>
 
@@ -641,7 +641,7 @@ export const PosCashier: React.FC = () => {
               </button>
             )}
             <span className="text-xs font-mono font-bold px-3 py-1 rounded-full bg-slate-100 text-slate-700 border border-slate-200">
-              Kapasitas: 125 - 175 Pcs/Hari
+              Kapasitas: 375 Pcs/Hari
             </span>
           </div>
         </div>
@@ -707,7 +707,7 @@ export const PosCashier: React.FC = () => {
                 {/* 5 Menu Breakdown Chips */}
                 <div className="mt-3.5 pt-3 border-t border-slate-200/70">
                   <span className="text-[10px] font-heading font-bold text-slate-400 uppercase tracking-wider block mb-1.5">
-                    Produksi Menu ({summary.dayIndex === 1 ? 'Maks 25/Menu • Es Gabin 75' : 'Maks 25/Menu'}):
+                    Produksi Menu (Maks 75/Menu):
                   </span>
                   <div className="grid grid-cols-2 gap-1.5 text-[10px]">
                     {summary.productQuotas.map((pq) => (
@@ -867,7 +867,7 @@ export const PosCashier: React.FC = () => {
 
                       <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
                         <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-md bg-sky-50 text-[#0284C7] border border-sky-200">
-                          Hari ke-{order.scheduledDayIndex || 1} (#{order.dailyOrderNumber || 1}/25)
+                          Hari ke-{order.scheduledDayIndex || 1} (#{order.dailyOrderNumber || 1}/75)
                         </span>
 
                         {order.pickupMethod?.includes('Diantar') || order.pickupMethod === 'Lumajang Kota' ? (

@@ -35,7 +35,7 @@ export const FaqSection: React.FC = () => {
     {
       question: 'Bagaimana ketentuan kuota dan jadwal pengambilan pesanan?',
       answer:
-        'Anda bebas memilih tanggal pengambilan pesanan antara tanggal 27, 28, atau 29 November 2026 di Stand Kelas 12B. Setiap hari kami memproduksi maksimal 25 pcs per varian menu (khusus Es Gabin hari Jumat kami sediakan target spesial 75 pcs, total kapasitas 175 porsi di hari pertama) demi menjaga kualitas dan kesegaran bahan. Jika kuota menu pada tanggal yang dipilih telah penuh, Anda dapat memilih tanggal lainnya.',
+        'Anda bebas memilih tanggal pengambilan pesanan antara tanggal 27, 28, atau 29 November 2026 di Stand Kelas 12B. Setiap hari kami memproduksi maksimal 75 pcs per varian menu dengan total kapasitas 375 porsi/hari demi menjaga kualitas dan kesegaran bahan. Jika kuota menu pada tanggal yang dipilih telah penuh, Anda dapat memilih tanggal lainnya.',
     },
     {
       question: 'Bagaimana cara mendapatkan struk fisik atau digital?',

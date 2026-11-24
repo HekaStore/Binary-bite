@@ -108,7 +108,7 @@ export const CheckoutSection: React.FC = () => {
       }
       if (availability.isDayCapacityExceeded) {
         setErrorMsg(
-          `Total pesanan untuk ${allocation.scheduledDate} sudah mencapai kapasitas maksimal ${allocation.totalCapacityPcs || 125} porsi. Silakan pilih tanggal pengambilan lain (Hari ${availability.recommendedDayIndex}).`
+          `Total pesanan untuk ${allocation.scheduledDate} sudah mencapai kapasitas maksimal ${allocation.totalCapacityPcs || 375} porsi. Silakan pilih tanggal pengambilan lain (Hari ${availability.recommendedDayIndex}).`
         );
         return;
       }
@@ -232,7 +232,7 @@ export const CheckoutSection: React.FC = () => {
                   <span>Pilih Tanggal Pengambilan Stand (27 s/d 29 Nov 2026) *</span>
                 </span>
                 <span className="text-[10px] text-slate-400 font-normal">
-                  Target: 25 Pcs/Menu (Khusus Gabin Jumat 75 Pcs)
+                  Target: 75 Pcs/Menu (375 Porsi/Hari)
                 </span>
               </label>
 
@@ -325,7 +325,7 @@ export const CheckoutSection: React.FC = () => {
                   </span>
                 </div>
                 <span className="font-heading font-bold text-[#0284C7] text-[11px]">
-                  Terisi {daySummaries.find((d) => d.dayIndex === selectedDayIndex)?.totalSoldPcs || 0} / {daySummaries.find((d) => d.dayIndex === selectedDayIndex)?.totalCapacityPcs || 125} Pcs
+                  Terisi {daySummaries.find((d) => d.dayIndex === selectedDayIndex)?.totalSoldPcs || 0} / {daySummaries.find((d) => d.dayIndex === selectedDayIndex)?.totalCapacityPcs || 375} Pcs
                 </span>
               </div>
             </div>
